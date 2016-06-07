@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 
 public class login extends AppCompatActivity {
 
@@ -14,10 +13,21 @@ public class login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
     }
 
+    //Login and goes to lobby
     public void login(View view){
-        Intent intent = new Intent(getBaseContext(), obby.class);
+        Intent intent = new Intent(getBaseContext(), lobby.class);
         startActivity(intent);
+    }
 
+    //Forgot pass link, goes to lobby temporarily
+    public void forgotPass(View view){
+        Intent intent = new Intent(getBaseContext(), lobby.class);
+        startActivity(intent);
+    }
 
+    //Register link, goes to lobby temporarily
+    public void register(View view){
+        Intent intent = new Intent(getBaseContext(), lobby.class);
+        startActivity(intent);
     }
 }
