@@ -1,2 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
+
+    <item
+        jar="/Users/imac2014/workspace/12m/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
+        <dex dex="/Users/imac2014/workspace/12m/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.4.0_a67b6625c66af2c06b36d07da403cea56e763a30/classes.dex" />
+    </item>
+    <item
+        jar="/Users/imac2014/workspace/12m/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="548f06de403a9409f00554b3ee12a9fdea0e236c">
+        <dex dex="/Users/imac2014/workspace/12m/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.4.0_c14073fcbffde49135a88de64bbe05e3e6183128/classes.dex" />
+    </item>
+    <item
+        jar="/Users/imac2014/workspace/12m/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars/libs/internal_impl-23.4.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
+        <dex dex="/Users/imac2014/workspace/12m/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.4.0_a4a0500859e34239e68c321244a018320ef343d6/classes.dex" />
+    </item>
+    <item
+        jar="/Users/imac2014/workspace/12m/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="67bd36ee9340ec7c254108936ad16b24bed160cc">
+        <dex dex="/Users/imac2014/workspace/12m/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.4.0_25349f74d6fd469069c17bc77dfa615c350d621a/classes.dex" />
+    </item>
+    <item
+        jar="/Users/imac2014/workspace/12m/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="de4db3785756bfb0915a9f59a9b3f2fea7407be4">
+        <dex dex="/Users/imac2014/workspace/12m/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-23.4.0_ceccb5e94f7fc70cafb4b80bbb77b7026beb163e/classes.dex" />
+    </item>
+    <item
+        jar="/Users/imac2014/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.4.0/support-annotations-23.4.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="ffbe55fdb2bb456b1485831706a9eac3300bb6b8">
+        <dex dex="/Users/imac2014/workspace/12m/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.4.0_869c2e4cd427884731817d302ffcbff839e8ddd5/classes.dex" />
+    </item>
+    <item
+        jar="/Users/imac2014/workspace/12m/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="f32c92648117a469b7ebab3a65a8603d02032cb4">
+        <dex dex="/Users/imac2014/workspace/12m/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_54ea7272a84e5b3810a457a500596452819ebbdd/classes.dex" />
+    </item>
+    <item
+        jar="/Users/imac2014/workspace/12m/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="541b216908b3c8009ec9e360b602166f95c8da73">
+        <dex dex="/Users/imac2014/workspace/12m/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_2913fa2303e658cbd9f594bade9c94de06c21541/classes.dex" />
+    </item>
+
+</items>

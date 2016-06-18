@@ -26,9 +26,9 @@ public class login extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //Register link, goes to lobby temporarily
+    //Register link, goes to register page
     public void register(View view){
-        Intent intent = new Intent(getBaseContext(), lobby.class);
+        Intent intent = new Intent(getBaseContext(), register.class);
         startActivity(intent);
     }
 }
