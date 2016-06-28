@@ -12,7 +12,10 @@ import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-public class login extends AppCompatActivity {
+/*
+Login page with links to registration page and forgot password page.
+ */
+public class Login extends AppCompatActivity {
     EditText input_username;
     EditText input_pw;
     String username;
@@ -31,7 +34,7 @@ public class login extends AppCompatActivity {
         input_pw = (EditText) findViewById(R.id.editTextPW);
     }
 
-    //Login and goes to lobby
+    //Login and goes to Lobby
     public void loginNow(View view){
         //Grab username and password values for string comparison
         username = input_username.getText().toString();
@@ -42,7 +45,7 @@ public class login extends AppCompatActivity {
                 new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null){
-                            Intent intent = new Intent(getBaseContext(), lobby.class);
+                            Intent intent = new Intent(getBaseContext(), Lobby.class);
                             startActivity(intent);
                             Toast.makeText(getApplicationContext(), "Successfully logged in", Toast.LENGTH_LONG).show();
                             finish();
@@ -61,13 +64,13 @@ public class login extends AppCompatActivity {
 
     //Forgot password link, goes to forgot pass page
     public void forgotPass(View view){
-        Intent intent = new Intent(getBaseContext(), lobby.class);
+        Intent intent = new Intent(getBaseContext(), PasswordReset.class);
         startActivity(intent);
     }
 
-    //Register link, goes to register page
+    //Register link, goes to Register page
     public void register(View view){
-        Intent intent = new Intent(getBaseContext(), register.class);
+        Intent intent = new Intent(getBaseContext(), Register.class);
         startActivity(intent);
     }
 }

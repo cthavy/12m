@@ -11,7 +11,10 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
-public class register extends AppCompatActivity {
+/*
+Register new users page. Will gather user input and create a new user stored in Parse.
+ */
+public class Register extends AppCompatActivity {
     EditText newUser;
     EditText newPass;
     EditText confirmPass;
@@ -57,7 +60,7 @@ public class register extends AppCompatActivity {
             user.signUpInBackground(new SignUpCallback() {
                 public void done(ParseException e) {
                     if (e == null) {
-                        Intent intent = new Intent(getBaseContext(), lobby.class);
+                        Intent intent = new Intent(getBaseContext(), Lobby.class);
                         startActivity(intent);
                         Toast.makeText(getApplicationContext(), "Account created", Toast.LENGTH_SHORT).show();
                     } else {
