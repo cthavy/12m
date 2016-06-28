@@ -15,7 +15,7 @@
         android:id="@+id/new_user"
         android:layout_marginTop="101dp"
         android:hint="Username"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/spaceReserved4Logo"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/confirm_pass"
         android:layout_below="@+id/new_pass"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -58,9 +58,9 @@
         android:layout_height="wrap_content"
         android:text="Submit"
         android:id="@+id/btn_submit"
-        android:layout_below="@+id/editText"
-        android:layout_alignRight="@+id/editText"
-        android:layout_alignEnd="@+id/editText"
+        android:layout_below="@+id/confirm_pass"
+        android:layout_alignRight="@+id/confirm_pass"
+        android:layout_alignEnd="@+id/confirm_pass"
         android:onClick="register_new_user" />
 
     <TextView
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="This is a plain register page"
-        android:id="@+id/textView"
+        android:id="@+id/spaceReserved4Logo"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp" />
