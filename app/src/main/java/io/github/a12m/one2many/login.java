@@ -23,19 +23,21 @@ public class login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //Calls onCreateParse method
         onCreateParse();
 
+        //Gathers username and password from edit fields
         input_username = (EditText) findViewById(R.id.editTextLogin);
         input_pw = (EditText) findViewById(R.id.editTextPW);
     }
 
     //Login and goes to lobby
     public void loginNow(View view){
-
         //Grab username and password values for string comparison
         username = input_username.getText().toString();
         password = input_pw.getText().toString();
 
+        //Login attempt by checking username and password with Parse server
         ParseUser.logInInBackground(username, password,
                 new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
@@ -51,12 +53,13 @@ public class login extends AppCompatActivity {
                 });
     }
 
+    //Initializes Parse server with app key and client key
     public void onCreateParse(){
         Parse.initialize(this, "5g44gXLHE9HIOzzAr7VWo0em9SWll2EvyKyPuoac",
                 "359AULLuseeJcNDGsHSKZ6KniwZOHu8gG5AnpFoj");
     }
 
-    //Forgot pass link, goes to lobby temporarily
+    //Forgot password link, goes to forgot pass page
     public void forgotPass(View view){
         Intent intent = new Intent(getBaseContext(), lobby.class);
         startActivity(intent);
