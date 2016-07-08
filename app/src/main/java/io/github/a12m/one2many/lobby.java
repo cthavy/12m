@@ -2,6 +2,7 @@ package io.github.a12m.one2many;
 
 //import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.app.ListActivity;
 
@@ -34,5 +35,10 @@ public class Lobby extends ListActivity {
         this.setListAdapter(new ArrayAdapter<String>(
                 this, R.layout.lobby_list,
                 R.id.Itemname,itemName));
+    }
+
+    //Will be a settings drop down but temporarily will be edit profile
+    public void editProfile(View view) {
+
     }
 }

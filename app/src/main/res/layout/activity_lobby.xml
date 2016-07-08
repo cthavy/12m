@@ -9,60 +9,73 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Lobby">
 
+    <ListView
+        android:id="@+id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/viewSeperator" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
         android:id="@+id/viewSeperator"
-        android:layout_alignTop="@+id/android:list"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-    <ListView
-        android:id="@+id/android:list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="40dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="12m"
-        android:id="@+id/logo"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="480dp" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_settings"
-        android:src="@drawable/ic_action_name"
-        android:background="#00ffffff"
-        android:layout_alignBottom="@+id/btn_camera"
+        android:id="@+id/btn_camera"
+        android:background="@drawable/ic_camera"
+        android:layout_below="@+id/viewSeperator"
+        android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_lobby"
+        android:background="@drawable/ic_drawer"
+        android:onClick="editProfile"
+        android:layout_below="@+id/viewSeperator"
+        android:layout_toRightOf="@+id/btn_camera"
+        android:layout_toEndOf="@+id/btn_camera"
+        android:layout_marginLeft="41dp"
+        android:layout_marginStart="41dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_newEvent"
+        android:background="@drawable/ic_add_new"
+        android:layout_below="@+id/viewSeperator"
         android:layout_alignRight="@+id/viewSeperator"
         android:layout_alignEnd="@+id/viewSeperator" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_camera"
-        android:src="@drawable/ic_camera"
-        android:background="#00ffffff"
-        android:layout_alignBottom="@+id/logo"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/btn_profile"
+        android:background="@drawable/ic_self"
+        android:layout_below="@+id/viewSeperator"
+        android:layout_toLeftOf="@+id/btn_camera"
+        android:layout_toStartOf="@+id/btn_camera"
+        android:layout_marginRight="46dp"
+        android:layout_marginEnd="46dp" />
 
-    <ImageButton
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_add_user"
-        android:src="@drawable/ic_add_new"
-        android:background="#00ffffff"
-        android:layout_marginRight="43dp"
-        android:layout_marginEnd="43dp"
-        android:layout_alignBottom="@+id/btn_settings"
-        android:layout_toLeftOf="@+id/btn_settings"
-        android:layout_toStartOf="@+id/btn_settings" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="12m"
+        android:id="@+id/textView"
+        android:layout_alignBottom="@+id/btn_profile"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>
