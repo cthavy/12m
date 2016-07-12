@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/btn_lobby"
         android:background="@drawable/ic_drawer"
-        android:onClick="editProfile"
+        android:onClick="editAccount"
         android:layout_below="@+id/viewSeperator"
         android:layout_toRightOf="@+id/btn_camera"
         android:layout_toEndOf="@+id/btn_camera"
@@ -65,7 +65,8 @@
         android:layout_toLeftOf="@+id/btn_camera"
         android:layout_toStartOf="@+id/btn_camera"
         android:layout_marginRight="46dp"
-        android:layout_marginEnd="46dp" />
+        android:layout_marginEnd="46dp"
+        android:onClick="goToProfile" />
 
     <TextView
         android:layout_width="wrap_content"

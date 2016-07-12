@@ -1,6 +1,7 @@
 package io.github.a12m.one2many;
 
 //import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -37,8 +38,14 @@ public class Lobby extends ListActivity {
                 R.id.Itemname,itemName));
     }
 
+    //Will bring user to their basic profile
+    public void goToProfile(View view) {
+        Intent intent = new Intent(getBaseContext(), Profile.class);
+        startActivity(intent);
+    }
+
     //Will be a settings drop down but temporarily will be edit profile
-    public void editProfile(View view) {
+    public void editAccount(View view) {
 
     }
 }
