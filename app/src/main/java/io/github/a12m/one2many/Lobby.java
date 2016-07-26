@@ -48,4 +48,8 @@ public class Lobby extends ListActivity {
     public void editAccount(View view) {
 
     }
+
+    public void onBackPressed() {
+
+    }
 }

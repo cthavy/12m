@@ -1,17 +1,14 @@
 package io.github.a12m.one2many;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 
-import com.parse.GetCallback;
-import com.parse.GetDataCallback;
-import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 
 public class Profile extends AppCompatActivity {
@@ -24,5 +21,13 @@ public class Profile extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         profilePic = (ImageView) findViewById(R.id.profile_image);
+    }
+
+    //Self explanatory
+    public void logOut(View view) {
+        ParseUser.logOut();
+        Intent intent = new Intent(this, Login.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }
