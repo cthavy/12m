@@ -25,58 +25,59 @@
         android:id="@+id/viewSeperator"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="480dp" />
+        android:layout_marginTop="470dp" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_camera"
-        android:background="@drawable/ic_camera"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/viewSeperator"
-        android:layout_centerHorizontal="true" />
+        android:weightSum="4">
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_lobby"
-        android:background="@drawable/ic_drawer"
-        android:onClick="editAccount"
-        android:layout_below="@+id/viewSeperator"
-        android:layout_toRightOf="@+id/btn_camera"
-        android:layout_toEndOf="@+id/btn_camera"
-        android:layout_marginLeft="41dp"
-        android:layout_marginStart="41dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="12m"
+            android:id="@+id/textView"
+            android:layout_alignBottom="@+id/btn_profile"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_weight=".25"
+            android:textSize="35sp"/>
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_newEvent"
-        android:background="@drawable/ic_add_new"
-        android:layout_below="@+id/viewSeperator"
-        android:layout_alignRight="@+id/viewSeperator"
-        android:layout_alignEnd="@+id/viewSeperator" />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/btn_profile"
+            android:background="@drawable/ic_self"
+            android:layout_below="@+id/viewSeperator"
+            android:layout_toLeftOf="@+id/btn_camera"
+            android:layout_toStartOf="@+id/btn_camera"
+            android:onClick="goToProfile"
+            android:layout_weight="1"/>
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_profile"
-        android:background="@drawable/ic_self"
-        android:layout_below="@+id/viewSeperator"
-        android:layout_toLeftOf="@+id/btn_camera"
-        android:layout_toStartOf="@+id/btn_camera"
-        android:layout_marginRight="46dp"
-        android:layout_marginEnd="46dp"
-        android:onClick="goToProfile" />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/btn_camera"
+            android:background="@drawable/ic_camera"
+            android:layout_below="@+id/viewSeperator"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="1"
+            android:layout_marginLeft="12dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="12m"
-        android:id="@+id/textView"
-        android:layout_alignBottom="@+id/btn_profile"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/btn_newEvent"
+            android:background="@drawable/ic_add_new"
+            android:layout_below="@+id/viewSeperator"
+            android:layout_alignRight="@+id/viewSeperator"
+            android:layout_alignEnd="@+id/viewSeperator"
+            android:layout_weight="1"
+            android:layout_marginLeft="12dp" />
+    </LinearLayout>
 
 
 </RelativeLayout>

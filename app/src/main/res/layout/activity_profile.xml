@@ -26,7 +26,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:onClick="logOut" />
+        android:onClick="LogOut" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -72,7 +72,8 @@
         android:text="Edit Profile"
         android:id="@+id/btn_edit"
         android:layout_below="@+id/Text_friend"
-        android:layout_alignLeft="@+id/Text_friend" />
+        android:layout_alignLeft="@+id/Text_friend"
+        android:onClick="EditProfile" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -82,4 +83,11 @@
         android:layout_below="@+id/profile_image"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\@email"
+        android:id="@+id/Text_email"
+        android:layout_below="@+id/Text_username" />
 </RelativeLayout>
