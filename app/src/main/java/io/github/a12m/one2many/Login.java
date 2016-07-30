@@ -27,7 +27,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         //Calls onCreateParse method
-        onCreateParse();
+        //onCreateParse();
 
         //Gathers username and password from edit fields
         input_username = (EditText) findViewById(R.id.editTextLogin);

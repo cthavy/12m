@@ -56,13 +56,14 @@ public class Lobby extends ListActivity implements View.OnClickListener {
     }
 
     //Will be a settings drop down but temporarily will be edit profile
+    //!!! MAY BE REDUNDANT !!!
     public void editAccount(View view) {
 
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
 
             case R.id.btn_newEvent:
                 final Dialog dialog = new Dialog(v.getContext());

@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Login"
+            android:name=".Launch"
             android:theme="@style/AppThemeLogin">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,6 +29,8 @@
         <activity android:name=".Register" />
         <activity android:name=".PasswordReset" />
         <activity android:name=".Profile" />
+        <activity android:name=".Login"></activity>
+
     </application>
 
 </manifest>
