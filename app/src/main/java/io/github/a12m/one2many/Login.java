@@ -56,12 +56,6 @@ public class Login extends AppCompatActivity {
                 });
     }
 
-    //Initializes Parse server with app key and client key
-    public void onCreateParse(){
-        Parse.initialize(this, "5g44gXLHE9HIOzzAr7VWo0em9SWll2EvyKyPuoac",
-                "359AULLuseeJcNDGsHSKZ6KniwZOHu8gG5AnpFoj");
-    }
-
     //Forgot password link, goes to forgot pass page
     public void forgotPass(View view){
         Intent intent = new Intent(getBaseContext(), PasswordReset.class);

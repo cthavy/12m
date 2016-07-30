@@ -19,9 +19,6 @@ public class Launch extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
 
-        Parse.initialize(this, "5g44gXLHE9HIOzzAr7VWo0em9SWll2EvyKyPuoac",
-                "359AULLuseeJcNDGsHSKZ6KniwZOHu8gG5AnpFoj");
-
         if (ParseUser.getCurrentUser() == null){
             intent = new Intent(this, Login.class);
         } else {
