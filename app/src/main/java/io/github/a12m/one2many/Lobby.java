@@ -44,12 +44,6 @@ public class Lobby extends ListActivity {
         startActivity(intent);
     }
 
-    //Will be a settings drop down but temporarily will be edit profile
-    //!!! MAY BE REDUNDANT !!!
-    public void editAccount(View view) {
-
-    }
-
     public void onBackPressed() {
 
     }
