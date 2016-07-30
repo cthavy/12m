@@ -18,7 +18,10 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-
+/*
+Class to display profile page as well as present a logout button for user.
+Logout will bring the app back to the login page.
+ */
 public class Profile extends AppCompatActivity {
     ImageView d_pic;
     TextView d_friends;
@@ -89,8 +92,9 @@ public class Profile extends AppCompatActivity {
         });
     }
 
+    //Starts the edit profile activity
     public void EditProfile(View view){
-        Intent intent = new Intent(this, EditProfileDialog.class);
+        Intent intent = new Intent(this, EditProfile.class);
         startActivity(intent);
         finish();
     }

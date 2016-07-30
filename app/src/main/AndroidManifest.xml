@@ -31,7 +31,7 @@
         <activity android:name=".PasswordReset" />
         <activity android:name=".Profile" />
         <activity android:name=".Login" />
-        <activity android:name=".EditProfileDialog"> </activity>
+        <activity android:name=".EditProfile"> </activity>
     </application>
 
 </manifest>

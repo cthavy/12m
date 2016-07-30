@@ -12,7 +12,10 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-public class EditProfileDialog extends AppCompatActivity {
+/*
+This class is for the user to update their info like username or email address.
+ */
+public class EditProfile extends AppCompatActivity {
     EditText newUser;
     EditText newEmail;
 
@@ -27,6 +30,7 @@ public class EditProfileDialog extends AppCompatActivity {
         newUser = (EditText) findViewById(R.id.edit_username);
         newEmail = (EditText) findViewById(R.id.edit_email);
 
+        //Queries to load user's fields
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         query.getInBackground(ParseUser.getCurrentUser().getObjectId(), new GetCallback<ParseObject>() {
             @Override
@@ -40,11 +44,13 @@ public class EditProfileDialog extends AppCompatActivity {
         });
     }
 
+    //Cancel the edit and go back to profile
     public void Cancel(View view){
         finish();
         startActivity(new Intent(this, Profile.class));
     }
 
+    //Saves whatever is in the edit fields and updates the user's info on the backend
     public void Save(View view){
         c_user = newUser.getText().toString();
         c_email = newEmail.getText().toString();

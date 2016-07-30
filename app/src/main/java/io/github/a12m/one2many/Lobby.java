@@ -44,6 +44,7 @@ public class Lobby extends ListActivity {
         startActivity(intent);
     }
 
+    //Prevents user from going back to login page while logged in (prevents a crash)
     public void onBackPressed() {
 
     }
