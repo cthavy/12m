@@ -17,7 +17,8 @@
         android:hint="Username"
         android:layout_below="@+id/spaceReserved4Logo"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:inputType="text"/>
 
     <EditText
         android:layout_width="match_parent"
