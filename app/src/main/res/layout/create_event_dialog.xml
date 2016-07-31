@@ -7,7 +7,7 @@
     <Button
         android:id="@+id/buttonDialogHeader"
         android:layout_width="match_parent"
-        android:layout_height="55sp"
+        android:layout_height="65sp"
         android:clickable="false"
         android:background="@color/colorPrimary"
         android:text="Create New Event"
@@ -26,7 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageViewNewEventProfilePic"
-        android:hint="@string/new_event_name"/>
+        android:hint="@string/new_event_name"
+        android:inputType="text" />
 
     <Button
         android:id="@+id/buttonNewEventChooseFriends"
