@@ -14,8 +14,6 @@ the app while account is cached in local storage.
 This page should allow the user to view all projects w/ their respective links,
 search for other users, view their friends list, and start a new event.
 
-*Subject to change
-*Needs update on navbar
  */
 //Deleted extension to AppCompatActivity. Not sure how this affects anything though.
 public class Lobby extends ListActivity {

@@ -97,6 +97,10 @@ public class Profile extends AppCompatActivity {
         startActivity(new Intent(this, EditProfile.class));
     }
 
+    public void toFriendsList(View view){
+        startActivity(new Intent(this, FriendsList.class));
+    }
+
     //Self explanatory
     public void LogOut(View view) {
         ParseUser.logOut();

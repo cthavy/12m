@@ -40,7 +40,8 @@
         android:layout_alignTop="@+id/profile_image"
         android:layout_toRightOf="@+id/profile_image"
         android:layout_toEndOf="@+id/profile_image"
-        android:layout_marginLeft="35dp" />
+        android:layout_marginLeft="35dp"
+        android:onClick="toFriendsList" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -59,7 +60,8 @@
         android:id="@+id/Text_friend"
         android:layout_below="@+id/count_friend"
         android:layout_alignLeft="@+id/count_friend"
-        android:layout_alignStart="@+id/count_friend" />
+        android:layout_alignStart="@+id/count_friend"
+        android:onClick="toFriendsList" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -94,4 +96,5 @@
         android:text="\@email"
         android:id="@+id/Text_email"
         android:layout_below="@+id/Text_username" />
+
 </RelativeLayout>
