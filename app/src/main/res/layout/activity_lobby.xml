@@ -32,19 +32,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/viewSeperator"
-        android:weightSum="4">
+        android:weightSum="4.25">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="12m"
-            android:id="@+id/textView"
+            android:id="@+id/logo"
             android:layout_alignBottom="@+id/btn_profile"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_weight=".25"
-            android:textSize="35sp"/>
+            android:textSize="35sp"
+            android:gravity="center" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -70,6 +71,14 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:id="@+id/btn_notifs"
+            android:layout_weight="1"
+            android:background="@drawable/ic_notifications"
+            android:layout_marginLeft="12dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/btn_newEvent"
             android:background="@drawable/ic_add_new"
             android:layout_below="@+id/viewSeperator"
@@ -77,6 +86,7 @@
             android:layout_alignEnd="@+id/viewSeperator"
             android:layout_weight="1"
             android:layout_marginLeft="12dp" />
+
     </LinearLayout>
 
 
