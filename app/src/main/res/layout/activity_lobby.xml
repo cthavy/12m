@@ -9,14 +9,27 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Lobby">
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/searchField"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:hint="Search"
+        android:layout_toLeftOf="@+id/button" />
+
     <ListView
         android:id="@+id/android:list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentTop="false"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/viewSeperator" />
+        android:layout_alignBottom="@+id/viewSeperator"
+        android:layout_below="@+id/searchField" />
 
     <View
         android:layout_width="match_parent"
@@ -32,7 +45,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/viewSeperator"
-        android:weightSum="4.25">
+        android:weightSum="4"
+        android:gravity="clip_vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -43,7 +57,6 @@
             android:layout_alignBottom="@+id/btn_profile"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_weight=".25"
             android:textSize="35sp"
             android:gravity="center" />
 
@@ -65,16 +78,14 @@
             android:background="@drawable/ic_camera"
             android:layout_below="@+id/viewSeperator"
             android:layout_centerHorizontal="true"
-            android:layout_weight="1"
-            android:layout_marginLeft="12dp" />
+            android:layout_weight="1" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/btn_notifs"
             android:layout_weight="1"
-            android:background="@drawable/ic_notifications"
-            android:layout_marginLeft="12dp" />
+            android:background="@drawable/ic_notifications" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -84,10 +95,20 @@
             android:layout_below="@+id/viewSeperator"
             android:layout_alignRight="@+id/viewSeperator"
             android:layout_alignEnd="@+id/viewSeperator"
-            android:layout_weight="1"
-            android:layout_marginLeft="12dp" />
+            android:layout_weight="1" />
 
     </LinearLayout>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="..."
+        android:id="@+id/button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:onClick="Search" />
 
 
 </RelativeLayout>

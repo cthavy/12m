@@ -31,8 +31,9 @@
         <activity android:name=".PasswordReset" />
         <activity android:name=".Profile" />
         <activity android:name=".Login" />
-        <activity android:name=".EditProfile"></activity>
-        <activity android:name=".FriendsList"></activity>
+        <activity android:name=".EditProfile" />
+        <activity android:name=".FriendsList" />
+        <activity android:name=".SearchedUser"></activity>
     </application>
 
 </manifest>
