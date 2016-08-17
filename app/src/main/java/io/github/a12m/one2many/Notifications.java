@@ -1,5 +1,6 @@
 package io.github.a12m.one2many;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -75,9 +76,14 @@ public class Notifications extends AppCompatActivity {
         });
     }
 
-    //Maybe redundant or don't need to add
-    public void LoadProfilePics(){
+    //Goes to the user's profile page when their username is clicked
+    public void goToUser(View view){
+        final int position = friendslist.getPositionForView((View) view.getParent());
+        final String person = requestee.get(position);
 
+        Intent intent = new Intent(this, SearchedUser.class);
+        intent.putExtra("searchedName", person);
+        startActivity(intent);
     }
 
     //Adds friend from their position on the list when the accept button is clicked
@@ -95,7 +101,7 @@ public class Notifications extends AppCompatActivity {
                     parseObject.put("accepted", true);
                     parseObject.saveInBackground();
 
-                    Toast.makeText(getApplicationContext(), userToAdd+" added", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), userToAdd+" added", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -121,7 +127,7 @@ public class Notifications extends AppCompatActivity {
                     parseObject.put("ignored", true);
                     parseObject.saveInBackground();
 
-                    Toast.makeText(getApplicationContext(), userToRemove+" ignored", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), userToRemove+" ignored", Toast.LENGTH_SHORT).show();
                 }
             }
         });

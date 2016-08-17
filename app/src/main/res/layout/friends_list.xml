@@ -71,6 +71,7 @@
             android:layout_toRightOf="@+id/p_pic"
             android:layout_toEndOf="@+id/p_pic"
             android:gravity="left|center"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp"
+            android:onClick="goToUser" />
     </LinearLayout>
 </RelativeLayout>
