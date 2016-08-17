@@ -52,7 +52,7 @@ public class Notifications extends AppCompatActivity {
         events.add("tung's swag event");
         events.add("mohammed's lit event");
 
-        final ArrayAdapter arrayAdapter1 = new ArrayAdapter(getBaseContext(), R.layout.friends_list, R.id.username, events);
+        final ArrayAdapter arrayAdapter1 = new ArrayAdapter(getBaseContext(), R.layout.event_requests, R.id.eventname, events);
         eventslist.setAdapter(arrayAdapter1);
     }
 
