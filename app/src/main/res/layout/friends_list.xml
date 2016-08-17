@@ -15,16 +15,62 @@
         android:layout_margin="5dp"
         android:src="@drawable/default_pic" />
 
-    <TextView
+    <Button
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="name"
-        android:id="@+id/username"
-        android:layout_alignParentTop="true"
+        android:text="X"
+        android:id="@+id/btn_ignore"
+        android:layout_alignBottom="@+id/p_pic"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:onClick="IgnoreRequestee" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="O"
+        android:id="@+id/btn_accept"
+        android:layout_alignBottom="@+id/p_pic"
+        android:layout_toLeftOf="@+id/btn_ignore"
+        android:layout_toStartOf="@+id/btn_ignore"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:onClick="AddRequestee" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/p_pic"
         android:layout_toRightOf="@+id/p_pic"
         android:layout_toEndOf="@+id/p_pic"
         android:layout_alignBottom="@+id/p_pic"
-        android:layout_margin="5dp"
-        android:gravity="center" />
+        android:layout_toLeftOf="@+id/btn_accept"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentRight="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_toStartOf="@+id/btn_accept">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="name"
+            android:id="@+id/username"
+            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/p_pic"
+            android:textSize="16dp"
+            android:scrollHorizontally="false"
+            android:layout_toLeftOf="@+id/btn_accept"
+            android:layout_toRightOf="@+id/p_pic"
+            android:layout_toEndOf="@+id/p_pic"
+            android:gravity="left|center"
+            android:layout_margin="5dp" />
+    </LinearLayout>
 </RelativeLayout>

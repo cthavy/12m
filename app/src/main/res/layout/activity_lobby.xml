@@ -28,8 +28,8 @@
         android:layout_alignParentTop="false"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/viewSeperator"
-        android:layout_below="@+id/searchField" />
+        android:layout_below="@+id/searchField"
+        android:layout_alignBottom="@+id/viewSeperator" />
 
     <View
         android:layout_width="match_parent"
@@ -85,7 +85,8 @@
             android:layout_height="match_parent"
             android:id="@+id/btn_notifs"
             android:layout_weight="1"
-            android:background="@drawable/ic_notifications" />
+            android:background="@drawable/ic_notifications"
+            android:onClick="goToNotifications" />
 
         <ImageButton
             android:layout_width="wrap_content"

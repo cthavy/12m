@@ -33,7 +33,8 @@
         <activity android:name=".Login" />
         <activity android:name=".EditProfile" />
         <activity android:name=".FriendsList" />
-        <activity android:name=".SearchedUser"></activity>
+        <activity android:name=".SearchedUser" />
+        <activity android:name=".Notifications"></activity>
     </application>
 
 </manifest>

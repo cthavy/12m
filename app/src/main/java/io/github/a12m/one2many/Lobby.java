@@ -53,6 +53,12 @@ public class Lobby extends ListActivity {
         startActivity(intent);
     }
 
+    //Brings user to their notifications
+    public void goToNotifications(View view){
+        Intent intent = new Intent(getBaseContext(), Notifications.class);
+        startActivity(intent);
+    }
+
     //Prevents user from going back to login page while logged in (prevents a crash)
     public void onBackPressed() {
 

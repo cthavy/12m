@@ -1,46 +1,37 @@
 package io.github.a12m.one2many;
 
-import android.app.ListActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
-
 import java.util.ArrayList;
-import java.util.List;
 
-public class FriendsList extends ListActivity {
-
-    String[] friends = {
-            "friend 1",
-            "friend 2",
-            "thing 1",
-            "thing 2"
-    };
+public class FriendsList extends AppCompatActivity {
+    ListView friendsList;
+    ArrayList<String> friends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends_list);
 
-//        ParseQuery<ParseUser> query = ParseUser.getQuery();
-//        query.findInBackground(new FindCallback<ParseUser>() {
-//            @Override
-//            public void done(List<ParseUser> list, ParseException e) {
-//                if (list != null) {
-//                    for (int i = 0; i < list.size(); i++){
-//
-//                    }
-//                }
-//            }
-//        });
+        friendsList = (ListView) findViewById(R.id.friend_list);
 
-        this.setListAdapter(new ArrayAdapter<String>(
-                this, R.layout.friends_list,
-                R.id.username,friends));
+        friends = new ArrayList<>();
+        friends.add("cool guy");
+        friends.add("cool girl");
+
+        final ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.friends_list, R.id.username, friends);
+        friendsList.setAdapter(arrayAdapter);
+    }
+
+    public void AddRequestee(View view){
+
+    }
+    public void IgnoreRequestee(View view){
+
     }
 }

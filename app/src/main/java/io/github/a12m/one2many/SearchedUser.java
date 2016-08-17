@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.GetDataCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -21,9 +24,11 @@ import java.util.List;
 
 
 /*
-Profile class for a searched user
-Shows basic info and allows the current user to request to add them
-to their friends list
+Profile class for a searched user.
+Shows basic info and allows the current user
+to request to add them to their friends list.
+
+Does not display current friends and event count yet
  */
 public class SearchedUser extends AppCompatActivity {
     TextView d_username;
@@ -85,9 +90,31 @@ public class SearchedUser extends AppCompatActivity {
             }
         });
     }
-    
-    //// TODO: 8/8/16  
+
+    /*
+    Finds if the user has already sent a friend request or not.
+    If not then it will create a new object and make a request
+    to the other user.
+     */
     public void RequestFriend(View view){
-        
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("FriendRequest");
+        query.whereEqualTo("fromUser", ParseUser.getCurrentUser().getUsername());
+        query.whereEqualTo("toUser", searchedName);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                if (parseObject == null){
+                    ParseObject request = new ParseObject("FriendRequest");
+                    request.put("fromUser", ParseUser.getCurrentUser().getUsername());
+                    request.put("toUser", searchedName);
+                    request.put("accepted", false);
+                    request.put("ignored", false);
+                    request.saveInBackground();
+
+                    Toast.makeText(getApplicationContext(), "Request sent", Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(getApplicationContext(), "Pending reply", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
