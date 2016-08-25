@@ -7,9 +7,11 @@ import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -17,6 +19,9 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 Class to display profile page as well as present a logout button for user.
@@ -49,6 +54,7 @@ public class Profile extends AppCompatActivity {
         ct_friends = 0;
 
         getData();
+        getFriends();
     }
 
     //Loads data like profile picture and friend count from Parse
@@ -94,11 +100,40 @@ public class Profile extends AppCompatActivity {
         });
     }
 
+    //'or' queries to find friend count
+    public void getFriends(){
+        ParseQuery<ParseObject> query1 = ParseQuery.getQuery("FriendRequest");
+        query1.whereEqualTo("toUser", ParseUser.getCurrentUser().getUsername());
+        query1.whereEqualTo("accepted", true);
+
+        ParseQuery<ParseObject> query2 = ParseQuery.getQuery("FriendRequest");
+        query2.whereEqualTo("fromUser", ParseUser.getCurrentUser().getUsername());
+        query2.whereEqualTo("accepted", true);
+
+        //Joint 'or' query for finding all friends that the user has accepted or was accepted by
+        List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
+        queries.add(query1);
+        queries.add(query2);
+
+        ParseQuery<ParseObject> mainQuery = ParseQuery.or(queries);
+
+        mainQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (list != null){
+                    ct_friends = list.size();
+                    d_friends.setText(String.valueOf(ct_friends));
+                }
+            }
+        });
+    }
+
     //Starts the edit profile activity
     public void EditProfile(View view){
         startActivity(new Intent(this, EditProfile.class));
     }
 
+    //Self explanatory
     public void toFriendsList(View view){
         startActivity(new Intent(this, FriendsList.class));
     }
