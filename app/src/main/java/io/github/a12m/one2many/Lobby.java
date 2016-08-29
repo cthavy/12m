@@ -175,7 +175,8 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
                                 public void done(ParseException e) {
                                     if (e == null) {
                                         dialog.dismiss();
-                                        new GetUserEvents().execute();
+                                        getEvents();
+//                                        new GetUserEvents().execute();
                                     } else {
                                         Toast.makeText(vCreate.getContext(), "Something went wrong",
                                                 Toast.LENGTH_SHORT).show();
