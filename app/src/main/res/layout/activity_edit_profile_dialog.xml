@@ -18,7 +18,9 @@
         android:hint="Username"
         android:layout_below="@+id/edit_img"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:focusable="false"
+        android:enabled="false" />
 
     <EditText
         android:layout_width="match_parent"

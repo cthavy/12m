@@ -5,7 +5,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.app.ListActivity;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 Main lobby page. User should see this when first logging in or opening
@@ -23,8 +33,10 @@ public class Lobby extends ListActivity {
             "Nikko's house"
     };
 
+    ArrayList<String> searchableUsers;
+
     String search_username;
-    EditText search_text;
+    private AutoCompleteTextView search_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +44,44 @@ public class Lobby extends ListActivity {
         setContentView(R.layout.activity_lobby);
 
         search_username = "";
-        search_text = (EditText) findViewById(R.id.searchField);
+        search_text = (AutoCompleteTextView) findViewById(R.id.searchField);
+        searchableUsers = new ArrayList<>();
+
+        getListofUsers();
+
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, searchableUsers);
+
+        search_text.setAdapter(adapter);
+        search_text.setThreshold(1);
 
         //Populates the list with array itemName using lobby_list.xml as a base.
-        this.setListAdapter(new ArrayAdapter<String>(
+        this.setListAdapter(new ArrayAdapter<>(
                 this, R.layout.lobby_list,
                 R.id.Itemname,itemName));
     }
 
+    //Searches for selected user and opens up their profile page
     public void Search(View view){
         search_username = search_text.getText().toString();
         Intent intent = new Intent(this, SearchedUser.class);
         intent.putExtra("searchedName", search_username);
         startActivity(intent);
+    }
+
+    /*
+    This method queries the list of all users in the database
+    so that it could fill in for the auto complete search bar
+     */
+    public void getListofUsers(){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                for (int i = 0; i < list.size(); i++){
+                    searchableUsers.add((String) list.get(i).get("username"));
+                }
+            }
+        });
     }
 
     //Will bring user to their basic profile

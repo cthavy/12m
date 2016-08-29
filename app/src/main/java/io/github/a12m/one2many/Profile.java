@@ -88,11 +88,6 @@ public class Profile extends AppCompatActivity {
                     email = (String) parseObject.get("email");
                     d_email.setText(email);
 
-                    //friend's list undefined as of right now
-
-//                    JSONArray arr = (JSONArray) parseObject.get("friendsList");
-//                    ct_friends = arr.length();
-//                    d_friends.setText(Integer.toString(ct_friends));
                 } else {
                     System.out.println("No data available");
                 }
@@ -131,6 +126,7 @@ public class Profile extends AppCompatActivity {
     //Starts the edit profile activity
     public void EditProfile(View view){
         startActivity(new Intent(this, EditProfile.class));
+        finish();
     }
 
     //Self explanatory

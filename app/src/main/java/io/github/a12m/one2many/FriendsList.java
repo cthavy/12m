@@ -73,19 +73,12 @@ public class FriendsList extends AppCompatActivity {
     }
 
     //Goes to the user's profile page when their username is clicked
-    public void goToUser(View view){
+    public void goToUser(View view) {
         final int position = friendsList.getPositionForView((View) view.getParent());
         final String person = friends.get(position);
 
         Intent intent = new Intent(this, SearchedUser.class);
         intent.putExtra("searchedName", person);
         startActivity(intent);
-    }
-
-    public void AddRequestee(View view){
-
-    }
-    public void IgnoreRequestee(View view){
-
     }
 }

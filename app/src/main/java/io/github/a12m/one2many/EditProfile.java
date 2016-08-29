@@ -110,7 +110,6 @@ public class EditProfile extends AppCompatActivity {
         c_email = newEmail.getText().toString();
 
         UpdateInfo();
-
         finish();
     }
 
