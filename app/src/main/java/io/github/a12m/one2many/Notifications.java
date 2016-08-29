@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -69,7 +68,7 @@ public class Notifications extends AppCompatActivity {
                     for (int i = 0; i < list.size(); i++){
                         requestee.add((String) list.get(i).get("fromUser"));
                     }
-                    ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.friends_list, R.id.username, requestee);
+                    ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.friends_list_with_buttons, R.id.username, requestee);
                     friendslist.setAdapter(arrayAdapter);
                 }
             }
@@ -108,7 +107,7 @@ public class Notifications extends AppCompatActivity {
 
         //Removes this person and updates the list in real time after being added
         requestee.remove(position);
-        ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.friends_list, R.id.username, requestee);
+        ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.friends_list_with_buttons, R.id.username, requestee);
         friendslist.setAdapter(arrayAdapter);
     }
 
@@ -134,7 +133,7 @@ public class Notifications extends AppCompatActivity {
 
         //Removes this person and updates the list in real time after being added
         requestee.remove(position);
-        ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.friends_list, R.id.username, requestee);
+        ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.friends_list_with_buttons, R.id.username, requestee);
         friendslist.setAdapter(arrayAdapter);
     }
 }
