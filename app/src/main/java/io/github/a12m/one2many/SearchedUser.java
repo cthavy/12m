@@ -20,6 +20,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,10 +34,12 @@ Does not display current friends and event count yet
 public class SearchedUser extends AppCompatActivity {
     TextView d_username;
     TextView d_email;
+    TextView d_friend_count;
     ImageView d_pic;
 
     String searchedName;
     String emailString;
+    int friendSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class SearchedUser extends AppCompatActivity {
 
         d_username = (TextView) findViewById(R.id.Text_username);
         d_email = (TextView) findViewById(R.id.Text_email);
+        d_friend_count = (TextView) findViewById(R.id.count_friend);
         d_pic = (ImageView) findViewById(R.id.profile_image);
 
         Intent intent = getIntent();
@@ -52,6 +56,7 @@ public class SearchedUser extends AppCompatActivity {
         emailString = "email@email.com";
 
         getData(searchedName);
+        getFriends(searchedName);
     }
 
     //Loads user searched data from Parse
@@ -86,6 +91,34 @@ public class SearchedUser extends AppCompatActivity {
                     d_email.setText(emailString);
                 } else {
                     System.out.println("No data");
+                }
+            }
+        });
+    }
+
+    //Counts searched user's friends and displays info
+    public void getFriends(String username){
+        ParseQuery<ParseObject> query1 = ParseQuery.getQuery("FriendRequest");
+        query1.whereEqualTo("toUser", username);
+        query1.whereEqualTo("accepted", true);
+
+        ParseQuery<ParseObject> query2 = ParseQuery.getQuery("FriendRequest");
+        query2.whereEqualTo("fromUser", username);
+        query2.whereEqualTo("accepted", true);
+
+        //Joint 'or' query for finding all friends that the user has accepted or was accepted by
+        List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
+        queries.add(query1);
+        queries.add(query2);
+
+        ParseQuery<ParseObject> mainQuery = ParseQuery.or(queries);
+
+        mainQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (list != null){
+                    friendSize = list.size();
+                    d_friend_count.setText(String.valueOf(friendSize));
                 }
             }
         });
