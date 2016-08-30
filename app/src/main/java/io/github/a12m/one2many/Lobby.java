@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,7 +14,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -45,14 +42,6 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
 
     ProgressBar mProgressBar;
 
-    //Test list to populate the Lobby
-    String[] itemName;
-
-    ArrayAdapter<String> adapter;
-
-    List<ParseObject> ob;
-    List<ParseObject> ob2;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,71 +59,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
         profileButton = (ImageButton) findViewById(R.id.btn_profile);
         profileButton.setOnClickListener(this);
 
-
-        getEvents();
-
-//        new GetUserEvents().execute();
-    }
-
-    String eventName;
-
-    public void getEvents() {
-
-        mProgressBar.setVisibility(View.VISIBLE);
-
-
-        ParseQuery<ParseObject> query = new ParseQuery<>("Event");
-        query.whereContains("owner", ParseUser.getCurrentUser().getUsername());
-        try {
-            ob = query.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        //Getting all the events this user is a part of
-        ParseQuery<ParseObject> queryEventPartOf = new ParseQuery<>("EventMembers");
-        queryEventPartOf.whereContains("memberUsername", ParseUser.getCurrentUser().getUsername());
-        try {
-            ob2 = queryEventPartOf.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Log.e("Got event part", "yes");
-
-        itemName = new String[ob.size() + ob2.size()];
-
-        int i = 0;
-        for (ParseObject event : ob) {
-            itemName[i] = (String) event.get("name");
-            i++;
-        }
-
-        //Adding events a part of to the list
-        for (ParseObject event : ob2) {
-            String eventId = (String) event.get("eventId");
-            ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Event");
-            query2.getInBackground(eventId, new GetCallback<ParseObject>() {
-                @Override
-                public void done(ParseObject parseObject, ParseException e) {
-                    if (e == null) {
-                        eventName = parseObject.getString("name");
-                        Toast.makeText(getApplicationContext(), "event part: " + eventName,
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            itemName[i] = eventName;
-            i++;
-        }
-
-        eventsListView.setAdapter(new EventsListAdapter(getApplicationContext(), itemName));
-
-//        Toast.makeText(getApplicationContext(), "obs len: " + (ob.size() + ob2.size()) ,
-//                Toast.LENGTH_SHORT).show();
-
-        mProgressBar.setVisibility(View.INVISIBLE);
+        new GetUserEvents().execute();
     }
 
     //Will be a settings drop down but temporarily will be edit profile
@@ -175,8 +100,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
                                 public void done(ParseException e) {
                                     if (e == null) {
                                         dialog.dismiss();
-                                        getEvents();
-//                                        new GetUserEvents().execute();
+                                        new GetUserEvents().execute();
                                     } else {
                                         Toast.makeText(vCreate.getContext(), "Something went wrong",
                                                 Toast.LENGTH_SHORT).show();
@@ -215,20 +139,20 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
     }
 
     private class GetUserEvents extends AsyncTask<Void, Void, Void> {
-        String eventName;
+        String[] itemName;
+        List<ParseObject> ob;
+        List<ParseObject> ob2;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
+            eventsListView.setVisibility(View.INVISIBLE);
             mProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            Toast.makeText(getApplicationContext(), "before try",
-                    Toast.LENGTH_SHORT).show();
-
             //Getting all the events this user owns
             ParseQuery<ParseObject> queryEventOwn = new ParseQuery<>("Event");
             queryEventOwn.whereContains("owner", ParseUser.getCurrentUser().getUsername());
@@ -237,20 +161,19 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            Log.e("Got event owned", "yes");
 
             //Getting all the events this user is a part of
-//            ParseQuery<ParseObject> queryEventPartOf = new ParseQuery<>("EventMembers");
-//            queryEventPartOf.whereContains("memberUsername", ParseUser.getCurrentUser().getUsername());
-//            try {
-//                ob2 = queryEventPartOf.find();
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//            Log.e("Got event part", "yes");
+            ParseQuery<ParseObject> queryEventPartOf = new ParseQuery<>("EventMembers");
+            queryEventPartOf.whereContains("memberUsername", ParseUser.getCurrentUser().getUsername());
+            try {
+                ob2 = queryEventPartOf.find();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-//            itemName = new String[ob.size() + ob2.size()];
-            itemName = new String[ob.size()];
+            //Setting the size of the list to the total size of owned events and
+            //events a part of
+            itemName = new String[ob.size() + ob2.size()];
             int i = 0;
 
             //Adding owned events to list
@@ -260,30 +183,25 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
             }
 
             //Adding events a part of to the list
-//            for (ParseObject event : ob2) {
-//                String eventId = (String) event.get("eventId");
-//                ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
-//                query.getInBackground(eventId, new GetCallback<ParseObject>() {
-//                    @Override
-//                    public void done(ParseObject parseObject, ParseException e) {
-//                        if(e == null) {
-//                            eventName = parseObject.getString("name");
-//                        } else {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//                itemName[i] = eventName;
-//                i++;
-//            }
-
+            for (ParseObject event : ob2) {
+                String eventId = (String) event.get("eventId");
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
+                try {
+                    itemName[i] = query.get(eventId).getString("name");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                i++;
+            }
 
             return null;
         }
 
         @Override
         protected void onPostExecute(final Void param) {
+            //setting the event names to the adapter
             eventsListView.setAdapter(new EventsListAdapter(getApplicationContext(), itemName));
+            eventsListView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.INVISIBLE);
         }
     }

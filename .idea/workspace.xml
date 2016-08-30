@@ -10,9 +10,9 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ceeb64bd-8f5b-4116-b9cc-61b9f1adaab0" name="Default" comment="">
+    <list default="true" id="ceeb64bd-8f5b-4116-b9cc-61b9f1adaab0" name="Default" comment="Events page doesnt crash and everything cool now">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/io/github/a12m/one2many/Lobby.java" afterPath="$PROJECT_DIR$/app/src/main/java/io/github/a12m/one2many/Lobby.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
     </list>
     <ignored path="12m.iws" />
@@ -37,8 +37,8 @@
       <file leaf-file-name="Lobby.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/io/github/a12m/one2many/Lobby.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.07198443">
-              <caret line="80" column="20" selection-start-line="80" selection-start-column="20" selection-end-line="80" selection-end-column="20" />
+            <state vertical-scroll-proportion="0.9747082">
+              <caret line="78" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -52,7 +52,12 @@
             <state vertical-scroll-proportion="0.0">
               <caret line="41" column="20" selection-start-line="41" selection-start-column="20" selection-end-line="41" selection-end-column="20" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#690#691#0" expanded="false" />
+                <element signature="e#725#726#0" expanded="false" />
+                <element signature="e#782#783#0" expanded="false" />
+                <element signature="e#813#814#0" expanded="false" />
+                <element signature="e#870#871#0" expanded="false" />
+                <element signature="e#901#902#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -2073,6 +2078,13 @@
       <option name="number" value="Default" />
       <updated>1469569124004</updated>
     </task>
+    <task id="LOCAL-00001" summary="merge">
+      <created>1472511977466</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1472511977466</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -2086,15 +2098,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287841" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32754344" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32754344" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32754344" sideWeight="0.5071531" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32754344" sideWeight="0.49284694" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32754344" sideWeight="0.49284694" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32754344" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287841" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -2121,6 +2133,11 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="merge" />
+    <MESSAGE value="Events page doesnt crash and everything cool now" />
+    <option name="LAST_COMMIT_MESSAGE" value="Events page doesnt crash and everything cool now" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
@@ -2141,7 +2158,12 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="41" column="20" selection-start-line="41" selection-start-column="20" selection-end-line="41" selection-end-column="20" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#690#691#0" expanded="false" />
+            <element signature="e#725#726#0" expanded="false" />
+            <element signature="e#782#783#0" expanded="false" />
+            <element signature="e#813#814#0" expanded="false" />
+            <element signature="e#870#871#0" expanded="false" />
+            <element signature="e#901#902#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2194,7 +2216,12 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="41" column="20" selection-start-line="41" selection-start-column="20" selection-end-line="41" selection-end-column="20" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#690#691#0" expanded="false" />
+            <element signature="e#725#726#0" expanded="false" />
+            <element signature="e#782#783#0" expanded="false" />
+            <element signature="e#813#814#0" expanded="false" />
+            <element signature="e#870#871#0" expanded="false" />
+            <element signature="e#901#902#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2551,15 +2578,20 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="41" column="20" selection-start-line="41" selection-start-column="20" selection-end-line="41" selection-end-column="20" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#690#691#0" expanded="false" />
+            <element signature="e#725#726#0" expanded="false" />
+            <element signature="e#782#783#0" expanded="false" />
+            <element signature="e#813#814#0" expanded="false" />
+            <element signature="e#870#871#0" expanded="false" />
+            <element signature="e#901#902#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/io/github/a12m/one2many/Lobby.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.07198443">
-          <caret line="80" column="20" selection-start-line="80" selection-start-column="20" selection-end-line="80" selection-end-column="20" />
+        <state vertical-scroll-proportion="0.9747082">
+          <caret line="78" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
