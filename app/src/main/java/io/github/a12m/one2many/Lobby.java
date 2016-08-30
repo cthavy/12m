@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -22,18 +23,10 @@ import com.parse.SaveCallback;
 
 import java.util.List;
 import android.widget.ArrayAdapter;
-import android.app.ListActivity;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /*
 Main lobby page. User should see this when first logging in or opening
@@ -51,6 +44,9 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
 
     ImageButton newEvent;
     ImageButton profileButton;
+    ImageButton notifsButton;
+
+    Button searchButton;
 
     ListView eventsListView;
 
@@ -81,11 +77,6 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
         search_text.setAdapter(adapter);
         search_text.setThreshold(1);
 
-        //Populates the list with array itemName using lobby_list.xml as a base.
-        this.setListAdapter(new ArrayAdapter<>(
-                this, R.layout.lobby_list,
-                R.id.Itemname,itemName));
-    }
 
         newEvent = (ImageButton) findViewById(R.id.btn_newEvent);
         newEvent.setOnClickListener(this);
@@ -93,51 +84,39 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
         profileButton = (ImageButton) findViewById(R.id.btn_profile);
         profileButton.setOnClickListener(this);
 
+        notifsButton = (ImageButton) findViewById(R.id.btn_notifs);
+        notifsButton.setOnClickListener(this);
+
+        searchButton = (Button) findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(this);
+
         new GetUserEvents().execute();
-    //Searches for selected user and opens up their profile page
-    public void Search(View view){
-        search_username = search_text.getText().toString();
-        Intent intent = new Intent(this, SearchedUser.class);
-        intent.putExtra("searchedName", search_username);
-        startActivity(intent);
     }
 
     /*
     This method queries the list of all users in the database
     so that it could fill in for the auto complete search bar
      */
-    public void getListofUsers(){
+    public void getListofUsers() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
-                for (int i = 0; i < list.size(); i++){
+                for (int i = 0; i < list.size(); i++) {
                     searchableUsers.add((String) list.get(i).get("username"));
                 }
             }
         });
     }
 
-    //Will bring user to their basic profile
-    public void goToProfile(View view) {
-        Intent intent = new Intent(getBaseContext(), Profile.class);
-        startActivity(intent);
-    }
-
-    //Will be a settings drop down but temporarily will be edit profile
-    //!!! MAY BE REDUNDANT !!!
-//    public void editAccount(View view) {
-//
-//    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.btn_newEvent:
+                //Opens the dialog to create new event and handles it
                 final Dialog dialog = new Dialog(v.getContext());
                 dialog.setContentView(R.layout.create_event_dialog);
-                dialog.setTitle("Create a New Event");
+                dialog.show();
 
                 // set the custom dialog components - text, image and button
                 final EditText eventName = (EditText) dialog.findViewById(R.id.editTextNewEventName);
@@ -180,29 +159,24 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
                         }
                     }
                 });
-    //Brings user to their notifications
-    public void goToNotifications(View view){
-        Intent intent = new Intent(getBaseContext(), Notifications.class);
-        startActivity(intent);
-    }
-
-    //Prevents user from going back to login page while logged in (prevents a crash)
-    public void onBackPressed() {
-                Button cancelButton = (Button) dialog.findViewById(R.id.buttonCreateEventCanel);
-                // if button is clicked, close the custom dialog
-                cancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show();
                 break;
 
             case R.id.btn_profile:
                 Intent intent = new Intent(getBaseContext(), Profile.class);
                 startActivity(intent);
+                break;
+
+            case R.id.btn_notifs:
+                Intent i = new Intent(getBaseContext(), Notifications.class);
+                startActivity(i);
+                break;
+
+            case R.id.searchButton:
+                //Searches for selected user and opens up their profile page
+                search_username = search_text.getText().toString();
+                Intent intent2 = new Intent(this, SearchedUser.class);
+                intent2.putExtra("searchedName", search_username);
+                startActivity(intent2);
                 break;
         }
     }
