@@ -30,8 +30,11 @@
         <activity android:name=".Register" />
         <activity android:name=".PasswordReset" />
         <activity android:name=".Profile" />
-        <activity android:name=".Login"></activity>
-
+        <activity android:name=".Login" />
+        <activity android:name=".EditProfile" />
+        <activity android:name=".FriendsList" />
+        <activity android:name=".SearchedUser" />
+        <activity android:name=".Notifications"></activity>
     </application>
 
 </manifest>

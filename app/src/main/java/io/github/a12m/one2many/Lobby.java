@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,7 +14,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.parse.GetCallback;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -24,6 +22,11 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.List;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+
+
+import java.util.ArrayList;
 
 /*
 Main lobby page. User should see this when first logging in or opening
@@ -35,23 +38,24 @@ search for other users, view their friends list, and start a new event.
 *Subject to change
 *Needs update on navbar
  */
+//Deleted extension to AppCompatActivity. Not sure how this affects anything though.
 
 public class Lobby extends AppCompatActivity implements View.OnClickListener {
 
     ImageButton newEvent;
     ImageButton profileButton;
+    ImageButton notifsButton;
+
+    Button searchButton;
 
     ListView eventsListView;
 
     ProgressBar mProgressBar;
 
-    //Test list to populate the Lobby
-    String[] itemName;
+    ArrayList<String> searchableUsers;
 
-    ArrayAdapter<String> adapter;
-
-    List<ParseObject> ob;
-    List<ParseObject> ob2;
+    String search_username;
+    private AutoCompleteTextView search_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +66,17 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBarLobby);
 
-        //Populates the list with array itemName using lobby_list.xml as a base.
+        search_username = "";
+        search_text = (AutoCompleteTextView) findViewById(R.id.searchField);
+        searchableUsers = new ArrayList<>();
+
+        getListofUsers();
+
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, searchableUsers);
+
+        search_text.setAdapter(adapter);
+        search_text.setThreshold(1);
+
 
         newEvent = (ImageButton) findViewById(R.id.btn_newEvent);
         newEvent.setOnClickListener(this);
@@ -70,87 +84,39 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
         profileButton = (ImageButton) findViewById(R.id.btn_profile);
         profileButton.setOnClickListener(this);
 
+        notifsButton = (ImageButton) findViewById(R.id.btn_notifs);
+        notifsButton.setOnClickListener(this);
 
-        getEvents();
+        searchButton = (Button) findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(this);
 
-//        new GetUserEvents().execute();
+        new GetUserEvents().execute();
     }
 
-    String eventName;
-
-    public void getEvents() {
-
-        mProgressBar.setVisibility(View.VISIBLE);
-
-
-        ParseQuery<ParseObject> query = new ParseQuery<>("Event");
-        query.whereContains("owner", ParseUser.getCurrentUser().getUsername());
-        try {
-            ob = query.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        //Getting all the events this user is a part of
-        ParseQuery<ParseObject> queryEventPartOf = new ParseQuery<>("EventMembers");
-        queryEventPartOf.whereContains("memberUsername", ParseUser.getCurrentUser().getUsername());
-        try {
-            ob2 = queryEventPartOf.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Log.e("Got event part", "yes");
-
-        itemName = new String[ob.size() + ob2.size()];
-
-        int i = 0;
-        for (ParseObject event : ob) {
-            itemName[i] = (String) event.get("name");
-            i++;
-        }
-
-        //Adding events a part of to the list
-        for (ParseObject event : ob2) {
-            String eventId = (String) event.get("eventId");
-            ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Event");
-            query2.getInBackground(eventId, new GetCallback<ParseObject>() {
-                @Override
-                public void done(ParseObject parseObject, ParseException e) {
-                    if (e == null) {
-                        eventName = parseObject.getString("name");
-                        Toast.makeText(getApplicationContext(), "event part: " + eventName,
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        e.printStackTrace();
-                    }
+    /*
+    This method queries the list of all users in the database
+    so that it could fill in for the auto complete search bar
+     */
+    public void getListofUsers() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                for (int i = 0; i < list.size(); i++) {
+                    searchableUsers.add((String) list.get(i).get("username"));
                 }
-            });
-            itemName[i] = eventName;
-            i++;
-        }
-
-        eventsListView.setAdapter(new EventsListAdapter(getApplicationContext(), itemName));
-
-//        Toast.makeText(getApplicationContext(), "obs len: " + (ob.size() + ob2.size()) ,
-//                Toast.LENGTH_SHORT).show();
-
-        mProgressBar.setVisibility(View.INVISIBLE);
+            }
+        });
     }
-
-    //Will be a settings drop down but temporarily will be edit profile
-    //!!! MAY BE REDUNDANT !!!
-//    public void editAccount(View view) {
-//
-//    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.btn_newEvent:
+                //Opens the dialog to create new event and handles it
                 final Dialog dialog = new Dialog(v.getContext());
                 dialog.setContentView(R.layout.create_event_dialog);
-                dialog.setTitle("Create a New Event");
+                dialog.show();
 
                 // set the custom dialog components - text, image and button
                 final EditText eventName = (EditText) dialog.findViewById(R.id.editTextNewEventName);
@@ -193,41 +159,43 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
                         }
                     }
                 });
-
-                Button cancelButton = (Button) dialog.findViewById(R.id.buttonCreateEventCanel);
-                // if button is clicked, close the custom dialog
-                cancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show();
                 break;
 
             case R.id.btn_profile:
                 Intent intent = new Intent(getBaseContext(), Profile.class);
                 startActivity(intent);
                 break;
+
+            case R.id.btn_notifs:
+                Intent i = new Intent(getBaseContext(), Notifications.class);
+                startActivity(i);
+                break;
+
+            case R.id.searchButton:
+                //Searches for selected user and opens up their profile page
+                search_username = search_text.getText().toString();
+                Intent intent2 = new Intent(this, SearchedUser.class);
+                intent2.putExtra("searchedName", search_username);
+                startActivity(intent2);
+                break;
         }
     }
 
     private class GetUserEvents extends AsyncTask<Void, Void, Void> {
-        String eventName;
+        String[] itemName;
+        List<ParseObject> ob;
+        List<ParseObject> ob2;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
+            eventsListView.setVisibility(View.INVISIBLE);
             mProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            Toast.makeText(getApplicationContext(), "before try",
-                    Toast.LENGTH_SHORT).show();
-
             //Getting all the events this user owns
             ParseQuery<ParseObject> queryEventOwn = new ParseQuery<>("Event");
             queryEventOwn.whereContains("owner", ParseUser.getCurrentUser().getUsername());
@@ -236,20 +204,19 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            Log.e("Got event owned", "yes");
 
             //Getting all the events this user is a part of
-//            ParseQuery<ParseObject> queryEventPartOf = new ParseQuery<>("EventMembers");
-//            queryEventPartOf.whereContains("memberUsername", ParseUser.getCurrentUser().getUsername());
-//            try {
-//                ob2 = queryEventPartOf.find();
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//            Log.e("Got event part", "yes");
+            ParseQuery<ParseObject> queryEventPartOf = new ParseQuery<>("EventMembers");
+            queryEventPartOf.whereContains("memberUsername", ParseUser.getCurrentUser().getUsername());
+            try {
+                ob2 = queryEventPartOf.find();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-//            itemName = new String[ob.size() + ob2.size()];
-            itemName = new String[ob.size()];
+            //Setting the size of the list to the total size of owned events and
+            //events a part of
+            itemName = new String[ob.size() + ob2.size()];
             int i = 0;
 
             //Adding owned events to list
@@ -259,30 +226,25 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
             }
 
             //Adding events a part of to the list
-//            for (ParseObject event : ob2) {
-//                String eventId = (String) event.get("eventId");
-//                ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
-//                query.getInBackground(eventId, new GetCallback<ParseObject>() {
-//                    @Override
-//                    public void done(ParseObject parseObject, ParseException e) {
-//                        if(e == null) {
-//                            eventName = parseObject.getString("name");
-//                        } else {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//                itemName[i] = eventName;
-//                i++;
-//            }
-
+            for (ParseObject event : ob2) {
+                String eventId = (String) event.get("eventId");
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
+                try {
+                    itemName[i] = query.get(eventId).getString("name");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                i++;
+            }
 
             return null;
         }
 
         @Override
         protected void onPostExecute(final Void param) {
+            //setting the event names to the adapter
             eventsListView.setAdapter(new EventsListAdapter(getApplicationContext(), itemName));
+            eventsListView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.INVISIBLE);
         }
     }
