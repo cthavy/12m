@@ -7,9 +7,11 @@ import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -18,12 +20,23 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
+import java.util.List;
 
+/*
+Class to display profile page as well as present a logout button for user.
+Logout will bring the app back to the login page.
+
+Does not display friend and event count yet
+ */
 public class Profile extends AppCompatActivity {
     ImageView d_pic;
     TextView d_friends;
     TextView d_username;
+    TextView d_email;
+
     String username;
+    String email;
     int ct_friends;
 
     @Override
@@ -34,16 +47,20 @@ public class Profile extends AppCompatActivity {
         d_pic = (ImageView) findViewById(R.id.profile_image);
         d_friends = (TextView) findViewById(R.id.count_friend);
         d_username = (TextView) findViewById(R.id.Text_username);
+        d_email = (TextView) findViewById(R.id.Text_email);
 
+        username = "@username";
+        email = "email@email.com";
         ct_friends = 0;
 
         getData();
+        getFriends();
     }
 
     //Loads data like profile picture and friend count from Parse
     public void getData() {
         //Queries the user class and crabs current user as an object
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         query.getInBackground(ParseUser.getCurrentUser().getObjectId(), new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
@@ -63,23 +80,62 @@ public class Profile extends AppCompatActivity {
                         }
                     });
 
+                    //Displays username
                     username = (String) parseObject.get("username");
                     d_username.setText("@"+username);
 
-                    //friend's list undefined as of right now
+                    //Displays email address
+                    email = (String) parseObject.get("email");
+                    d_email.setText(email);
 
-//                    JSONArray arr = (JSONArray) parseObject.get("friendsList");
-//                    ct_friends = arr.length();
-//                    d_friends.setText(ct_friends);
                 } else {
-                    System.out.println("No picture available");
+                    System.out.println("No data available");
                 }
             }
         });
     }
 
+    //'or' queries to find friend count
+    public void getFriends(){
+        ParseQuery<ParseObject> query1 = ParseQuery.getQuery("FriendRequest");
+        query1.whereEqualTo("toUser", ParseUser.getCurrentUser().getUsername());
+        query1.whereEqualTo("accepted", true);
+
+        ParseQuery<ParseObject> query2 = ParseQuery.getQuery("FriendRequest");
+        query2.whereEqualTo("fromUser", ParseUser.getCurrentUser().getUsername());
+        query2.whereEqualTo("accepted", true);
+
+        //Joint 'or' query for finding all friends that the user has accepted or was accepted by
+        List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
+        queries.add(query1);
+        queries.add(query2);
+
+        ParseQuery<ParseObject> mainQuery = ParseQuery.or(queries);
+
+        mainQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (list != null){
+                    ct_friends = list.size();
+                    d_friends.setText(String.valueOf(ct_friends));
+                }
+            }
+        });
+    }
+
+    //Starts the edit profile activity
+    public void EditProfile(View view){
+        startActivity(new Intent(this, EditProfile.class));
+        finish();
+    }
+
     //Self explanatory
-    public void logOut(View view) {
+    public void toFriendsList(View view){
+        startActivity(new Intent(this, FriendsList.class));
+    }
+
+    //Self explanatory
+    public void LogOut(View view) {
         ParseUser.logOut();
         Intent intent = new Intent(this, Login.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

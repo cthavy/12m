@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="io.github.a12m.one2many.Profile">
+    tools:context=".SearchedUser">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -20,17 +20,6 @@
         android:adjustViewBounds="true"
         android:maxHeight="100dp"
         android:maxWidth="100dp" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Log out"
-        android:id="@+id/btn_logout"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="LogOut" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -72,15 +61,6 @@
         android:layout_alignStart="@+id/count_events"
         android:layout_alignLeft="@+id/count_events" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit Profile"
-        android:id="@+id/btn_edit"
-        android:layout_below="@+id/Text_friend"
-        android:layout_alignLeft="@+id/Text_friend"
-        android:onClick="EditProfile" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -96,5 +76,14 @@
         android:text="\@email"
         android:id="@+id/Text_email"
         android:layout_below="@+id/Text_username" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Friend +"
+        android:id="@+id/btn_add"
+        android:layout_below="@+id/Text_friend"
+        android:layout_alignLeft="@+id/Text_friend"
+        android:onClick="RequestFriend" />
 
 </RelativeLayout>

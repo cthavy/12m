@@ -1,15 +1,23 @@
 package io.github.a12m.one2many;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+
+import java.io.ByteArrayOutputStream;
 
 /*
 Register new users page. Will gather user input and create a new user stored in Parse.
@@ -23,6 +31,7 @@ public class Register extends AppCompatActivity {
     String password;
     String cPass;
     String email;
+    private Bitmap bmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +69,8 @@ public class Register extends AppCompatActivity {
             user.signUpInBackground(new SignUpCallback() {
                 public void done(ParseException e) {
                     if (e == null) {
+                        AddDefaultPic();
+
                         Intent intent = new Intent(getBaseContext(), Lobby.class);
                         startActivity(intent);
                         Toast.makeText(getApplicationContext(), "Account created", Toast.LENGTH_SHORT).show();
@@ -69,5 +80,29 @@ public class Register extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    /*
+    Method to add a default picture for everyone signing up.
+    Parse's sign-up method does not allow adding pictures initially
+    so this is added right after the new user registers successfully.
+     */
+    public void AddDefaultPic(){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        query.getInBackground(ParseUser.getCurrentUser().getObjectId(), new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                //Gets the default image from the drawable and converts it into a bitmap
+                bmp = BitmapFactory.decodeResource(getResources(), R.drawable.default_pic);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+                //Uses the bitmap to update the new user's profile picture
+                byte[] image = stream.toByteArray();
+                ParseFile file = new ParseFile("defaultPic.png", image);
+                parseObject.put("avatarPic", file);
+                parseObject.saveInBackground();
+            }
+        });
     }
 }

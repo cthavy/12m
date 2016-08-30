@@ -29,9 +29,11 @@
         android:id="@+id/editTextPW"
         android:hint="Password"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/editTextLogin"
         android:layout_alignParentRight="true"
-        android:textColorHint="#fff"/>
+        android:textColorHint="#fff"
+        android:fontFamily="sans-serif"/>
 
     <Button
         android:layout_width="fill_parent"
