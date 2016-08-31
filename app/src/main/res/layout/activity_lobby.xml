@@ -7,7 +7,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".Lobby">
+    tools:context="io.github.a12m.one2many.Lobby">
+
+    <ProgressBar
+        android:id="@+id/progressBarLobby"
+        android:layout_width="200sp"
+        android:layout_height="200sp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
+
 
     <AutoCompleteTextView
         android:layout_width="wrap_content"
@@ -19,18 +28,17 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:hint="Search"
-        android:layout_toLeftOf="@+id/button" />
+        android:layout_toLeftOf="@+id/searchButton" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="..."
-        android:id="@+id/button"
+        android:id="@+id/searchButton"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:onClick="Search" />
+        android:layout_alignParentTop="true" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -42,14 +50,11 @@
         android:weightSum="1">
 
         <ListView
-            android:id="@+id/android:list"
+            android:id="@+id/eventsList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="false"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/searchField"
-            android:layout_alignBottom="@+id/viewSeperator"
             android:layout_weight=".12"/>
 
         <View
@@ -87,37 +92,29 @@
                 android:layout_height="match_parent"
                 android:id="@+id/btn_profile"
                 android:background="@drawable/ic_self"
-                android:layout_below="@+id/viewSeperator"
-                android:layout_toLeftOf="@+id/buttonTakePicture"
-                android:layout_toStartOf="@+id/buttonTakePicture"
                 android:onClick="goToProfile"
                 android:layout_weight="1"/>
 
-            <Button
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/buttonTakePicture"
+                android:id="@+id/btn_camera"
                 android:background="@drawable/ic_camera"
-                android:layout_below="@+id/viewSeperator"
                 android:layout_centerHorizontal="true"
                 android:layout_weight="1" />
 
-            <Button
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/btn_notifs"
                 android:layout_weight="1"
-                android:background="@drawable/ic_notifications"
-                android:onClick="goToNotifications" />
+                android:background="@drawable/ic_notifications" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/btn_newEvent"
                 android:background="@drawable/ic_add_new"
-                android:layout_below="@+id/viewSeperator"
-                android:layout_alignRight="@+id/viewSeperator"
-                android:layout_alignEnd="@+id/viewSeperator"
                 android:layout_weight="1" />
 
         </LinearLayout>

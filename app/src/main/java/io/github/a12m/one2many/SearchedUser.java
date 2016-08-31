@@ -64,14 +64,12 @@ public class SearchedUser extends AppCompatActivity {
         //Queries Parse users and finds which username matches the searched field
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereEqualTo("username", username);
-        query.findInBackground(new FindCallback<ParseUser>() {
+        query.getFirstInBackground(new GetCallback<ParseUser>() {
             @Override
-            public void done(List<ParseUser> list, ParseException e) {
-                if (list != null){
-                    ParseObject parseObject = list.get(0);
-
+            public void done(ParseUser parseUser, ParseException e) {
+                if (e == null){
                     //Gets and converts profile pic to be displayed
-                    ParseFile file = (ParseFile) parseObject.get("avatarPic");
+                    ParseFile file = (ParseFile) parseUser.get("avatarPic");
                     file.getDataInBackground(new GetDataCallback() {
                         @Override
                         public void done(byte[] bytes, ParseException e) {
@@ -87,10 +85,11 @@ public class SearchedUser extends AppCompatActivity {
                     //Displays the rest of the user's fields
                     d_username.setText("@"+searchedName);
 
-                    emailString = (String) parseObject.get("email");
+                    emailString = (String) parseUser.get("email");
                     d_email.setText(emailString);
                 } else {
-                    System.out.println("No data");
+                    finish();
+                    Toast.makeText(getApplicationContext(), "User does not exist", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -116,7 +115,7 @@ public class SearchedUser extends AppCompatActivity {
         mainQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
-                if (list != null){
+                if (e == null){
                     friendSize = list.size();
                     d_friend_count.setText(String.valueOf(friendSize));
                 }

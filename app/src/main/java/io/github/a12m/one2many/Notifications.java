@@ -32,6 +32,7 @@ public class Notifications extends AppCompatActivity {
     ListView friendslist;
 
     ArrayList<String> requestee;
+    ArrayList<String> eventIDs;
     ArrayList<String> events;
 
     @Override
@@ -43,16 +44,11 @@ public class Notifications extends AppCompatActivity {
         eventslist = (ListView) findViewById(R.id.EV_list);
 
         requestee = new ArrayList<>();
+        eventIDs = new ArrayList<>();
         events = new ArrayList<>();
 
         getFriendRequests();
-
-        events.add("nikko's cool event");
-        events.add("tung's swag event");
-        events.add("mohammed's lit event");
-
-        final ArrayAdapter arrayAdapter1 = new ArrayAdapter(getBaseContext(), R.layout.event_requests, R.id.eventname, events);
-        eventslist.setAdapter(arrayAdapter1);
+        getEventRequests();
     }
 
     //Queries to find all unanswered friend requests that are not ignored
@@ -70,6 +66,39 @@ public class Notifications extends AppCompatActivity {
                     }
                     ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.friends_list_with_buttons, R.id.username, requestee);
                     friendslist.setAdapter(arrayAdapter);
+                }
+            }
+        });
+    }
+
+    //Queries to find all unanswered event requests that are not ignored
+    public void getEventRequests(){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("EventRequest");
+        query.whereEqualTo("toUser", ParseUser.getCurrentUser().getUsername());
+        query.whereEqualTo("accepted", false);
+        query.whereEqualTo("ignored", false);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null){
+                    for (int i = 0; i < list.size(); i++){
+                        eventIDs.add((String) list.get(i).get("forEventId"));
+                    }
+                    for (int i = 0; i < eventIDs.size(); i++){
+                        ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Event");
+                        query1.whereEqualTo("objectId", eventIDs.get(i));
+                        query1.whereEqualTo("active", true);
+                        query1.getFirstInBackground(new GetCallback<ParseObject>() {
+                            @Override
+                            public void done(ParseObject parseObject, ParseException e) {
+                                if (parseObject != null){
+                                    events.add((String) parseObject.get("name"));
+                                }
+                                final ArrayAdapter arrayAdapter1 = new ArrayAdapter(getBaseContext(), R.layout.event_requests, R.id.eventname, events);
+                                eventslist.setAdapter(arrayAdapter1);
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -135,6 +164,65 @@ public class Notifications extends AppCompatActivity {
         requestee.remove(position);
         ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.friends_list_with_buttons, R.id.username, requestee);
         friendslist.setAdapter(arrayAdapter);
+    }
+
+    //Accepts the event and adds them to the members list
+    public void AcceptEvent(View view){
+        final int position = eventslist.getPositionForView((View) view.getParent());
+        final String eventToAdd = eventIDs.get(position);
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("EventRequest");
+        query.whereEqualTo("toUser", ParseUser.getCurrentUser().getUsername());
+        query.whereEqualTo("forEventId", eventToAdd);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                if (parseObject != null){
+                    parseObject.put("accepted", true);
+                    parseObject.saveInBackground();
+
+                    Toast.makeText(getApplicationContext(), "Event accepted", Toast.LENGTH_SHORT).show();
+
+                    ParseObject newMember = new ParseObject("EventMembers");
+                    newMember.put("eventId", eventToAdd);
+                    newMember.put("memberUsername", ParseUser.getCurrentUser().getUsername());
+                    newMember.saveInBackground();
+                } else
+                    System.out.println("non existant");
+            }
+        });
+
+        events.remove(position);
+        eventIDs.remove(position);
+        ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.event_requests, R.id.eventname, events);
+        eventslist.setAdapter(arrayAdapter);
+    }
+
+    //Ignores event request
+    public void DeclineEvent(View view){
+        final int position = eventslist.getPositionForView((View) view.getParent());
+        final String eventToAdd = eventIDs.get(position);
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("EventRequest");
+        query.whereEqualTo("toUser", ParseUser.getCurrentUser().getUsername());
+        query.whereEqualTo("forEventId", eventToAdd);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                if (parseObject != null){
+                    parseObject.put("ignored", true);
+                    parseObject.saveInBackground();
+
+                    Toast.makeText(getApplicationContext(), "Event ignored", Toast.LENGTH_SHORT).show();
+                } else
+                    System.out.println("non existant");
+            }
+        });
+
+        events.remove(position);
+        eventIDs.remove(position);
+        ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.event_requests, R.id.eventname, events);
+        eventslist.setAdapter(arrayAdapter);
     }
 }
 

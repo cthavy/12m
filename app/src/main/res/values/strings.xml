@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">one2many</string>
+    <string name="new_event_name">Event Name</string>
+    <string name="choose_friends">Choose Friends</string>
+    <string name="create_event">Create</string>
+    <string name="cancel">Cancel</string>
 </resources>
