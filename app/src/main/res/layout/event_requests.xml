@@ -13,7 +13,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="5dp"
+        android:onClick="DeclineEvent" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -24,7 +25,8 @@
         android:layout_toLeftOf="@+id/btn_ignore_e"
         android:layout_toStartOf="@+id/btn_ignore_e"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="5dp"
+        android:onClick="AcceptEvent" />
 
     <LinearLayout
         android:orientation="vertical"
