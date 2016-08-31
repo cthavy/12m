@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ public class SearchedUser extends AppCompatActivity {
     TextView d_email;
     TextView d_friend_count;
     ImageView d_pic;
+    Button d_add;
 
     String searchedName;
     String emailString;
@@ -50,12 +52,20 @@ public class SearchedUser extends AppCompatActivity {
         d_email = (TextView) findViewById(R.id.Text_email);
         d_friend_count = (TextView) findViewById(R.id.count_friend);
         d_pic = (ImageView) findViewById(R.id.profile_image);
+        d_add = (Button) findViewById(R.id.btn_add);
 
         Intent intent = getIntent();
         searchedName = intent.getStringExtra("searchedName");
         emailString = "email@email.com";
 
+        //Prevents user from searching themselves
+        if (searchedName.equals(ParseUser.getCurrentUser().getUsername())){
+            finish();
+            Toast.makeText(getApplicationContext(), "No reason to search yourself :)", Toast.LENGTH_SHORT).show();
+        }
+
         getData(searchedName);
+        ifFriends(searchedName);
         getFriends(searchedName);
     }
 
@@ -118,6 +128,34 @@ public class SearchedUser extends AppCompatActivity {
                 if (e == null){
                     friendSize = list.size();
                     d_friend_count.setText(String.valueOf(friendSize));
+                }
+            }
+        });
+    }
+
+    //Checks to see if the current user is already friends with searched user. Disables add button if yes
+    public void ifFriends(String username){
+        ParseQuery<ParseObject> query1 = ParseQuery.getQuery("FriendRequest");
+        query1.whereEqualTo("fromUser", ParseUser.getCurrentUser().getUsername());
+        query1.whereEqualTo("toUser", username);
+        query1.whereEqualTo("accepted", true);
+
+        ParseQuery<ParseObject> query2 = ParseQuery.getQuery("FriendRequest");
+        query2.whereEqualTo("toUser", ParseUser.getCurrentUser().getUsername());
+        query2.whereEqualTo("fromUser", username);
+        query2.whereEqualTo("accepted", true);
+
+        List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
+        queries.add(query1);
+        queries.add(query2);
+
+        ParseQuery<ParseObject> mainQuery = ParseQuery.or(queries);
+
+        mainQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                if (e == null){
+                    d_add.setVisibility(View.GONE);
                 }
             }
         });
