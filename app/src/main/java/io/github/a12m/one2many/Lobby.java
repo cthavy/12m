@@ -1,18 +1,31 @@
 package io.github.a12m.one2many;
 
+import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.app.ListActivity;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +37,13 @@ the app while account is cached in local storage.
 This page should allow the user to view all projects w/ their respective links,
 search for other users, view their friends list, and start a new event.
  */
-public class Lobby extends ListActivity {
 
 public class Lobby extends AppCompatActivity implements View.OnClickListener {
 
     ImageButton newEvent;
     ImageButton profileButton;
     ImageButton notifsButton;
+    ImageButton takePictureButton;
 
     Button searchButton;
 
@@ -40,14 +53,8 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
     int TAKE_PHOTO_CODE = 0;
     public static int count = 0;
     Uri imageUri;
-    Button takePictureButton;
 
     //Test list to populate the Lobby
-    String[] itemName = {
-            "The making of sr project",
-            "Yosemite",
-            "Nikko's house"
-    };
 
     ArrayList<String> searchableUsers;
 
@@ -73,12 +80,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
         search_text.setAdapter(adapter);
         search_text.setThreshold(1);
 
-        //Populates the list with array itemName using lobby_list.xml as a base.
-        this.setListAdapter(new ArrayAdapter<>(
-                this, R.layout.lobby_list,
-                R.id.Itemname,itemName));
-
-        takePictureButton = (Button) findViewById(R.id.buttonTakePicture);
+        takePictureButton = (ImageButton) findViewById(R.id.btn_camera);
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,8 +95,6 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
 
             }
         });
-
-    }
 
         newEvent = (ImageButton) findViewById(R.id.btn_newEvent);
         newEvent.setOnClickListener(this);
