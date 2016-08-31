@@ -74,8 +74,8 @@ public class Lobby extends ListActivity {
             public void onClick(View v) {
 
                 ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.TITLE, "New Picture");
-                values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+                values.put(MediaStore.Images.Media.TITLE, "New Photo");
+                values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
                 imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
@@ -126,4 +126,6 @@ public class Lobby extends ListActivity {
     public void onBackPressed() {
 
     }
+
+
 }
