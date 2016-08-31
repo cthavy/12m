@@ -9,8 +9,10 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
@@ -23,13 +25,17 @@ import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 
+
 /*
 This class is for the user to update their info like username or email address.
  */
-public class EditProfile extends AppCompatActivity {
+public class EditProfile extends AppCompatActivity implements View.OnClickListener {
     private EditText newUser;
     private EditText newEmail;
     private ImageButton newPic;
+
+    Button saveButton;
+    Button cancelButton;
 
     private String c_user;
     private String c_email;
@@ -43,6 +49,12 @@ public class EditProfile extends AppCompatActivity {
         newUser = (EditText) findViewById(R.id.edit_username);
         newEmail = (EditText) findViewById(R.id.edit_email);
         newPic = (ImageButton) findViewById(R.id.edit_img);
+
+        saveButton = (Button) findViewById(R.id.btn_save);
+        saveButton.setOnClickListener(this);
+
+        cancelButton = (Button) findViewById(R.id.btn_cancel);
+        cancelButton.setOnClickListener(this);
 
         //Queries to load user's fields
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
@@ -99,20 +111,6 @@ public class EditProfile extends AppCompatActivity {
         }
     }
 
-    //Cancel the edit and go back to profile
-    public void Cancel(View view){
-        finish();
-    }
-
-    //Saves whatever is in the edit fields and updates the user's info on the backend
-    public void Save(View view){
-        c_user = newUser.getText().toString();
-        c_email = newEmail.getText().toString();
-
-        UpdateInfo();
-        finish();
-    }
-
     //Self explanatory
     public void UpdateInfo(){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
@@ -129,8 +127,41 @@ public class EditProfile extends AppCompatActivity {
                 parseObject.put("avatarPic", file);
                 parseObject.put("email", c_email);
                 parseObject.put("username", c_user);
-                parseObject.saveInBackground();
+                parseObject.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e == null){
+                            startActivity(new Intent(EditProfile.this, Profile.class));
+                            finish();
+                        } else{
+                            e.printStackTrace();
+                            saveButton.setEnabled(true);
+                            cancelButton.setEnabled(true);
+                            Toast.makeText(getApplicationContext(), "Something went wrong",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_save:
+                c_user = newUser.getText().toString();
+                c_email = newEmail.getText().toString();
+
+                saveButton.setEnabled(false);
+                cancelButton.setEnabled(false);
+                UpdateInfo();
+                break;
+
+            case R.id.btn_cancel:
+                startActivity(new Intent(EditProfile.this, Profile.class));
+                finish();
+                break;
+        }
     }
 }
