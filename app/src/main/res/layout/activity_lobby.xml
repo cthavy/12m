@@ -88,21 +88,21 @@
                 android:id="@+id/btn_profile"
                 android:background="@drawable/ic_self"
                 android:layout_below="@+id/viewSeperator"
-                android:layout_toLeftOf="@+id/btn_camera"
-                android:layout_toStartOf="@+id/btn_camera"
+                android:layout_toLeftOf="@+id/buttonTakePicture"
+                android:layout_toStartOf="@+id/buttonTakePicture"
                 android:onClick="goToProfile"
                 android:layout_weight="1"/>
 
-            <ImageButton
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/btn_camera"
+                android:id="@+id/buttonTakePicture"
                 android:background="@drawable/ic_camera"
                 android:layout_below="@+id/viewSeperator"
                 android:layout_centerHorizontal="true"
                 android:layout_weight="1" />
 
-            <ImageButton
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/btn_notifs"

@@ -1,11 +1,15 @@
 package io.github.a12m.one2many;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.app.ListActivity;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.parse.FindCallback;
@@ -25,6 +29,11 @@ This page should allow the user to view all projects w/ their respective links,
 search for other users, view their friends list, and start a new event.
  */
 public class Lobby extends ListActivity {
+
+    int TAKE_PHOTO_CODE = 0;
+    public static int count = 0;
+    Uri imageUri;
+    Button takePictureButton;
 
     //Test list to populate the Lobby
     String[] itemName = {
@@ -58,6 +67,23 @@ public class Lobby extends ListActivity {
         this.setListAdapter(new ArrayAdapter<>(
                 this, R.layout.lobby_list,
                 R.id.Itemname,itemName));
+
+        takePictureButton = (Button) findViewById(R.id.buttonTakePicture);
+        takePictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.TITLE, "New Picture");
+                values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+                imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(intent, TAKE_PHOTO_CODE);
+
+            }
+        });
+
     }
 
     //Searches for selected user and opens up their profile page
