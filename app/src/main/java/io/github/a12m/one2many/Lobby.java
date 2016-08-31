@@ -66,7 +66,6 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBarLobby);
 
-        search_username = "";
         search_text = (AutoCompleteTextView) findViewById(R.id.searchField);
         searchableUsers = new ArrayList<>();
 

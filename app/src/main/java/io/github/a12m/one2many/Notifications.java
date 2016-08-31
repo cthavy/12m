@@ -198,6 +198,7 @@ public class Notifications extends AppCompatActivity {
         eventslist.setAdapter(arrayAdapter);
     }
 
+    //Ignores event request
     public void DeclineEvent(View view){
         final int position = eventslist.getPositionForView((View) view.getParent());
         final String eventToAdd = eventIDs.get(position);
