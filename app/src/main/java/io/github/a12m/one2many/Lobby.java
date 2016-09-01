@@ -198,7 +198,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
         protected Void doInBackground(Void... params) {
             //Getting all the events this user owns
             ParseQuery<ParseObject> queryEventOwn = new ParseQuery<>("Event");
-            queryEventOwn.whereContains("owner", ParseUser.getCurrentUser().getUsername());
+            queryEventOwn.whereEqualTo("owner", ParseUser.getCurrentUser().getUsername());
             try {
                 ob = queryEventOwn.find();
             } catch (ParseException e) {
@@ -207,7 +207,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
 
             //Getting all the events this user is a part of
             ParseQuery<ParseObject> queryEventPartOf = new ParseQuery<>("EventMembers");
-            queryEventPartOf.whereContains("memberUsername", ParseUser.getCurrentUser().getUsername());
+            queryEventPartOf.whereEqualTo("memberUsername", ParseUser.getCurrentUser().getUsername());
             try {
                 ob2 = queryEventPartOf.find();
             } catch (ParseException e) {
