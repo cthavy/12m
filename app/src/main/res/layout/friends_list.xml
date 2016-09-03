@@ -13,8 +13,7 @@
         android:maxWidth="50dp"
         android:maxHeight="50dp"
         android:layout_margin="5dp"
-        android:src="@drawable/default_pic"
-        android:onClick="goToUser" />
+        android:src="@drawable/default_pic" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -44,6 +43,6 @@
             android:layout_toEndOf="@+id/e_pic"
             android:gravity="left|center"
             android:layout_margin="5dp"
-            android:onClick="goToUser" />
+            android:textColor="#000"/>
     </LinearLayout>
 </RelativeLayout>

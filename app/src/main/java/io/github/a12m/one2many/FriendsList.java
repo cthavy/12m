@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -21,9 +22,11 @@ Class that just shows all of the user's friends
 
 Accept and ignore buttons don't work. I don't know how to make it invisible.
  */
-public class FriendsList extends AppCompatActivity {
+public class FriendsList extends AppCompatActivity implements View.OnClickListener {
     ListView friendsList;
     ArrayList<String> friends;
+
+    TextView goToUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,9 @@ public class FriendsList extends AppCompatActivity {
         setContentView(R.layout.activity_friends_list);
 
         friendsList = (ListView) findViewById(R.id.friend_list);
+
+        goToUser = (TextView) findViewById(R.id.username);
+        goToUser.setOnClickListener(this);
 
         friends = new ArrayList<>();
         getFriends();
@@ -72,13 +78,17 @@ public class FriendsList extends AppCompatActivity {
         });
     }
 
-    //Goes to the user's profile page when their username is clicked
-    public void goToUser(View view) {
-        final int position = friendsList.getPositionForView((View) view.getParent());
-        final String person = friends.get(position);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.username:
+                final int position = friendsList.getPositionForView((View) v.getParent());
+                final String person = friends.get(position);
 
-        Intent intent = new Intent(this, SearchedUser.class);
-        intent.putExtra("searchedName", person);
-        startActivity(intent);
+                Intent intent = new Intent(this, SearchedUser.class);
+                intent.putExtra("searchedName", person);
+                startActivity(intent);
+                break;
+        }
     }
 }

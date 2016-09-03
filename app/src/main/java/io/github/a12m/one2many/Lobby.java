@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -56,6 +58,8 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
 
     String search_username;
     private AutoCompleteTextView search_text;
+
+    ArrayList<String> selectedFriends = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +128,97 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
                 ImageView image = (ImageView) dialog.findViewById(R.id.imageViewNewEventProfilePic);
                 image.setImageResource(R.drawable.lobby_example);
 
+                final Button cancelButton = (Button) dialog.findViewById(R.id.buttonCreateEventCanel);
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                final Button chooseFriends = (Button) dialog.findViewById(R.id.buttonNewEventChooseFriends);
+                chooseFriends.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //This dialog shows up when a user wants to select their friends to invite to event
+                        final Dialog dialogInviteFriends = new Dialog(v.getContext());
+                        dialogInviteFriends.setContentView(R.layout.activity_invite_friends);
+                        dialogInviteFriends.show();
+
+                        final ListView inviteFriendsLV = (ListView) dialogInviteFriends.findViewById(R.id.listViewInviteFriends);
+
+                        //ProgressBar pb = (ProgressBar) dialogInviteFriends.findViewById(R.id.progressBarInviteFriends);
+
+                        //Getting all the names of the user's friends
+                        ParseQuery<ParseObject> query1 = ParseQuery.getQuery("FriendRequest");
+                        query1.whereEqualTo("toUser", ParseUser.getCurrentUser().getUsername());
+                        query1.whereEqualTo("accepted", true);
+
+                        ParseQuery<ParseObject> query2 = ParseQuery.getQuery("FriendRequest");
+                        query2.whereEqualTo("fromUser", ParseUser.getCurrentUser().getUsername());
+                        query2.whereEqualTo("accepted", true);
+
+                        //Joint 'or' query for finding all friends that the user has accepted or was accepted by
+                        List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
+                        queries.add(query1);
+                        queries.add(query2);
+
+                        ParseQuery<ParseObject> mainQuery = ParseQuery.or(queries);
+
+                        List<ParseObject> results = null;
+
+                        try {
+                            results = mainQuery.find();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        String[] friends = new String[results.size()];
+                        //Iterates through the list and adds all friends to the array
+                        for (int i = 0; i < results.size(); i++){
+                            if (!results.get(i).get("fromUser").equals(ParseUser.getCurrentUser().getUsername())){
+                                friends[i] = ((String) results.get(i).get("fromUser"));
+                            } else {
+                                friends[i] = ((String) results.get(i).get("toUser"));
+                            }
+                        }
+
+                        //pb.setVisibility(View.INVISIBLE);
+                        inviteFriendsLV.setVisibility(View.VISIBLE);
+                        inviteFriendsLV.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+                        inviteFriendsLV.setItemsCanFocus(true);
+
+                        final ArrayAdapter arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_multiple_choice,friends);
+                        inviteFriendsLV.setAdapter(arrayAdapter);
+
+                        //When the user clicks the button to add these friends
+                        Button selectedFriends = (Button) dialogInviteFriends.findViewById(R.id.buttonChosenFriends);
+                        selectedFriends.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                SparseBooleanArray checked = inviteFriendsLV.getCheckedItemPositions();
+                                ArrayList<String> selectedItems = new ArrayList<>();
+                                //Getting the names of the user's friends
+                                for (int i = 0; i < checked.size(); i++) {
+                                    // Item position in adapter
+                                    int position = checked.keyAt(i);
+                                    // Add sport if it is checked i.e.) == TRUE!
+                                    if (checked.valueAt(i))
+                                        selectedItems.add((String) arrayAdapter.getItem(position));
+                                }
+
+                                //Showing the user how many friends they selected
+                                chooseFriends.setText("Choose Friends - " + selectedItems.size());
+
+                                //Saving it in a variable so we can access it when creating the event
+                                saveToSelectedFriends(selectedItems);
+
+                                dialogInviteFriends.dismiss();
+                            }
+                        });
+                    }
+                });
+
                 final Button createButton = (Button) dialog.findViewById(R.id.buttonCreateEventAccept);
                 createButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -131,8 +226,12 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
                         String eventNameString = eventName.getText().toString();
                         createButton.setEnabled(false);
                         eventName.setEnabled(false);
+                        cancelButton.setEnabled(false);
+
+                        //Making sure they didn't enter a blank name
                         if (!eventNameString.replace(" ", "").equals("")) {
-                            ParseObject parseEvent = new ParseObject("Event");
+
+                            final ParseObject parseEvent = new ParseObject("Event");
                             parseEvent.put("owner", ParseUser.getCurrentUser().getUsername());
                             parseEvent.put("name", eventNameString);
                             parseEvent.put("active", true);
@@ -140,13 +239,35 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
                                 @Override
                                 public void done(ParseException e) {
                                     if (e == null) {
+                                        ArrayList<String> friendNames = getSelectedFriends();
+
+                                        //Once the event is saved, send a request to all the friends
+                                        if(friendNames.size() != 0){
+                                            for(String friendName : friendNames){
+                                                ParseObject req = new ParseObject("EventRequest");
+                                                req.put("fromUser", ParseUser.getCurrentUser().getUsername());
+                                                req.put("toUser", friendName);
+                                                req.put("forEventId", parseEvent.getObjectId());
+                                                req.put("accepted", false);
+                                                req.put("ignored", false);
+                                                try {
+                                                    req.save();
+                                                } catch (ParseException e1) {
+                                                    e1.printStackTrace();
+                                                }
+                                            }
+                                        }
+
                                         dialog.dismiss();
+
+                                        //Refresh the events list once event saved and requests are sent
                                         new GetUserEvents().execute();
                                     } else {
                                         Toast.makeText(vCreate.getContext(), "Something went wrong",
                                                 Toast.LENGTH_SHORT).show();
                                         createButton.setEnabled(true);
                                         eventName.setEnabled(true);
+                                        cancelButton.setEnabled(true);
                                         e.printStackTrace();
                                     }
                                 }
@@ -156,9 +277,11 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
                                     Toast.LENGTH_SHORT).show();
                             eventName.setEnabled(true);
                             createButton.setEnabled(true);
+                            cancelButton.setEnabled(true);
                         }
                     }
                 });
+
                 break;
 
             case R.id.btn_profile:
@@ -180,6 +303,16 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
                 break;
         }
     }
+
+
+    private void saveToSelectedFriends(ArrayList<String> fds){
+        selectedFriends = fds;
+    }
+
+    public ArrayList<String> getSelectedFriends(){
+        return selectedFriends;
+    }
+
 
     private class GetUserEvents extends AsyncTask<Void, Void, Void> {
         String[] itemName;
@@ -225,7 +358,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
                 i++;
             }
 
-            //Adding events a part of to the list
+            //Adding events the user is a part of to the list
             for (ParseObject event : ob2) {
                 String eventId = (String) event.get("eventId");
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
