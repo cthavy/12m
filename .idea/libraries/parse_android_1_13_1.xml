@@ -6,7 +6,6 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.parse/parse-android/1.13.1/121031930972bac287c21e4147f8432ff8ab6fe4/parse-android-1.13.1-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.parse/parse-android/1.13.1/9b568437fef65132c212b0dfbaf2fb2e72612f2f/parse-android-1.13.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
