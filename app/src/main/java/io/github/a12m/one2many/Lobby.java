@@ -1,13 +1,18 @@
 package io.github.a12m.one2many;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.app.ListActivity;
@@ -38,16 +43,21 @@ This page should allow the user to view all projects w/ their respective links,
 search for other users, view their friends list, and start a new event.
  */
 
-public class Lobby extends AppCompatActivity implements View.OnClickListener {
+public class Lobby extends AppCompatActivity implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
+
+
+    private static final int REQUEST_CAMERA = 0;
 
     ImageButton newEvent;
     ImageButton profileButton;
     ImageButton notifsButton;
-    ImageButton takePictureButton;
+    ImageButton btn_camera;
 
     Button searchButton;
 
     ListView eventsListView;
+
+
 
     ProgressBar mProgressBar;
     int TAKE_PHOTO_CODE = 0;
@@ -80,19 +90,29 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
         search_text.setAdapter(adapter);
         search_text.setThreshold(1);
 
-        takePictureButton = (ImageButton) findViewById(R.id.btn_camera);
-        takePictureButton.setOnClickListener(new View.OnClickListener() {
+//        takePictureButton = (ImageButton) findViewById(R.id.btn_camera);
+//        takePictureButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                ContentValues values = new ContentValues();
+//                values.put(MediaStore.Images.Media.TITLE, "New Photo");
+//                values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
+//                imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//                startActivityForResult(intent, TAKE_PHOTO_CODE);
+//
+//            }
+//        });
+
+
+        btn_camera = (ImageButton) findViewById(R.id.btn_camera);
+
+        btn_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.TITLE, "New Photo");
-                values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
-                imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(intent, TAKE_PHOTO_CODE);
-
+                checkCameraPermission();
             }
         });
 
@@ -266,4 +286,65 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
             mProgressBar.setVisibility(View.INVISIBLE);
         }
     }
+
+    /**
+     * Method to launch camera after permission accepted from user
+     */
+    void takePicture() {
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        startActivityForResult(intent, 0);
+    }
+
+    /**
+     * Method to request permission for camera
+     */
+    private void requestCameraPermission() {
+
+
+        // Camera permission has not been granted yet. Request it directly.
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                REQUEST_CAMERA);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CAMERA) {
+            // BEGIN_INCLUDE(permission_result)
+            // Received permission result for camera permission.
+            Log.i("Lobby", "Received response for Camera permission request.");
+
+            // Check if the only required permission has been granted
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                // Camera permission has been granted, preview can be displayed
+
+                takePicture();
+
+            } else {
+                //Permission not granted
+                Toast.makeText(Lobby.this,"You need to grant camera permission to use camera",Toast.LENGTH_LONG).show();
+            }
+
+        }
+    }
+
+    /**
+     * Method to check permission
+     */
+    void checkCameraPermission() {
+        boolean isGranted;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Camera permission has not been granted.
+
+            requestCameraPermission();
+
+
+        } else {
+
+            takePicture();
+
+        }
+    }
+
 }

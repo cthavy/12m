@@ -82,14 +82,14 @@
         jar="/Users/imac2014/workspace/12m/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
         revision="23.0.3"
-        sha1="0308a848a27b3ed6b1763cf1c067080357e00678">
+        sha1="6fbe277347629cb522c489f34fbab57338cc7b11">
         <dex dex="/Users/imac2014/workspace/12m/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_54ea7272a84e5b3810a457a500596452819ebbdd/classes.dex" />
     </item>
     <item
         jar="/Users/imac2014/workspace/12m/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         revision="23.0.3"
-        sha1="94be40055a068267c6d996738515e7d9b892540f">
+        sha1="bc223df32835284b8131703237342110839abbf2">
         <dex dex="/Users/imac2014/workspace/12m/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_2913fa2303e658cbd9f594bade9c94de06c21541/classes.dex" />
     </item>
 
