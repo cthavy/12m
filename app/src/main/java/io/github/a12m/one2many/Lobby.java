@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -377,6 +379,39 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener {
         protected void onPostExecute(final Void param) {
             //setting the event names to the adapter
             eventsListView.setAdapter(new EventsListAdapter(getApplicationContext(), itemName));
+            eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    // Check which list this position is coming from 
+                    // If the position is greater than the size of the first(owned events) list 
+                    // then look in the second list
+                    if(position > ob.size() - 1){
+                        // String eventName = itemName[position];
+                        // String eventId = (String) ob2.get(position - ob.size()).get("eventId");
+
+                        Intent i = new Intent(Lobby.this, EventActivity.class);
+                        i.putExtra("EventName", itemName[position]);
+                        i.putExtra("EventId", (String) ob2.get(position - ob.size()).get("eventId"));
+                        i.putExtra("IsOwner", false);
+
+                        startActivity(i);
+                    } else {
+                        // This means that the event is in the first list
+                        // String eventName = itemName[position];
+                        // String eventId = ob.get(position).getObjectId();
+
+                        Intent i = new Intent(Lobby.this, EventActivity.class);
+                        i.putExtra("EventName", itemName[position]);
+                        i.putExtra("EventId", ob.get(position).getObjectId());
+                        i.putExtra("IsOwner", true);
+                        i.putExtra("OwnerName", ParseUser.getCurrentUser().getUsername());
+
+                        startActivity(i);
+                    }
+                }
+            });
+
             eventsListView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.INVISIBLE);
         }
