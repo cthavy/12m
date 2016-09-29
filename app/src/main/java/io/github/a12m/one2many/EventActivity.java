@@ -1,5 +1,6 @@
 package io.github.a12m.one2many;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,10 +11,13 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -22,7 +26,7 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventActivity extends AppCompatActivity {
+public class EventActivity extends AppCompatActivity implements View.OnClickListener{
 
     CollapsingToolbarLayout collapsingToolbarLayout;
 
@@ -31,7 +35,15 @@ public class EventActivity extends AppCompatActivity {
     TextView ownerName;
     TextView numberOfMembers;
 
+    String eventName;
+
+    Button btnEdit;
+    Button btnMembers;
+    Button btnFinalize;
+
     GridView eventPhotos;
+
+    boolean isNameChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +52,10 @@ public class EventActivity extends AppCompatActivity {
 
         Intent i = getIntent();
 
+        eventName = i.getStringExtra("EventName");
+
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarEvent);
-        collapsingToolbarLayout.setTitle(i.getStringExtra("EventName"));
+        collapsingToolbarLayout.setTitle(eventName);
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.white));
         collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(android.R.color.white));
 
@@ -53,15 +67,24 @@ public class EventActivity extends AppCompatActivity {
             findViewById(R.id.relativeLayoutEventOwner).setVisibility(View.VISIBLE);
             String owner = "Owner: " + i.getStringExtra("OwnerName");
             ownerName.setText(owner);
-            new GetNumberOfMembers(i.getStringExtra("EventId"), true).execute();
+            new GetNumberOfMembersAndName(i.getStringExtra("EventId"), true).execute();
         } else {
-            new GetNumberOfMembers(i.getStringExtra("EventId"), false).execute();
+            new GetNumberOfMembersAndName(i.getStringExtra("EventId"), false).execute();
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbarEvent);
         setSupportActionBar(toolbar);
         //Sets the back button on the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        btnEdit = (Button) findViewById(R.id.buttonEventOwnerEdit);
+        btnEdit.setOnClickListener(this);
+
+        btnMembers = (Button) findViewById(R.id.buttonEventOwnerAddMembers);
+        btnMembers.setOnClickListener(this);
+
+        btnFinalize = (Button) findViewById(R.id.buttonEventOwnerFinalize);
+        btnFinalize.setOnClickListener(this);
 
         eventPhotos = (GridView) findViewById(R.id.gridViewEventPictures);
 
@@ -70,14 +93,29 @@ public class EventActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        //Restarts lobby if the event name changed
+        if(isNameChanged) {
+            Intent intent = new Intent(EventActivity.this, Lobby.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            startActivity(intent);
+        }
+
+        finish();
+    }
+
     //Get number of members in event
-    private class GetNumberOfMembers extends AsyncTask<Void, Void, Void>{
+    private class GetNumberOfMembersAndName extends AsyncTask<Void, Void, Void>{
         String eventId;
         boolean isOwner;
         List<ParseObject> ob;
         List<ParseObject> ob2;
 
-        public GetNumberOfMembers(String eventId, boolean isOwner){
+        public GetNumberOfMembersAndName(String eventId, boolean isOwner){
             this.eventId = eventId;
             this.isOwner = isOwner;
         }
@@ -124,6 +162,58 @@ public class EventActivity extends AppCompatActivity {
             }
 
             numberOfMembers.setText(members);
+        }
+    }
+
+    @Override
+    public void onClick(View v){
+        switch (v.getId()) {
+            case R.id.buttonEventOwnerEdit:
+                //Creates the edit dialog
+                final Dialog dialog = new Dialog(v.getContext());
+                dialog.setContentView(R.layout.edit_event_dialog);
+                dialog.show();
+
+                final EditText eName = (EditText) dialog.findViewById(R.id.eventName);
+                eName.setText(eventName);
+
+                //Cancel button to exit dialog
+                final Button cancelButton = (Button) dialog.findViewById(R.id.buttonCancel);
+                cancelButton.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        dialog.dismiss();
+                    }
+                });
+
+                //Save button to save edits
+                final Button saveButton = (Button) dialog.findViewById(R.id.buttonSave);
+                saveButton.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        final String temp = eName.getText().toString();
+                        ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
+                        query.whereEqualTo("name", eventName);
+                        query.getFirstInBackground(new GetCallback<ParseObject>() {
+                            @Override
+                            public void done(ParseObject parseObject, ParseException e) {
+                                parseObject.put("name", temp);
+                                parseObject.saveInBackground();
+                                Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+                                //Refreshes toolbar name
+                                collapsingToolbarLayout.setTitle(temp);
+                                isNameChanged = true;
+                            }
+                        });
+                        dialog.dismiss();
+                    }
+                });
+
+                break;
+            case R.id.buttonEventOwnerAddMembers:
+                break;
+            case R.id.buttonEventOwnerFinalize:
+                break;
         }
     }
 
