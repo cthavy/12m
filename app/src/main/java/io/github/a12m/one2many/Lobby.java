@@ -296,6 +296,14 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
     }
 
     /**
+     * Method to launch camera after permission accepted from user
+     */
+    void takeVideo() {
+        Intent intent = new Intent("android.media.action.VIDEO_CAPTURE");
+        startActivityForResult(intent, 0);
+    }
+
+    /**
      * Method to request permission for camera
      */
     private void requestCameraPermission() {
@@ -343,6 +351,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
         } else {
 
             takePicture();
+            takeVideo();
 
         }
     }
