@@ -104,7 +104,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
             startActivity(intent);
         }
-
         finish();
     }
 

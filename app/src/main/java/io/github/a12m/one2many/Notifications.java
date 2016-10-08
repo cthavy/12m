@@ -35,6 +35,8 @@ public class Notifications extends AppCompatActivity {
     ArrayList<String> eventIDs;
     ArrayList<String> events;
 
+    Boolean areNewEventsAdded;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +49,23 @@ public class Notifications extends AppCompatActivity {
         eventIDs = new ArrayList<>();
         events = new ArrayList<>();
 
+        areNewEventsAdded = false;
+
         getFriendRequests();
         getEventRequests();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if (areNewEventsAdded){
+            Intent intent = new Intent(Notifications.this, Lobby.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            startActivity(intent);
+        }
+        finish();
     }
 
     //Queries to find all unanswered friend requests that are not ignored
@@ -73,7 +90,7 @@ public class Notifications extends AppCompatActivity {
 
     //Queries to find all unanswered event requests that are not ignored
     public void getEventRequests(){
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("EventRequest");
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("EventRequest");
         query.whereEqualTo("toUser", ParseUser.getCurrentUser().getUsername());
         query.whereEqualTo("accepted", false);
         query.whereEqualTo("ignored", false);
@@ -88,16 +105,15 @@ public class Notifications extends AppCompatActivity {
                         ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Event");
                         query1.whereEqualTo("objectId", eventIDs.get(i));
                         query1.whereEqualTo("active", true);
-                        query1.getFirstInBackground(new GetCallback<ParseObject>() {
-                            @Override
-                            public void done(ParseObject parseObject, ParseException e) {
-                                if (parseObject != null){
-                                    events.add((String) parseObject.get("name"));
-                                }
-                                final ArrayAdapter arrayAdapter1 = new ArrayAdapter(getBaseContext(), R.layout.event_requests, R.id.eventname, events);
-                                eventslist.setAdapter(arrayAdapter1);
-                            }
-                        });
+                        try {
+                            List<ParseObject> listTem = query1.find();
+                            events.add((String) listTem.get(0).get("name"));
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                        final ArrayAdapter arrayAdapter1 = new ArrayAdapter(getBaseContext(), R.layout.event_requests, R.id.eventname, events);
+                        eventslist.setAdapter(arrayAdapter1);
+
                     }
                 }
             }
@@ -187,8 +203,9 @@ public class Notifications extends AppCompatActivity {
                     newMember.put("eventId", eventToAdd);
                     newMember.put("memberUsername", ParseUser.getCurrentUser().getUsername());
                     newMember.saveInBackground();
-                } else
-                    System.out.println("non existant");
+
+                    areNewEventsAdded = true;
+                }
             }
         });
 
@@ -198,6 +215,7 @@ public class Notifications extends AppCompatActivity {
         eventslist.setAdapter(arrayAdapter);
     }
 
+    //Declines event and puts it into the ignored state
     public void DeclineEvent(View view){
         final int position = eventslist.getPositionForView((View) view.getParent());
         final String eventToAdd = eventIDs.get(position);
