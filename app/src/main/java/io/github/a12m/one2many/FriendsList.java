@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ Class that just shows all of the user's friends
 
 Accept and ignore buttons don't work. I don't know how to make it invisible.
  */
-public class FriendsList extends AppCompatActivity implements View.OnClickListener {
+public class FriendsList extends AppCompatActivity {
     ListView friendsList;
     ArrayList<String> friends;
 
@@ -36,7 +37,6 @@ public class FriendsList extends AppCompatActivity implements View.OnClickListen
         friendsList = (ListView) findViewById(R.id.friend_list);
 
         goToUser = (TextView) findViewById(R.id.username);
-        goToUser.setOnClickListener(this);
 
         friends = new ArrayList<>();
         getFriends();
@@ -73,22 +73,17 @@ public class FriendsList extends AppCompatActivity implements View.OnClickListen
                     }
                     ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.friends_list, R.id.username, friends);
                     friendsList.setAdapter(arrayAdapter);
+
+                    friendsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Intent intent = new Intent(FriendsList.this, SearchedUser.class);
+                            intent.putExtra("searchedName", friends.get(position));
+                            startActivity(intent);
+                        }
+                    });
                 }
             }
         });
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.username:
-                final int position = friendsList.getPositionForView((View) v.getParent());
-                final String person = friends.get(position);
-
-                Intent intent = new Intent(this, SearchedUser.class);
-                intent.putExtra("searchedName", person);
-                startActivity(intent);
-                break;
-        }
     }
 }

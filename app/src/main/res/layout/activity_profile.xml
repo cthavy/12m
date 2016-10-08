@@ -10,8 +10,8 @@
     tools:context="io.github.a12m.one2many.Profile">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:id="@+id/profile_image"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -29,72 +29,45 @@
         android:id="@+id/btn_logout"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="LogOut" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="999"
-        android:id="@+id/count_friend"
-        android:layout_alignTop="@+id/profile_image"
-        android:layout_toRightOf="@+id/profile_image"
-        android:layout_toEndOf="@+id/profile_image"
-        android:layout_marginLeft="35dp"
-        android:onClick="toFriendsList" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="999"
-        android:id="@+id/count_events"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/count_friend"
-        android:layout_toEndOf="@+id/count_friend"
-        android:layout_marginLeft="60dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Friends"
-        android:id="@+id/Text_friend"
-        android:layout_below="@+id/count_friend"
-        android:layout_alignLeft="@+id/count_friend"
-        android:layout_alignStart="@+id/count_friend"
-        android:onClick="toFriendsList" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Events"
-        android:id="@+id/Text_event"
-        android:layout_below="@+id/count_events"
-        android:layout_alignStart="@+id/count_events"
-        android:layout_alignLeft="@+id/count_events" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit Profile"
-        android:id="@+id/btn_edit"
-        android:layout_below="@+id/Text_friend"
-        android:layout_alignLeft="@+id/Text_friend"
-        android:onClick="EditProfile" />
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="\@username"
         android:id="@+id/Text_username"
-        android:layout_below="@+id/profile_image"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/profile_image"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="\@email"
         android:id="@+id/Text_email"
-        android:layout_below="@+id/Text_username" />
+        android:layout_below="@+id/Text_username"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Profile"
+        android:id="@+id/btn_edit"
+        android:onClick="EditProfile"
+        android:layout_below="@+id/Text_email"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Friends"
+        android:id="@+id/Text_friend"
+        android:layout_toRightOf="@+id/profile_image"
+        android:layout_marginTop="11dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Events"
+        android:id="@+id/Text_event"
+        android:layout_toRightOf="@id/profile_image"
+        android:layout_below="@+id/Text_friend"/>
 
 </RelativeLayout>
