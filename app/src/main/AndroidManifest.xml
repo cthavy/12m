@@ -36,7 +36,9 @@
         <activity android:name=".EditProfile" />
         <activity android:name=".FriendsList" />
         <activity android:name=".SearchedUser" />
-        <activity android:name=".Notifications"></activity>
+        <activity android:name=".Notifications" />
+        <activity android:name=".InviteFriendsActivity" />
+        <activity android:name=".EventActivity"></activity>
     </application>
 
 </manifest>

@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -25,12 +27,16 @@ public class FriendsList extends AppCompatActivity {
     ListView friendsList;
     ArrayList<String> friends;
 
+    TextView goToUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends_list);
 
         friendsList = (ListView) findViewById(R.id.friend_list);
+
+        goToUser = (TextView) findViewById(R.id.username);
 
         friends = new ArrayList<>();
         getFriends();
@@ -67,18 +73,17 @@ public class FriendsList extends AppCompatActivity {
                     }
                     ArrayAdapter arrayAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.friends_list, R.id.username, friends);
                     friendsList.setAdapter(arrayAdapter);
+
+                    friendsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Intent intent = new Intent(FriendsList.this, SearchedUser.class);
+                            intent.putExtra("searchedName", friends.get(position));
+                            startActivity(intent);
+                        }
+                    });
                 }
             }
         });
-    }
-
-    //Goes to the user's profile page when their username is clicked
-    public void goToUser(View view) {
-        final int position = friendsList.getPositionForView((View) view.getParent());
-        final String person = friends.get(position);
-
-        Intent intent = new Intent(this, SearchedUser.class);
-        intent.putExtra("searchedName", person);
-        startActivity(intent);
     }
 }
