@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +29,7 @@ Logout will bring the app back to the login page.
 
 Does not display friend and event count yet
  */
-public class Profile extends AppCompatActivity {
+public class Profile extends AppCompatActivity implements View.OnClickListener {
     ImageView d_pic;
     TextView d_friends;
     TextView d_username;
@@ -40,16 +41,26 @@ public class Profile extends AppCompatActivity {
     int ct_friends;
     int ct_events;
 
+    Button editProfile;
+    Button logout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
         d_pic = (ImageView) findViewById(R.id.profile_image);
-        d_friends = (TextView) findViewById(R.id.count_friend);
+        d_friends = (TextView) findViewById(R.id.Text_friend);
+        d_friends.setOnClickListener(this);
         d_username = (TextView) findViewById(R.id.Text_username);
         d_email = (TextView) findViewById(R.id.Text_email);
         d_events = (TextView) findViewById(R.id.count_events);
+
+        editProfile = (Button) findViewById(R.id.btn_edit);
+        editProfile.setOnClickListener(this);
+
+        logout = (Button) findViewById(R.id.btn_logout);
+        logout.setOnClickListener(this);
 
         username = "@username";
         email = "email@email.com";
@@ -149,28 +160,30 @@ public class Profile extends AppCompatActivity {
             public void done(List<ParseObject> list, ParseException e) {
                 if (list != null){
                     ct_friends = list.size();
-                    d_friends.setText(String.valueOf(ct_friends));
+                    d_friends.setText(String.valueOf(ct_friends) + " Friends");
                 }
             }
         });
     }
 
-    //Starts the edit profile activity
-    public void EditProfile(View view){
-        startActivity(new Intent(this, EditProfile.class));
-        finish();
-    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.Text_friend:
+                startActivity(new Intent(this, FriendsList.class));
+                break;
 
-    //Self explanatory
-    public void toFriendsList(View view){
-        startActivity(new Intent(this, FriendsList.class));
-    }
+            case R.id.btn_edit:
+                startActivity(new Intent(this, EditProfile.class));
+                finish();
+                break;
 
-    //Self explanatory
-    public void LogOut(View view) {
-        ParseUser.logOut();
-        Intent intent = new Intent(this, Login.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+            case R.id.btn_logout:
+                ParseUser.logOut();
+                Intent intent = new Intent(this, Login.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+        }
     }
 }
