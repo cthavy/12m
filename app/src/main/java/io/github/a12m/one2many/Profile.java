@@ -34,10 +34,12 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     TextView d_friends;
     TextView d_username;
     TextView d_email;
+    TextView d_events;
 
     String username;
     String email;
     int ct_friends;
+    int ct_events;
 
     Button editProfile;
     Button logout;
@@ -52,6 +54,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         d_friends.setOnClickListener(this);
         d_username = (TextView) findViewById(R.id.Text_username);
         d_email = (TextView) findViewById(R.id.Text_email);
+        d_events = (TextView) findViewById(R.id.Text_event);
 
         editProfile = (Button) findViewById(R.id.btn_edit);
         editProfile.setOnClickListener(this);
@@ -62,13 +65,15 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         username = "@username";
         email = "email@email.com";
         ct_friends = 0;
+        ct_events = 0;
 
-        getData();
+        getPic();
         getFriends();
+        getEvents();
     }
 
     //Loads data like profile picture and friend count from Parse
-    public void getData() {
+    public void getPic() {
         //Queries the user class and crabs current user as an object
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         query.getInBackground(ParseUser.getCurrentUser().getObjectId(), new GetCallback<ParseObject>() {
@@ -100,6 +105,34 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
 
                 } else {
                     System.out.println("No data available");
+                }
+            }
+        });
+    }
+
+    //Counts the number of events user has through two queries
+    public void getEvents(){
+        ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Event");
+        query1.whereEqualTo("owner", ParseUser.getCurrentUser().getUsername());
+
+        ParseQuery<ParseObject> query2 = ParseQuery.getQuery("EventMembers");
+        query2.whereEqualTo("memberUsername", ParseUser.getCurrentUser().getUsername());
+
+        query1.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (list != null) {
+                    ct_events = list.size();
+                }
+            }
+        });
+
+        query2.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (list != null){
+                    ct_events += list.size();
+                    d_events.setText(String.valueOf(ct_events) + " Events");
                 }
             }
         });
