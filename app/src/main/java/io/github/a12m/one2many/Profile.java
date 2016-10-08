@@ -54,7 +54,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         d_friends.setOnClickListener(this);
         d_username = (TextView) findViewById(R.id.Text_username);
         d_email = (TextView) findViewById(R.id.Text_email);
-        d_events = (TextView) findViewById(R.id.count_events);
+        d_events = (TextView) findViewById(R.id.Text_event);
 
         editProfile = (Button) findViewById(R.id.btn_edit);
         editProfile.setOnClickListener(this);
@@ -132,7 +132,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             public void done(List<ParseObject> list, ParseException e) {
                 if (list != null){
                     ct_events += list.size();
-                    d_events.setText(String.valueOf(ct_events));
+                    d_events.setText(String.valueOf(ct_events) + " Events");
                 }
             }
         });
