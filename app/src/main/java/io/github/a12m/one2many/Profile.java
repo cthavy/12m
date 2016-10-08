@@ -115,7 +115,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Event");
         query1.whereEqualTo("owner", ParseUser.getCurrentUser().getUsername());
 
-        ParseQuery<ParseObject> query2 = ParseQuery.getQuery("EventMembers");
+        final ParseQuery<ParseObject> query2 = ParseQuery.getQuery("EventMembers");
         query2.whereEqualTo("memberUsername", ParseUser.getCurrentUser().getUsername());
 
         query1.findInBackground(new FindCallback<ParseObject>() {
@@ -123,16 +123,15 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             public void done(List<ParseObject> list, ParseException e) {
                 if (list != null) {
                     ct_events = list.size();
-                }
-            }
-        });
-
-        query2.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> list, ParseException e) {
-                if (list != null){
-                    ct_events += list.size();
-                    d_events.setText(String.valueOf(ct_events) + " Events");
+                    query2.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> list, ParseException e) {
+                            if (list != null){
+                                ct_events += list.size();
+                                d_events.setText(String.valueOf(ct_events) + " Events");
+                            }
+                        }
+                    });
                 }
             }
         });

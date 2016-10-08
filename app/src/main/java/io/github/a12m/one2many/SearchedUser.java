@@ -36,12 +36,14 @@ public class SearchedUser extends AppCompatActivity {
     TextView d_username;
     TextView d_email;
     TextView d_friend_count;
+    TextView d_event_count;
     ImageView d_pic;
     Button d_add;
 
     String searchedName;
     String emailString;
     int friendSize;
+    int ct_events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class SearchedUser extends AppCompatActivity {
         d_username = (TextView) findViewById(R.id.Text_username);
         d_email = (TextView) findViewById(R.id.Text_email);
         d_friend_count = (TextView) findViewById(R.id.count_friend);
+        d_event_count = (TextView) findViewById(R.id.count_events);
         d_pic = (ImageView) findViewById(R.id.profile_image);
         d_add = (Button) findViewById(R.id.btn_add);
 
@@ -67,6 +70,7 @@ public class SearchedUser extends AppCompatActivity {
         getData(searchedName);
         ifFriends(searchedName);
         getFriends(searchedName);
+        getEvents(searchedName);
     }
 
     //Loads user searched data from Parse
@@ -128,6 +132,33 @@ public class SearchedUser extends AppCompatActivity {
                 if (e == null){
                     friendSize = list.size();
                     d_friend_count.setText(String.valueOf(friendSize));
+                }
+            }
+        });
+    }
+
+    //Counts the number of events user has through two queries
+    public void getEvents(String username){
+        ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Event");
+        query1.whereEqualTo("owner", username);
+
+        final ParseQuery<ParseObject> query2 = ParseQuery.getQuery("EventMembers");
+        query2.whereEqualTo("memberUsername", username);
+
+        query1.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (list != null) {
+                    ct_events = list.size();
+                    query2.findInBackground(new FindCallback<ParseObject>() {
+                        @Override
+                        public void done(List<ParseObject> list, ParseException e) {
+                            if (list != null){
+                                ct_events += list.size();
+                                d_event_count.setText(String.valueOf(ct_events));
+                            }
+                        }
+                    });
                 }
             }
         });
