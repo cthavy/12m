@@ -7,6 +7,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-permission
+        android:name="android.permission.FLASHLIGHT"
+        android:permissionGroup="android.permission-group.HARDWARE_CONTROLS"
+        android:protectionLevel="normal" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -18,7 +22,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:largeHeap="true" >
         <activity
             android:name=".Launch"
             android:theme="@style/AppThemeLogin">
@@ -38,7 +43,8 @@
         <activity android:name=".SearchedUser" />
         <activity android:name=".Notifications" />
         <activity android:name=".InviteFriendsActivity" />
-        <activity android:name=".EventActivity"></activity>
+        <activity android:name=".EventActivity" />
+        <activity android:name=".CustomCamera"></activity>
     </application>
 
 </manifest>
