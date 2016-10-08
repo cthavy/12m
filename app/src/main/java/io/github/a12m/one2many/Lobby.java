@@ -456,6 +456,8 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
      * Method to launch camera after permission accepted from user
      */
     void takePicture() {
+
+
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
         startActivityForResult(intent, 0);
     }
@@ -515,8 +517,9 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
 
         } else {
 
-            takePicture();
-            takeVideo();
+            startActivity(new Intent(Lobby.this, CustomCamera.class));
+//            takePicture();
+//            takeVideo();
 
         }
     }
