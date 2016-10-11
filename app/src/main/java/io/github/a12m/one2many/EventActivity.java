@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -250,7 +251,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                     e.printStackTrace();
                 }
 
-                String[] friends = new String[results.size()];
+                final String[] friends = new String[results.size()];
                 //Iterates through the list and adds all friends to the array
                 for (int i = 0; i < results.size(); i++){
                     if (!results.get(i).get("fromUser").equals(ParseUser.getCurrentUser().getUsername())){
@@ -292,6 +293,24 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                 selectedFriends.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //Remove members if they were unchecked
+                        for (ParseObject member : getMembers()){
+                            for (int j = 0; j < friends.length; j++){
+                                if (member.get("memberUsername").equals(friends[j]) && !inviteFriendsList.isItemChecked(j)){
+                                    ParseQuery<ParseObject> queryRemove = ParseQuery.getQuery("EventMembers");
+                                    queryRemove.whereEqualTo("eventId", getIntent().getStringExtra("EventId"));
+                                    queryRemove.whereEqualTo("memberUsername", member.get("memberUsername"));
+                                    queryRemove.getFirstInBackground(new GetCallback<ParseObject>() {
+                                        @Override
+                                        public void done(ParseObject parseObject, ParseException e) {
+                                            parseObject.deleteInBackground();
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        //Creates new arraylist for all the checked people
                         SparseBooleanArray checked = inviteFriendsList.getCheckedItemPositions();
                         ArrayList<String> selectedItems = new ArrayList<>();
                         //Getting the names of the user's friends

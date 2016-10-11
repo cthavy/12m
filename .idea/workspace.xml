@@ -19,11 +19,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" afterPath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/io/github/a12m/one2many/EventActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/io/github/a12m/one2many/EventActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/io/github/a12m/one2many/Lobby.java" afterPath="$PROJECT_DIR$/app/src/main/java/io/github/a12m/one2many/Lobby.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/io/github/a12m/one2many/Profile.java" afterPath="$PROJECT_DIR$/app/src/main/java/io/github/a12m/one2many/Profile.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_invite_friends.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_invite_friends.xml" />
     </list>
     <ignored path="12m.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -59,15 +55,17 @@
       <file leaf-file-name="EventActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/io/github/a12m/one2many/EventActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="258">
-              <caret line="333" column="19" selection-start-line="333" selection-start-column="19" selection-end-line="333" selection-end-column="19" />
+            <state relative-caret-position="300">
+              <caret line="349" column="25" selection-start-line="349" selection-start-column="25" selection-end-line="349" selection-end-column="25" />
               <folding>
-                <element signature="e#11379#13841#0" expanded="true" />
-                <element signature="e#13840#13841#0" expanded="true" />
-                <element signature="e#14046#14245#0" expanded="true" />
-                <element signature="e#14244#14245#0" expanded="true" />
-                <element signature="e#14462#14463#0" expanded="true" />
-                <element signature="e#14509#14510#0" expanded="true" />
+                <element signature="e#11416#15115#0" expanded="true" />
+                <element signature="e#12251#12593#0" expanded="true" />
+                <element signature="e#12592#12593#0" expanded="true" />
+                <element signature="e#15114#15115#0" expanded="true" />
+                <element signature="e#15320#15519#0" expanded="true" />
+                <element signature="e#15518#15519#0" expanded="true" />
+                <element signature="e#15736#15737#0" expanded="true" />
+                <element signature="e#15783#15784#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2741,15 +2739,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/io/github/a12m/one2many/EventActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="333" column="19" selection-start-line="333" selection-start-column="19" selection-end-line="333" selection-end-column="19" />
+        <state relative-caret-position="300">
+          <caret line="349" column="25" selection-start-line="349" selection-start-column="25" selection-end-line="349" selection-end-column="25" />
           <folding>
-            <element signature="e#11379#13841#0" expanded="true" />
-            <element signature="e#13840#13841#0" expanded="true" />
-            <element signature="e#14046#14245#0" expanded="true" />
-            <element signature="e#14244#14245#0" expanded="true" />
-            <element signature="e#14462#14463#0" expanded="true" />
-            <element signature="e#14509#14510#0" expanded="true" />
+            <element signature="e#11416#15115#0" expanded="true" />
+            <element signature="e#12251#12593#0" expanded="true" />
+            <element signature="e#12592#12593#0" expanded="true" />
+            <element signature="e#15114#15115#0" expanded="true" />
+            <element signature="e#15320#15519#0" expanded="true" />
+            <element signature="e#15518#15519#0" expanded="true" />
+            <element signature="e#15736#15737#0" expanded="true" />
+            <element signature="e#15783#15784#0" expanded="true" />
           </folding>
         </state>
       </provider>
