@@ -10,20 +10,30 @@
     tools:context="io.github.a12m.one2many.InviteFriendsActivity"
     android:background="@color/colorPrimary">
 
-    <Button
-        android:id="@+id/buttonChosenFriends"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="Select"/>
-
     <ListView
         android:id="@+id/listViewInviteFriends"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/buttonChosenFriends">
     </ListView>
+
+    <Button
+        android:id="@+id/buttonChosenFriends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonInviteCancel"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
 
     <!--<ProgressBar-->
         <!--android:id="@+id/progressBarInviteFriends"-->
