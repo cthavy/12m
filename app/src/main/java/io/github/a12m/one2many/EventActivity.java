@@ -42,6 +42,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     TextView numberOfMembers;
 
     String eventName;
+    int numberOfMembersCount;
 
     List<ParseObject> selectedMembers;
 
@@ -163,7 +164,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            String members = "Number of Members: " + String.valueOf(ob.size() + 1);
+            numberOfMembersCount = ob.size() + 1;
+            String members = "Number of Members: " + String.valueOf(numberOfMembersCount);
 
             if(!isOwner){
                 String owner = "Owner: " + ob2.get(0).getString("owner");
@@ -304,6 +306,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                                         @Override
                                         public void done(ParseObject parseObject, ParseException e) {
                                             parseObject.deleteInBackground();
+                                            //numberOfMembersCount--;
                                         }
                                     });
                                 }
@@ -348,6 +351,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                                 }
                             }
                         }
+                        //Not working
+                        //numberOfMembers.setText("Number of Members: " + String.valueOf(numberOfMembersCount));
                         dialogEditMembers.dismiss();
                     }
                 });
