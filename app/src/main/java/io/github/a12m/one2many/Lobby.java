@@ -477,7 +477,8 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
 
 
         // Camera permission has not been granted yet. Request it directly.
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,},
                 REQUEST_CAMERA);
     }
 
@@ -489,11 +490,14 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
             Log.i("Lobby", "Received response for Camera permission request.");
 
             // Check if the only required permission has been granted
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 1 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
                 // Camera permission has been granted, preview can be displayed
 
-                takePicture();
+                //takePicture();
+                startActivity(new Intent(Lobby.this, CustomCamera.class));
 
             } else {
                 //Permission not granted

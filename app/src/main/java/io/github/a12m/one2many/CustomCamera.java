@@ -3,11 +3,13 @@ package io.github.a12m.one2many;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -39,6 +41,8 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
     private Button flipCamera;
     private Button flashCameraButton;
     private Button captureImage;
+    private Button cancelButton;
+    private Button savePic;
     private int cameraId;
     private boolean flashmode = false;
     private int rotation;
@@ -65,6 +69,8 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
         flipCamera = (Button) findViewById(R.id.flipCamera);
         flashCameraButton = (Button) findViewById(R.id.flash);
         captureImage = (Button) findViewById(R.id.captureImage);
+        cancelButton = (Button) findViewById(R.id.button_cancel_picture);
+        savePic = (Button) findViewById(R.id.button_save_picture);
         surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
 
         surfaceHolder = surfaceView.getHolder();
@@ -324,6 +330,37 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
 
                     CustomCamera.this.getContentResolver().insert(
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+                    flipCamera.setEnabled(false);
+                    flipCamera.setVisibility(View.INVISIBLE);
+
+                    flashCameraButton.setEnabled(false);
+                    flashCameraButton.setVisibility(View.INVISIBLE);
+
+                    cancelButton.setEnabled(true);
+                    cancelButton.setVisibility(View.VISIBLE);
+                    savePic.setEnabled(true);
+                    savePic.setVisibility(View.VISIBLE);
+
+                    final Uri imageUri = Uri.fromFile(imageFile);
+
+                    cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = getIntent();
+                            startActivity(i);
+                            finish();
+
+                        }
+                    });
+                    savePic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(CustomCamera.this, SavePhotos.class);
+                            i.putExtra("imageUri", imageUri);
+                            startActivity(i);
+                        }
+                    });
 
                 } catch (Exception e) {
                     e.printStackTrace();
