@@ -26,8 +26,6 @@ import java.util.List;
 /*
 Class to display profile page as well as present a logout button for user.
 Logout will bring the app back to the login page.
-
-Does not display friend and event count yet
  */
 public class Profile extends AppCompatActivity implements View.OnClickListener {
     ImageView d_pic;

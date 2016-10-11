@@ -9,11 +9,15 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +26,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +41,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     TextView numberOfMembers;
 
     String eventName;
+
+    List<ParseObject> selectedMembers;
 
     Button btnEdit;
     Button btnMembers;
@@ -53,6 +60,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         Intent i = getIntent();
 
         eventName = i.getStringExtra("EventName");
+
+        selectedMembers = new ArrayList<>();
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarEvent);
         collapsingToolbarLayout.setTitle(eventName);
@@ -169,24 +178,24 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.buttonEventOwnerEdit:
                 //Creates the edit dialog
-                final Dialog dialog = new Dialog(v.getContext());
-                dialog.setContentView(R.layout.edit_event_dialog);
-                dialog.show();
+                final Dialog dialogRename = new Dialog(v.getContext());
+                dialogRename.setContentView(R.layout.edit_event_dialog);
+                dialogRename.show();
 
-                final EditText eName = (EditText) dialog.findViewById(R.id.eventName);
+                final EditText eName = (EditText) dialogRename.findViewById(R.id.eventName);
                 eName.setText(eventName);
 
                 //Cancel button to exit dialog
-                final Button cancelButton = (Button) dialog.findViewById(R.id.buttonCancel);
+                final Button cancelButton = (Button) dialogRename.findViewById(R.id.buttonCancel);
                 cancelButton.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
-                        dialog.dismiss();
+                        dialogRename.dismiss();
                     }
                 });
 
                 //Save button to save edits
-                final Button saveButton = (Button) dialog.findViewById(R.id.buttonSave);
+                final Button saveButton = (Button) dialogRename.findViewById(R.id.buttonSave);
                 saveButton.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
@@ -204,16 +213,149 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                                 isNameChanged = true;
                             }
                         });
-                        dialog.dismiss();
+                        dialogRename.dismiss();
+                    }
+                });
+                break;
+
+            case R.id.buttonEventOwnerAddMembers:
+                //Creates dialog for editing the event members
+                final Dialog dialogEditMembers = new Dialog(v.getContext());
+                dialogEditMembers.setContentView(R.layout.activity_invite_friends);
+                dialogEditMembers.show();
+
+                final ListView inviteFriendsList = (ListView) dialogEditMembers.findViewById(R.id.listViewInviteFriends);
+
+                //Getting all the names of the user's friends
+                ParseQuery<ParseObject> query1 = ParseQuery.getQuery("FriendRequest");
+                query1.whereEqualTo("toUser", ParseUser.getCurrentUser().getUsername());
+                query1.whereEqualTo("accepted", true);
+
+                ParseQuery<ParseObject> query2 = ParseQuery.getQuery("FriendRequest");
+                query2.whereEqualTo("fromUser", ParseUser.getCurrentUser().getUsername());
+                query2.whereEqualTo("accepted", true);
+
+                //Joint 'or' query for finding all friends that the user has accepted or was accepted by
+                List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
+                queries.add(query1);
+                queries.add(query2);
+
+                ParseQuery<ParseObject> mainQuery = ParseQuery.or(queries);
+
+                List<ParseObject> results = null;
+
+                try {
+                    results = mainQuery.find();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                String[] friends = new String[results.size()];
+                //Iterates through the list and adds all friends to the array
+                for (int i = 0; i < results.size(); i++){
+                    if (!results.get(i).get("fromUser").equals(ParseUser.getCurrentUser().getUsername())){
+                        friends[i] = ((String) results.get(i).get("fromUser"));
+                    } else {
+                        friends[i] = ((String) results.get(i).get("toUser"));
+                    }
+                }
+
+                inviteFriendsList.setVisibility(View.VISIBLE);
+                inviteFriendsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+                inviteFriendsList.setItemsCanFocus(true);
+
+                final ArrayAdapter arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_multiple_choice,friends);
+                inviteFriendsList.setAdapter(arrayAdapter);
+
+                //This block of code checks friends that are already members of the event
+                if (friends.length != 0){
+                    List<ParseObject> results2 = null;
+                    ParseQuery<ParseObject> membersQuery = ParseQuery.getQuery("EventMembers");
+                    membersQuery.whereEqualTo("eventId", getIntent().getStringExtra("EventId"));
+                    try{
+                        results2 = membersQuery.find();
+                        setMembers(results2);
+                    } catch (ParseException e){
+                        e.printStackTrace();
+                    }
+                    for (int i = 0; i < friends.length; i++){
+                        for (int j = 0; j < results2.size(); j++){
+                            if (results2.get(j).get("memberUsername").equals(friends[i])){
+                                inviteFriendsList.setItemChecked(j, true);
+                            }
+                        }
+                    }
+                }
+
+                //When the user clicks the button to add these friends
+                Button selectedFriends = (Button) dialogEditMembers.findViewById(R.id.buttonChosenFriends);
+                selectedFriends.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SparseBooleanArray checked = inviteFriendsList.getCheckedItemPositions();
+                        ArrayList<String> selectedItems = new ArrayList<>();
+                        //Getting the names of the user's friends
+                        for (int i = 0; i < checked.size(); i++) {
+                            // Item position in adapter
+                            int position = checked.keyAt(i);
+                            // Add sport if it is checked i.e.) == TRUE!
+                            if (checked.valueAt(i))
+                                selectedItems.add((String) arrayAdapter.getItem(position));
+                        }
+
+                        //Sends invites if there are any checked friends
+                        if (selectedItems.size() != 0){
+                            for (String list : selectedItems) {
+                                Boolean check = false;
+                                //Checks to see if the checked list already has members in event
+                                for (ParseObject isMember : getMembers()){
+                                    if (isMember.get("memberUsername").equals(list)){
+                                        check = true;
+                                    }
+                                }
+                                //Invites friends that are already not a member of the event
+                                if (!check){
+                                    ParseObject req = new ParseObject("EventRequest");
+                                    req.put("fromUser", ParseUser.getCurrentUser().getUsername());
+                                    req.put("toUser", list);
+                                    req.put("forEventId", getIntent().getStringExtra("EventId"));
+                                    req.put("accepted", false);
+                                    req.put("ignored", false);
+                                    try {
+                                        req.save();
+                                    } catch (ParseException e1) {
+                                        e1.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                        dialogEditMembers.dismiss();
                     }
                 });
 
+                //Cancel button to exit dialog
+                Button cancelInvites = (Button) dialogEditMembers.findViewById(R.id.buttonInviteCancel);
+                cancelInvites.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        dialogEditMembers.dismiss();
+                    }
+                });
                 break;
-            case R.id.buttonEventOwnerAddMembers:
-                break;
+
             case R.id.buttonEventOwnerFinalize:
                 break;
         }
+    }
+
+    //Setter for members of current event
+    private void setMembers(List<ParseObject> listOfMembers){
+        selectedMembers = listOfMembers;
+    }
+
+    //Getter for members of current event
+    public List<ParseObject> getMembers() {
+        return selectedMembers;
     }
 
     //When the back button on the toolbar is pressed
