@@ -18,10 +18,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -70,6 +72,37 @@ public class SavePhotos extends AppCompatActivity {
                 dialog.show();
             }
         });
+
+        //Saving photo to database
+
+        buttonSavePicture.setOnClickListener(new View.OnClickListener() {
+            boolean isVideo = true;
+            @Override
+            public void onClick(View v) {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    scaled.compress(Bitmap.CompressFormat.PNG, 0, stream);
+                    // get byte array here
+                    byte[] image= stream.toByteArray();
+
+                    ParseUser user = ParseUser.getCurrentUser();
+
+                    // Create the ParseFile
+                    ParseFile file = new ParseFile("image.png", image);
+                    // Upload the image into Parse Cloud
+                    file.saveInBackground();
+                    // Create a New Class called "ImageUpload" in Parse
+                    ParseObject user_photos = new ParseObject("Picture");
+                    // Create a column named "ImageName" and set the string
+                    user_photos.put("isVideo", false);
+                    // Create a column named "ImageFile" and insert the image
+                    user_photos.put("pic", file);
+                    user_photos.put("takenBy", ParseUser.getCurrentUser().getUsername());
+
+                    //Check if uploaded
+                Toast.makeText(getApplicationContext(), "The image has been uploaded", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     public Dialog onCreateDialogSingleChoice(final String[] myEvents) {
@@ -104,7 +137,6 @@ public class SavePhotos extends AppCompatActivity {
                     // or return them to the component that opened the dialog
                     selectEvent.setText(myEvents[whichSelected[0]]);
                     buttonSavePicture.setEnabled(true);
-
                 }
             })
             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
