@@ -83,9 +83,6 @@ public class SavePhotos extends AppCompatActivity {
                     scaled.compress(Bitmap.CompressFormat.PNG, 0, stream);
                     // get byte array here
                     byte[] image= stream.toByteArray();
-
-                    ParseUser user = ParseUser.getCurrentUser();
-
                     // Create the ParseFile
                     ParseFile file = new ParseFile("image.png", image);
                     // Upload the image into Parse Cloud
