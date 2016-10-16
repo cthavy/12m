@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -53,7 +54,7 @@ public class SavePhotos extends AppCompatActivity {
 
         Bundle extra = getIntent().getExtras();
 
-        Uri imageUri = (Uri) extra.get("imageUri");
+        final Uri imageUri = (Uri) extra.get("imageUri");
 
         Bitmap thumbnail = null;
         try {
@@ -73,31 +74,38 @@ public class SavePhotos extends AppCompatActivity {
             }
         });
 
-        //Saving photo to database
 
+        // Capture button clicks
         buttonSavePicture.setOnClickListener(new View.OnClickListener() {
-            boolean isVideo = true;
-            @Override
-            public void onClick(View v) {
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    scaled.compress(Bitmap.CompressFormat.PNG, 0, stream);
-                    // get byte array here
-                    byte[] image= stream.toByteArray();
-                    // Create the ParseFile
-                    ParseFile file = new ParseFile("image.png", image);
-                    // Upload the image into Parse Cloud
-                    file.saveInBackground();
-                    // Create a New Class called "ImageUpload" in Parse
-                    ParseObject user_photos = new ParseObject("Picture");
-                    // Create a column named "ImageName" and set the string
-                    user_photos.put("isVideo", false);
-                    // Create a column named "ImageFile" and insert the image
-                    user_photos.put("pic", file);
-                    user_photos.put("takenBy", ParseUser.getCurrentUser().getUsername());
 
-                    //Check if uploaded
+            public void onClick(View arg0) {
+                // Convert it to byte
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                // Compress image to lower quality scale 1 - 100
+                scaled.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] image = stream.toByteArray();
+
+                // Create the ParseFile
+                ParseFile file = new ParseFile("androidbegin.png", image);
+                // Upload the image into Parse Cloud
+
+                file.saveInBackground();
+                // Create a New Class called "ImageUpload" in Parse
+                ParseObject imgupload = new ParseObject("Picture");
+
+                // Create a column named "ImageName" and set the string
+                imgupload.put("eventId", "Testing");
+
+                // Insert isVideo, pic, and takenBy to each of the columns
+                imgupload.put("isVideo", false);
+                imgupload.put("pic", file);
+                imgupload.put("takenBy", ParseUser.getCurrentUser().getUsername());
+
+                // Create the class and the columns
+                imgupload.saveInBackground();
+
+                // Show a simple toast message to show the photo has been uploaded
                 Toast.makeText(getApplicationContext(), "The image has been uploaded", Toast.LENGTH_SHORT).show();
-
             }
         });
     }
