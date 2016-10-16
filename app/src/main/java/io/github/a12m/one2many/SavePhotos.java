@@ -141,6 +141,7 @@ public class SavePhotos extends AppCompatActivity {
                     // User clicked OK, so save the result somewhere
                     // or return them to the component that opened the dialog
                     selectEvent.setText(myEvents[whichSelected[0]]);
+                    Toast.makeText(getApplicationContext(), "Event Name: " + myEvents[whichSelected[0]], Toast.LENGTH_SHORT).show();
                     buttonSavePicture.setEnabled(true);
                 }
             })
