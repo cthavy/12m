@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -199,6 +200,7 @@ public class SavePhotos extends AppCompatActivity {
             //Adding events the user is a part of to the list
             for (ParseObject event : ob2) {
                 String eventId = (String) event.get("eventId");
+                Log.i("ID: ", eventId);
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
                 try {
                     itemName[i] = query.get(eventId).getString("name");
