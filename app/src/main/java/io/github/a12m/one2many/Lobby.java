@@ -93,23 +93,6 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
         search_text.setAdapter(adapter);
         search_text.setThreshold(1);
 
-//        takePictureButton = (ImageButton) findViewById(R.id.btn_camera);
-//        takePictureButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                ContentValues values = new ContentValues();
-//                values.put(MediaStore.Images.Media.TITLE, "New Photo");
-//                values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
-//                imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-//                startActivityForResult(intent, TAKE_PHOTO_CODE);
-//
-//            }
-//        });
-
-
         btn_camera = (ImageButton) findViewById(R.id.btn_camera);
 
         btn_camera.setOnClickListener(new View.OnClickListener() {
