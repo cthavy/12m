@@ -100,7 +100,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         eventPhotos = (GridView) findViewById(R.id.gridViewEventPictures);
 
 
-        //new GetEventPictures(i.getStringExtra("EventId")).execute();
+        new GetEventPictures(i.getStringExtra("EventId")).execute();
 
     }
 
