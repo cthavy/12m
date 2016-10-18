@@ -35,6 +35,7 @@ public class SavePhotos extends AppCompatActivity {
     ImageView picturePreview;
     Button selectEvent;
     Button buttonSavePicture;
+    String pickedEvent;
 
     String eventNames[];
     List<ParseObject> list1;
@@ -95,7 +96,7 @@ public class SavePhotos extends AppCompatActivity {
                 ParseObject imgupload = new ParseObject("Picture");
 
                 // Create a column named "ImageName" and set the string
-                imgupload.put("eventId", "Testing");
+                imgupload.put("eventId", pickedEvent);
 
                 // Insert isVideo, pic, and takenBy to each of the columns
                 imgupload.put("isVideo", false);
@@ -142,6 +143,7 @@ public class SavePhotos extends AppCompatActivity {
                     // User clicked OK, so save the result somewhere
                     // or return them to the component that opened the dialog
                     selectEvent.setText(myEvents[whichSelected[0]]);
+                    pickedEvent = myEvents[whichSelected[0]];
                     Toast.makeText(getApplicationContext(), "Event Name: " + myEvents[whichSelected[0]], Toast.LENGTH_SHORT).show();
                     buttonSavePicture.setEnabled(true);
                 }
@@ -200,13 +202,9 @@ public class SavePhotos extends AppCompatActivity {
             //Adding events the user is a part of to the list
             for (ParseObject event : ob2) {
                 String eventId = (String) event.get("eventId");
-                Log.i("ID: ", eventId);
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
-                try {
-                    itemName[i] = query.get(eventId).getString("name");
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                Log.i("SET: ", eventId);
+                itemName[i] = eventId;
                 i++;
             }
 
