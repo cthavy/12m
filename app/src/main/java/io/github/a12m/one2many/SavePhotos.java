@@ -148,14 +148,12 @@ public class SavePhotos extends AppCompatActivity {
                     // or return them to the component that opened the dialog
                     selectEvent.setText(myEvents[whichSelected[0]]);
                     eventId = myEvents[whichSelected[0]];
-                    String objId;
                     if(whichSelected[0] > list1.size() - 1){
-                        objId = list2.get(whichSelected[0] - list1.size() - 1).getObjectId();
+                        eventId = list2.get(whichSelected[0] - list1.size()).getObjectId();
                     } else{
-                        objId = list1.get(whichSelected[0]).getObjectId();
+                        eventId = list1.get(whichSelected[0]).getObjectId();
                     }
-                    Toast.makeText(getApplicationContext(), "ID: " + objId, Toast.LENGTH_LONG).show();
-                    Toast.makeText(getApplicationContext(), "Event Name: " + myEvents[whichSelected[0]], Toast.LENGTH_SHORT).show();
+
                     buttonSavePicture.setEnabled(true);
                 }
             })
