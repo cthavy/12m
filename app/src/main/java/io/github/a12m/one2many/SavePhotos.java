@@ -40,7 +40,7 @@ public class SavePhotos extends AppCompatActivity {
     List<ParseObject> list1;
     List<ParseObject> list2;
 
-    String eventName;
+    String eventId;
 
     //Dialog dialog;
 
@@ -97,7 +97,7 @@ public class SavePhotos extends AppCompatActivity {
                 ParseObject imgupload = new ParseObject("Picture");
 
                 // Create a column named "ImageName" and set the string
-                imgupload.put("eventId", eventName);
+                imgupload.put("eventId", eventId);
 
                 // Insert isVideo, pic, and takenBy to each of the columns
                 imgupload.put("isVideo", false);
@@ -137,6 +137,9 @@ public class SavePhotos extends AppCompatActivity {
                 }
             })
 
+                // 0 1 2 3 4 5 size: 6
+                // 6 7 8 9 size: 4
+
             // Set the action buttons
             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
@@ -144,7 +147,14 @@ public class SavePhotos extends AppCompatActivity {
                     // User clicked OK, so save the result somewhere
                     // or return them to the component that opened the dialog
                     selectEvent.setText(myEvents[whichSelected[0]]);
-                    eventName = myEvents[whichSelected[0]];
+                    eventId = myEvents[whichSelected[0]];
+                    String objId;
+                    if(whichSelected[0] > list1.size() - 1){
+                        objId = list2.get(whichSelected[0] - list1.size() - 1).getObjectId();
+                    } else{
+                        objId = list1.get(whichSelected[0]).getObjectId();
+                    }
+                    Toast.makeText(getApplicationContext(), "ID: " + objId, Toast.LENGTH_LONG).show();
                     Toast.makeText(getApplicationContext(), "Event Name: " + myEvents[whichSelected[0]], Toast.LENGTH_SHORT).show();
                     buttonSavePicture.setEnabled(true);
                 }
@@ -200,7 +210,9 @@ public class SavePhotos extends AppCompatActivity {
                 i++;
             }
 
-            //Adding events the user is a part of to the list
+
+
+//            //Adding events the user is a part of to the list
             for (ParseObject event : ob2) {
                 String eventId = (String) event.get("eventId");
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
@@ -212,6 +224,15 @@ public class SavePhotos extends AppCompatActivity {
                 }
                 i++;
             }
+
+            //Adding events the user is a part of to the list
+//            for (ParseObject event : ob2) {
+//                String eventId = (String) event.get("eventId");
+//                ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
+//                Log.i("SET: ", eventId);
+//                itemName[i] = eventId;
+//                i++;
+//            }
 
             return null;
         }
