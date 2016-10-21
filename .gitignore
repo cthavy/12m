@@ -1,0 +1,6 @@
+local.properties
+gradlew
+gradlew.bat
+.idea/workspace.xml
+.gradle/
+build/intermediates/dex-cache
