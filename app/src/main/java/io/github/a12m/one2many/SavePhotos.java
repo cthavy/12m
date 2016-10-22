@@ -24,6 +24,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,6 +42,8 @@ public class SavePhotos extends AppCompatActivity {
     List<ParseObject> list2;
 
     String eventId;
+
+    final int[] whichSelected = new int[1];
 
     //Dialog dialog;
 
@@ -65,7 +68,7 @@ public class SavePhotos extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int nh = (int) ( thumbnail.getHeight() * (1024.0 / thumbnail.getWidth()) );
+        int nh = (int) (thumbnail.getHeight() * (1024.0 / thumbnail.getWidth()));
         final Bitmap scaled = Bitmap.createScaledBitmap(thumbnail, 1024, nh, true);
         picturePreview.setImageBitmap(scaled);
 
@@ -82,6 +85,9 @@ public class SavePhotos extends AppCompatActivity {
         buttonSavePicture.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View arg0) {
+                buttonSavePicture.setEnabled(false);
+                selectEvent.setEnabled(false);
+
                 // Convert it to byte
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 // Compress image to lower quality scale 1 - 100
@@ -105,23 +111,47 @@ public class SavePhotos extends AppCompatActivity {
                 imgupload.put("takenBy", ParseUser.getCurrentUser().getUsername());
 
                 // Create the class and the columns
-                imgupload.saveInBackground();
+                imgupload.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
 
-                // Show a simple toast message to show the photo has been uploaded
-                Toast.makeText(getApplicationContext(), "The image has been uploaded", Toast.LENGTH_SHORT).show();
+                        if (e == null) {
+                            // Show a simple toast message to show the photo has been uploaded
+                            Toast.makeText(getApplicationContext(), "The image has been uploaded",
+                                    Toast.LENGTH_SHORT).show();
+
+                            Intent i = new Intent(SavePhotos.this, EventActivity.class);
+                            i.putExtra("EventName", selectEvent.getText().toString());
+                            i.putExtra("EventId", eventId);
+                            if (whichSelected[0] > list1.size() - 1) {
+                                i.putExtra("IsOwner", false);
+                            } else {
+                                i.putExtra("IsOwner", true);
+                                i.putExtra("OwnerName", ParseUser.getCurrentUser().getUsername());
+                            }
+                            finish();
+                            startActivity(i);
+
+
+                        } else {
+                            buttonSavePicture.setEnabled(true);
+                            selectEvent.setEnabled(true);
+
+                            Toast.makeText(getApplicationContext(), "Unable to upload, please try again",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
     }
+
 
     public Dialog onCreateDialogSingleChoice(final String[] myEvents) {
 
         //Initialize the Alert Dialog
         final AlertDialog.Builder builder = new AlertDialog.Builder(SavePhotos.this);
-        //Source of the data in the DIalog
-
-        Toast.makeText(this, "Length: " + myEvents.length, Toast.LENGTH_LONG).show();
-
-        final int[] whichSelected = new int[1];
+        //Source of the data in the Dialog
 
         // Set the dialog title
         builder.setTitle("Select Event")
