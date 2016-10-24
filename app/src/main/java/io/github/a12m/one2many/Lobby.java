@@ -412,6 +412,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
                         i.putExtra("EventName", itemName[position]);
                         i.putExtra("EventId", (String) ob2.get(position - ob.size()).get("eventId"));
                         i.putExtra("IsOwner", false);
+                        //i.putExtra("eventImg", somefile);
 
                         startActivity(i);
                     } else {

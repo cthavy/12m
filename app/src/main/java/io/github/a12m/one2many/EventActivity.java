@@ -17,11 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -37,6 +37,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     CollapsingToolbarLayout collapsingToolbarLayout;
 
     Toolbar toolbar;
+
+    ImageButton btnCoverPic;
 
     TextView ownerName;
     TextView numberOfMembers;
@@ -96,6 +98,9 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         btnFinalize = (Button) findViewById(R.id.buttonEventOwnerFinalize);
         btnFinalize.setOnClickListener(this);
+
+        btnCoverPic = (ImageButton) findViewById(R.id.imageViewEventPage);
+        btnCoverPic.setOnClickListener(this);
 
         eventPhotos = (GridView) findViewById(R.id.gridViewEventPictures);
 
