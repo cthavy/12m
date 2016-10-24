@@ -64,4 +64,12 @@
         android:visibility="invisible"
         android:enabled="false" />
 
+    <Button
+        android:id="@+id/button_video_capture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Video"/>
+
 </RelativeLayout>

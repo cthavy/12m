@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
+import android.media.CamcorderProfile;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,6 +49,10 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
     private boolean flashmode = false;
     private int rotation;
 
+    Button videoButton;
+    boolean recording;
+    private MediaRecorder mediaRecorder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +78,14 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
         cancelButton = (Button) findViewById(R.id.button_cancel_picture);
         savePic = (Button) findViewById(R.id.button_save_picture);
         surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+        videoButton = (Button) findViewById(R.id.button_video_capture);
 
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
         flipCamera.setOnClickListener(this);
         captureImage.setOnClickListener(this);
         flashCameraButton.setOnClickListener(this);
+        videoButton.setOnClickListener(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if (Camera.getNumberOfCameras() > 1) {
@@ -87,6 +95,8 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
                 PackageManager.FEATURE_CAMERA_FLASH)) {
             flashCameraButton.setVisibility(View.GONE);
         }
+
+        //mediaRecorder = new MediaRecorder();
 
     }
 
@@ -119,9 +129,80 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
             case R.id.captureImage:
                 takeImage();
                 break;
+            case R.id.button_video_capture:
+                videoCapture();
+                break;
 
             default:
                 break;
+        }
+    }
+
+    private void videoCapture(){
+        if(recording){
+            // stop recording and release camera
+            mediaRecorder.stop();  // stop the recording
+            releaseMediaRecorder(); // release the MediaRecorder object
+
+            //Exit after saved
+            //finish();
+        }else{
+
+            //Release Camera before MediaRecorder start
+            releaseCamera();
+
+            if(!prepareMediaRecorder()){
+                Toast.makeText(CustomCamera.this,
+                        "Fail in prepareMediaRecorder()!\n - Ended -",
+                        Toast.LENGTH_LONG).show();
+                finish();
+            }
+
+            mediaRecorder.start();
+            recording = true;
+            videoButton.setText("STOP");
+        }
+    }
+
+    private boolean prepareMediaRecorder(){
+        camera = Camera.open(cameraId);
+        mediaRecorder = new MediaRecorder();
+
+        camera.unlock();
+        mediaRecorder.setCamera(camera);
+
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+
+        mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+
+        //mediaRecorder.setOutputFile("/One2Many/" + new Timestamp(new java.util.Date().getTime()).toString() + ".mp4");
+        mediaRecorder.setOutputFile(Environment.getExternalStorageDirectory() + "/One2Many/" +
+                new Timestamp(new java.util.Date().getTime()).toString() + ".mp4");
+        mediaRecorder.setMaxDuration(10000); // Set max duration 60 sec.
+        mediaRecorder.setMaxFileSize(5000000); // Set max file size 5M
+
+        mediaRecorder.setPreviewDisplay(surfaceView.getHolder().getSurface());
+
+        try {
+            mediaRecorder.prepare();
+        } catch (IllegalStateException e) {
+            releaseMediaRecorder();
+            return false;
+        } catch (IOException e) {
+            releaseMediaRecorder();
+            return false;
+        }
+        return true;
+
+    }
+
+    private void releaseMediaRecorder(){
+        if (mediaRecorder != null) {
+            mediaRecorder.reset();   // clear recorder configuration
+            mediaRecorder.release(); // release the recorder object
+            mediaRecorder = null;
+            camera.lock();           // lock camera for later use
         }
     }
 
@@ -288,10 +369,10 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
                     File folder = null;
                     if (state.contains(Environment.MEDIA_MOUNTED)) {
                         folder = new File(Environment
-                                .getExternalStorageDirectory() + "/Demo");
+                                .getExternalStorageDirectory() + "/One2Many");
                     } else {
                         folder = new File(Environment
-                                .getExternalStorageDirectory() + "/Demo");
+                                .getExternalStorageDirectory() + "/One2Many");
                     }
 
                     boolean success = true;
