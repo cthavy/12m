@@ -3,11 +3,14 @@ package io.github.a12m.one2many;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
+import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -39,9 +42,16 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
     private Button flipCamera;
     private Button flashCameraButton;
     private Button captureImage;
+    private Button cancelButton;
+    private Button savePic;
     private int cameraId;
     private boolean flashmode = false;
     private int rotation;
+
+    Button videoButton;
+    boolean recording;
+    private MediaRecorder mediaRecorder;
+    String videoUrl;
 
 
     @Override
@@ -65,13 +75,17 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
         flipCamera = (Button) findViewById(R.id.flipCamera);
         flashCameraButton = (Button) findViewById(R.id.flash);
         captureImage = (Button) findViewById(R.id.captureImage);
+        cancelButton = (Button) findViewById(R.id.button_cancel_picture);
+        savePic = (Button) findViewById(R.id.button_save_picture);
         surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+        videoButton = (Button) findViewById(R.id.button_video_capture);
 
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
         flipCamera.setOnClickListener(this);
         captureImage.setOnClickListener(this);
         flashCameraButton.setOnClickListener(this);
+        videoButton.setOnClickListener(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if (Camera.getNumberOfCameras() > 1) {
@@ -81,6 +95,8 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
                 PackageManager.FEATURE_CAMERA_FLASH)) {
             flashCameraButton.setVisibility(View.GONE);
         }
+
+        //mediaRecorder = new MediaRecorder();
 
     }
 
@@ -113,9 +129,97 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
             case R.id.captureImage:
                 takeImage();
                 break;
+            case R.id.button_video_capture:
+                videoCapture();
+                break;
 
             default:
                 break;
+        }
+    }
+
+    private void videoCapture(){
+        if(recording){
+            // stop recording and release camera
+            videoButton.setText("START");
+            mediaRecorder.stop();  // stop the recording
+            releaseMediaRecorder(); // release the MediaRecorder object
+
+            //Exit after saved
+            Intent i = new Intent(CustomCamera.this, SavePhotos.class);
+            Uri videoUri = Uri.parse(videoUrl);
+            i.putExtra("imageUri", videoUri);
+            i.putExtra("isVideo", true);
+            startActivity(i);
+            finish();
+        }else{
+
+            //Release Camera before MediaRecorder start
+            releaseCamera();
+
+            if(!prepareMediaRecorder()){
+                Toast.makeText(CustomCamera.this,
+                        "Fail in prepareMediaRecorder()!\n - Ended -",
+                        Toast.LENGTH_LONG).show();
+                finish();
+            }
+
+            mediaRecorder.start();
+            recording = true;
+            videoButton.setText("STOP");
+        }
+    }
+
+    private boolean prepareMediaRecorder(){
+        camera = Camera.open(cameraId);
+        camera.setDisplayOrientation(90);
+        mediaRecorder = new MediaRecorder();
+
+        camera.unlock();
+        mediaRecorder.setCamera(camera);
+        mediaRecorder.setOrientationHint(90);
+
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mediaRecorder.setVideoEncodingBitRate(2000000);
+        mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        mediaRecorder.setVideoFrameRate(30);
+        mediaRecorder.setVideoSize(1920, 1080);
+
+        videoUrl = Environment.getExternalStorageDirectory() + "/One2Many/" +
+                new Timestamp(new java.util.Date().getTime()).toString()
+                        .replaceAll(":", "")
+                        .replaceAll("-", "")
+                + ".mp4";
+
+        mediaRecorder.setOutputFile(videoUrl);
+        mediaRecorder.setMaxDuration(10000); // Set max duration 10 sec.
+        mediaRecorder.setMaxFileSize(5000000); // Set max file size 5M
+
+        mediaRecorder.setPreviewDisplay(surfaceView.getHolder().getSurface());
+
+        try {
+            mediaRecorder.prepare();
+        } catch (IllegalStateException e) {
+            releaseMediaRecorder();
+            return false;
+        } catch (IOException e) {
+            releaseMediaRecorder();
+            return false;
+        }
+        return true;
+
+    }
+
+    private void releaseMediaRecorder(){
+        if (mediaRecorder != null) {
+            mediaRecorder.reset();   // clear recorder configuration
+            mediaRecorder.release(); // release the recorder object
+            mediaRecorder = null;
+            camera.lock();           // lock camera for later use
         }
     }
 
@@ -282,10 +386,10 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
                     File folder = null;
                     if (state.contains(Environment.MEDIA_MOUNTED)) {
                         folder = new File(Environment
-                                .getExternalStorageDirectory() + "/Demo");
+                                .getExternalStorageDirectory() + "/One2Many");
                     } else {
                         folder = new File(Environment
-                                .getExternalStorageDirectory() + "/Demo");
+                                .getExternalStorageDirectory() + "/One2Many");
                     }
 
                     boolean success = true;
@@ -324,6 +428,39 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
 
                     CustomCamera.this.getContentResolver().insert(
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+                    flipCamera.setEnabled(false);
+                    flipCamera.setVisibility(View.INVISIBLE);
+
+                    flashCameraButton.setEnabled(false);
+                    flashCameraButton.setVisibility(View.INVISIBLE);
+
+                    cancelButton.setEnabled(true);
+                    cancelButton.setVisibility(View.VISIBLE);
+                    savePic.setEnabled(true);
+                    savePic.setVisibility(View.VISIBLE);
+
+                    final Uri imageUri = Uri.fromFile(imageFile);
+
+                    cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = getIntent();
+                            startActivity(i);
+                            finish();
+
+                        }
+                    });
+                    savePic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(CustomCamera.this, SavePhotos.class);
+                            i.putExtra("imageUri", imageUri);
+                            i.putExtra("isVideo", false);
+                            startActivity(i);
+                            finish();
+                        }
+                    });
 
                 } catch (Exception e) {
                     e.printStackTrace();
