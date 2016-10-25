@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
-import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
@@ -52,6 +51,7 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
     Button videoButton;
     boolean recording;
     private MediaRecorder mediaRecorder;
+    String videoUrl;
 
 
     @Override
@@ -141,11 +141,17 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
     private void videoCapture(){
         if(recording){
             // stop recording and release camera
+            videoButton.setText("START");
             mediaRecorder.stop();  // stop the recording
             releaseMediaRecorder(); // release the MediaRecorder object
 
             //Exit after saved
-            //finish();
+            Intent i = new Intent(CustomCamera.this, SavePhotos.class);
+            Uri videoUri = Uri.parse(videoUrl);
+            i.putExtra("imageUri", videoUri);
+            i.putExtra("isVideo", true);
+            startActivity(i);
+            finish();
         }else{
 
             //Release Camera before MediaRecorder start
@@ -166,20 +172,31 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
 
     private boolean prepareMediaRecorder(){
         camera = Camera.open(cameraId);
+        camera.setDisplayOrientation(90);
         mediaRecorder = new MediaRecorder();
 
         camera.unlock();
         mediaRecorder.setCamera(camera);
+        mediaRecorder.setOrientationHint(90);
 
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
-        mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mediaRecorder.setVideoEncodingBitRate(2000000);
+        mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        mediaRecorder.setVideoFrameRate(30);
+        mediaRecorder.setVideoSize(1920, 1080);
 
-        //mediaRecorder.setOutputFile("/One2Many/" + new Timestamp(new java.util.Date().getTime()).toString() + ".mp4");
-        mediaRecorder.setOutputFile(Environment.getExternalStorageDirectory() + "/One2Many/" +
-                new Timestamp(new java.util.Date().getTime()).toString() + ".mp4");
-        mediaRecorder.setMaxDuration(10000); // Set max duration 60 sec.
+        videoUrl = Environment.getExternalStorageDirectory() + "/One2Many/" +
+                new Timestamp(new java.util.Date().getTime()).toString()
+                        .replaceAll(":", "")
+                        .replaceAll("-", "")
+                + ".mp4";
+
+        mediaRecorder.setOutputFile(videoUrl);
+        mediaRecorder.setMaxDuration(10000); // Set max duration 10 sec.
         mediaRecorder.setMaxFileSize(5000000); // Set max file size 5M
 
         mediaRecorder.setPreviewDisplay(surfaceView.getHolder().getSurface());
@@ -439,7 +456,9 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
                         public void onClick(View v) {
                             Intent i = new Intent(CustomCamera.this, SavePhotos.class);
                             i.putExtra("imageUri", imageUri);
+                            i.putExtra("isVideo", false);
                             startActivity(i);
+                            finish();
                         }
                     });
 

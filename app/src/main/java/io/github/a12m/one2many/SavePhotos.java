@@ -4,19 +4,17 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -27,8 +25,9 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 public class SavePhotos extends AppCompatActivity {
@@ -62,90 +61,210 @@ public class SavePhotos extends AppCompatActivity {
 
         final Uri imageUri = (Uri) extra.get("imageUri");
 
-        Bitmap thumbnail = null;
-        try {
-            thumbnail = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        int nh = (int) (thumbnail.getHeight() * (1024.0 / thumbnail.getWidth()));
-        final Bitmap scaled = Bitmap.createScaledBitmap(thumbnail, 1024, nh, true);
-        picturePreview.setImageBitmap(scaled);
+        if(extra.getBoolean("isVideo")){
+            Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(imageUri.getPath(),
+                    MediaStore.Images.Thumbnails.MINI_KIND);
 
-        selectEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Dialog dialog = onCreateDialogSingleChoice(eventNames);
-                dialog.show();
-            }
-        });
+            int nh = (int) (thumbnail.getHeight() * (1024.0 / thumbnail.getWidth()));
+            final Bitmap scaled = Bitmap.createScaledBitmap(thumbnail, 1024, nh, true);
+            picturePreview.setImageBitmap(scaled);
 
+            final File file = new File(imageUri.getPath());
 
-        // Capture button clicks
-        buttonSavePicture.setOnClickListener(new View.OnClickListener() {
+            picturePreview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-            public void onClick(View arg0) {
-                buttonSavePicture.setEnabled(false);
-                selectEvent.setEnabled(false);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.fromFile(file), "video/*");
+                    startActivity(intent);
+                }
+            });
 
-                // Convert it to byte
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                // Compress image to lower quality scale 1 - 100
-                scaled.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] image = stream.toByteArray();
+            selectEvent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Dialog dialog = onCreateDialogSingleChoice(eventNames);
+                    dialog.show();
+                }
+            });
 
-                // Create the ParseFile
-                ParseFile file = new ParseFile("androidbegin.png", image);
-                // Upload the image into Parse Cloud
+            buttonSavePicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    buttonSavePicture.setEnabled(false);
+                    selectEvent.setEnabled(false);
 
-                file.saveInBackground();
-                // Create a New Class called "ImageUpload" in Parse
-                ParseObject imgupload = new ParseObject("Picture");
+                    // Compress image to lower quality scale 1 - 100
+                    //scaled.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    //byte[] image = stream.toByteArray();
 
-                // Create a column named "ImageName" and set the string
-                imgupload.put("eventId", eventId);
+                    try {
+                        byte[] data = convert(imageUri.getPath());
 
-                // Insert isVideo, pic, and takenBy to each of the columns
-                imgupload.put("isVideo", false);
-                imgupload.put("pic", file);
-                imgupload.put("takenBy", ParseUser.getCurrentUser().getUsername());
+                        // Create the ParseFile
+                        ParseFile file = new ParseFile("androidbegin.mp4", data);
+                        // Upload the image into Parse Cloud
 
-                // Create the class and the columns
-                imgupload.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-
-                        if (e == null) {
-                            // Show a simple toast message to show the photo has been uploaded
-                            Toast.makeText(getApplicationContext(), "The image has been uploaded",
-                                    Toast.LENGTH_SHORT).show();
-
-                            Intent i = new Intent(SavePhotos.this, EventActivity.class);
-                            i.putExtra("EventName", selectEvent.getText().toString());
-                            i.putExtra("EventId", eventId);
-                            if (whichSelected[0] > list1.size() - 1) {
-                                i.putExtra("IsOwner", false);
-                            } else {
-                                i.putExtra("IsOwner", true);
-                                i.putExtra("OwnerName", ParseUser.getCurrentUser().getUsername());
-                            }
-                            finish();
-                            startActivity(i);
-
-
-                        } else {
-                            buttonSavePicture.setEnabled(true);
-                            selectEvent.setEnabled(true);
-
-                            Toast.makeText(getApplicationContext(), "Unable to upload, please try again",
-                                    Toast.LENGTH_SHORT).show();
+                        try {
+                            file.save();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
+
+                        // Create a New Class called "ImageUpload" in Parse
+                        ParseObject imgupload = new ParseObject("Picture");
+
+                        // Create a column named "ImageName" and set the string
+                        imgupload.put("eventId", eventId);
+
+                        // Insert isVideo, pic, and takenBy to each of the columns
+                        imgupload.put("isVideo", true);
+                        imgupload.put("pic", file);
+                        imgupload.put("takenBy", ParseUser.getCurrentUser().getUsername());
+
+                        // Create the class and the columns
+                        imgupload.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+
+                                if (e == null) {
+                                    // Show a simple toast message to show the photo has been uploaded
+                                    Toast.makeText(getApplicationContext(), "The video has been uploaded",
+                                            Toast.LENGTH_SHORT).show();
+
+                                    Intent i = new Intent(SavePhotos.this, EventActivity.class);
+                                    i.putExtra("EventName", selectEvent.getText().toString());
+                                    i.putExtra("EventId", eventId);
+                                    if (whichSelected[0] > list1.size() - 1) {
+                                        i.putExtra("IsOwner", false);
+                                    } else {
+                                        i.putExtra("IsOwner", true);
+                                        i.putExtra("OwnerName", ParseUser.getCurrentUser().getUsername());
+                                    }
+                                    finish();
+                                    startActivity(i);
+
+
+                                } else {
+                                    buttonSavePicture.setEnabled(true);
+                                    selectEvent.setEnabled(true);
+
+                                    Toast.makeText(getApplicationContext(), "Unable to upload, please try again",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                });
+                }
+            });
+
+        } else {
+            Bitmap thumbnail = null;
+            try {
+                thumbnail = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
+            int nh = (int) (thumbnail.getHeight() * (1024.0 / thumbnail.getWidth()));
+            final Bitmap scaled = Bitmap.createScaledBitmap(thumbnail, 1024, nh, true);
+            picturePreview.setImageBitmap(scaled);
+
+            selectEvent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Dialog dialog = onCreateDialogSingleChoice(eventNames);
+                    dialog.show();
+                }
+            });
+
+
+            // Capture button clicks
+            buttonSavePicture.setOnClickListener(new View.OnClickListener() {
+
+                public void onClick(View arg0) {
+                    buttonSavePicture.setEnabled(false);
+                    selectEvent.setEnabled(false);
+
+                    // Convert it to byte
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    // Compress image to lower quality scale 1 - 100
+                    scaled.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] image = stream.toByteArray();
+
+                    // Create the ParseFile
+                    ParseFile file = new ParseFile("androidbegin.png", image);
+                    // Upload the image into Parse Cloud
+
+                    try {
+                        file.save();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    // Create a New Class called "ImageUpload" in Parse
+                    ParseObject imgupload = new ParseObject("Picture");
+
+                    // Create a column named "ImageName" and set the string
+                    imgupload.put("eventId", eventId);
+
+                    // Insert isVideo, pic, and takenBy to each of the columns
+                    imgupload.put("isVideo", false);
+                    imgupload.put("pic", file);
+                    imgupload.put("takenBy", ParseUser.getCurrentUser().getUsername());
+
+                    // Create the class and the columns
+                    imgupload.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+
+                            if (e == null) {
+                                // Show a simple toast message to show the photo has been uploaded
+                                Toast.makeText(getApplicationContext(), "The image has been uploaded",
+                                        Toast.LENGTH_SHORT).show();
+
+                                Intent i = new Intent(SavePhotos.this, EventActivity.class);
+                                i.putExtra("EventName", selectEvent.getText().toString());
+                                i.putExtra("EventId", eventId);
+                                if (whichSelected[0] > list1.size() - 1) {
+                                    i.putExtra("IsOwner", false);
+                                } else {
+                                    i.putExtra("IsOwner", true);
+                                    i.putExtra("OwnerName", ParseUser.getCurrentUser().getUsername());
+                                }
+                                finish();
+                                startActivity(i);
+
+
+                            } else {
+                                buttonSavePicture.setEnabled(true);
+                                selectEvent.setEnabled(true);
+
+                                Toast.makeText(getApplicationContext(), "Unable to upload, please try again",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            });
+        }
     }
 
+
+    public byte[] convert(String path) throws IOException {
+        FileInputStream fis = new FileInputStream(path);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] b = new byte[1024];
+
+        for (int readNum; (readNum = fis.read(b)) != -1;) {
+            bos.write(b, 0, readNum);
+        }
+
+        byte[] bytes = bos.toByteArray();
+
+        return bytes;
+    }
 
     public Dialog onCreateDialogSingleChoice(final String[] myEvents) {
 
