@@ -95,10 +95,6 @@ public class SavePhotos extends AppCompatActivity {
                     buttonSavePicture.setEnabled(false);
                     selectEvent.setEnabled(false);
 
-                    // Compress image to lower quality scale 1 - 100
-                    //scaled.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    //byte[] image = stream.toByteArray();
-
                     try {
                         byte[] data = convert(imageUri.getPath());
 
@@ -251,6 +247,11 @@ public class SavePhotos extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(SavePhotos.this, CustomCamera.class));
+        super.onBackPressed();
+    }
 
     public byte[] convert(String path) throws IOException {
         FileInputStream fis = new FileInputStream(path);
@@ -296,9 +297,9 @@ public class SavePhotos extends AppCompatActivity {
                     // User clicked OK, so save the result somewhere
                     // or return them to the component that opened the dialog
                     selectEvent.setText(myEvents[whichSelected[0]]);
-                    eventId = myEvents[whichSelected[0]];
+                    //eventId = myEvents[whichSelected[0]];
                     if(whichSelected[0] > list1.size() - 1){
-                        eventId = list2.get(whichSelected[0] - list1.size()).getObjectId();
+                        eventId = (String) list2.get(whichSelected[0] - list1.size()).get("eventId");
                     } else{
                         eventId = list1.get(whichSelected[0]).getObjectId();
                     }

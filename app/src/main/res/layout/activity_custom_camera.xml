@@ -14,11 +14,11 @@
     <Button
         android:id="@+id/captureImage"
         android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/flash"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:background="@drawable/btn_broadcast_selected" />
+        android:background="@drawable/camera" />
 
     <Button
         android:id="@+id/flash"
@@ -27,7 +27,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginRight="25dp"
-        android:layout_toLeftOf="@id/captureImage"
+        android:layout_alignParentLeft="true"
         android:background="@drawable/flash" />
 
     <Button
@@ -37,7 +37,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginLeft="25dp"
-        android:layout_toRightOf="@id/captureImage"
+        android:layout_alignParentRight="true"
         android:background="@drawable/switch_camera" />
 
     <Button
@@ -66,10 +66,11 @@
 
     <Button
         android:id="@+id/button_video_capture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:background="@drawable/video"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="Video"/>
+        android:layout_toLeftOf="@+id/flipCamera"/>
 
 </RelativeLayout>
