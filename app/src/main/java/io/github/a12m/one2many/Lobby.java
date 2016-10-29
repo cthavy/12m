@@ -67,12 +67,11 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
     //Test list to populate the Lobby
 
     ArrayList<String> searchableUsers;
-    ArrayList<String> selectedFriends = new ArrayList<>();
 
     String search_username;
     private AutoCompleteTextView search_text;
 
-
+    ArrayList<String> selectedFriends = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,10 +126,8 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
-                if (e == null){
-                    for (int i = 0; i < list.size(); i++){
-                        searchableUsers.add((String) list.get(i).get("username"));
-                    }
+                for (int i = 0; i < list.size(); i++){
+                    searchableUsers.add((String) list.get(i).get("username"));
                 }
             }
         });
@@ -236,15 +233,6 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
                                 //Saving it in a variable so we can access it when creating the event
                                 saveToSelectedFriends(selectedItems);
 
-                                dialogInviteFriends.dismiss();
-                            }
-                        });
-
-                        //Cancel button to exit dialog
-                        Button cancelInvites = (Button) dialogInviteFriends.findViewById(R.id.buttonInviteCancel);
-                        cancelInvites.setOnClickListener(new View.OnClickListener(){
-                            @Override
-                            public void onClick(View v){
                                 dialogInviteFriends.dismiss();
                             }
                         });
@@ -424,6 +412,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
                         i.putExtra("EventName", itemName[position]);
                         i.putExtra("EventId", (String) ob2.get(position - ob.size()).get("eventId"));
                         i.putExtra("IsOwner", false);
+                        //i.putExtra("eventImg", somefile);
 
                         startActivity(i);
                     } else {
