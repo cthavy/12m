@@ -13,6 +13,7 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -96,8 +97,6 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
             flashCameraButton.setVisibility(View.GONE);
         }
 
-        //mediaRecorder = new MediaRecorder();
-
     }
 
     @Override
@@ -168,13 +167,29 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
                 finish();
             }
 
-            mediaRecorder.start();
+
             recording = true;
-            videoButton.setText("STOP");
             flipCamera.setVisibility(View.INVISIBLE);
             flipCamera.setEnabled(false);
             captureImage.setEnabled(false);
             captureImage.setVisibility(View.INVISIBLE);
+            mediaRecorder.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            new CountDownTimer(10000, 1000) {
+
+                public void onTick(long millisUntilFinished) {
+                    videoButton.setText("STOP - " + millisUntilFinished / 1000);
+                }
+
+                public void onFinish() {
+                    videoButton.setText("START");
+                    videoCapture();
+                }
+            }.start();
         }
     }
 
@@ -183,6 +198,12 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
         camera.setDisplayOrientation(90);
         mediaRecorder = new MediaRecorder();
 
+        // Setting auto focus
+        Camera.Parameters parameters = camera.getParameters();
+
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+        camera.setParameters(parameters);
+
         camera.unlock();
         mediaRecorder.setCamera(camera);
         mediaRecorder.setOrientationHint(90);
@@ -190,6 +211,7 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
+        // Initializing the settings for the video
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         mediaRecorder.setVideoEncodingBitRate(2000000);
@@ -197,6 +219,7 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
         mediaRecorder.setVideoFrameRate(30);
         mediaRecorder.setVideoSize(1920, 1080);
 
+        // Saving to the One2Many folder
         videoUrl = Environment.getExternalStorageDirectory() + "/One2Many/" +
                 new Timestamp(new java.util.Date().getTime()).toString()
                         .replaceAll(":", "")
@@ -260,9 +283,13 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
 
                     @Override
                     public void onError(int error, Camera camera) {
-//to show the error message.
+
                     }
                 });
+                Camera.Parameters parameters = camera.getParameters();
+
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                camera.setParameters(parameters);
                 camera.setPreviewDisplay(surfaceHolder);
                 camera.startPreview();
                 result = true;
@@ -291,6 +318,7 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
         }
     }
 
+    // Rotating the view depending on the orientation of phone
     private void setUpCamera(Camera c) {
         Camera.CameraInfo info = new Camera.CameraInfo();
         Camera.getCameraInfo(cameraId, info);

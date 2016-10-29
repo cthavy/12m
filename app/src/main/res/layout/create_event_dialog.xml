@@ -32,30 +32,31 @@
     <Button
         android:id="@+id/buttonNewEventChooseFriends"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45sp"
+        android:padding="6sp"
         android:layout_below="@+id/editTextNewEventName"
         android:layout_centerHorizontal="true"
         android:text="@string/choose_friends"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/button_background"
         android:textColor="#fff"/>
 
     <Button
         android:id="@+id/buttonCreateEventAccept"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45sp"
         android:layout_below="@+id/buttonNewEventChooseFriends"
         android:text="@string/create_event"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/button_background"
         android:textColor="#fff"/>
 
     <Button
         android:id="@+id/buttonCreateEventCanel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45sp"
         android:layout_below="@+id/buttonNewEventChooseFriends"
         android:layout_alignParentRight="true"
         android:text="@string/cancel"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/button_background"
         android:textColor="#fff"/>
 
 </RelativeLayout>

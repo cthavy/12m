@@ -18,19 +18,26 @@
     <Button
         android:id="@+id/button_select_event"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45sp"
         android:text="Loading"
         android:layout_below="@+id/imageViewSavePicture"
         android:layout_centerHorizontal="true"
-        android:enabled="false"/>
+        android:enabled="false"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white"
+        android:padding="4sp"/>
 
     <Button
         android:id="@+id/button_save_to_database"
         android:text="Save"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45sp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/button_select_event"
-        android:enabled="false"/>
+        android:enabled="false"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white"
+        android:padding="4sp"
+        android:layout_marginTop="2sp"/>
 
 </RelativeLayout>
