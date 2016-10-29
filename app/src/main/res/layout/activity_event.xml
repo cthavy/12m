@@ -7,6 +7,34 @@
     android:layout_height="match_parent"
     tools:context="io.github.a12m.one2many.EventActivity">
 
+    <android.support.design.widget.AppBarLayout
+        android:layout_height="192dp"
+        android:layout_width="match_parent">
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbarEvent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="?attr/colorPrimary">
+
+            <ImageView
+                android:id="@+id/imageViewEventPage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:fitsSystemWindows="true"
+                app:layout_collapseMode="parallax"
+                android:background="@drawable/lobby_example"/>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbarEvent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_width="match_parent"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme"/>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollViewEvent"
         android:layout_width="match_parent"
@@ -92,33 +120,5 @@
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_height="192dp"
-        android:layout_width="match_parent">
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolbarEvent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="?attr/colorPrimary">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbarEvent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_width="match_parent"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme"/>
-
-            <ImageButton
-                android:id="@+id/imageViewEventPage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax"
-                android:background="@drawable/lobby_example"/>
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
 
 </android.support.design.widget.CoordinatorLayout>

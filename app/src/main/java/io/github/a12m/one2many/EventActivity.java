@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,8 +39,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     CollapsingToolbarLayout collapsingToolbarLayout;
 
     Toolbar toolbar;
-
-    ImageButton btnCoverPic;
 
     TextView ownerName;
     TextView numberOfMembers;
@@ -101,9 +98,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         btnFinalize = (Button) findViewById(R.id.buttonEventOwnerFinalize);
         btnFinalize.setOnClickListener(this);
-
-        btnCoverPic = (ImageButton) findViewById(R.id.imageViewEventPage);
-        btnCoverPic.setOnClickListener(this);
 
         eventPhotos = (GridView) findViewById(R.id.gridViewEventPictures);
 
@@ -292,7 +286,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                     for (int i = 0; i < friends.length; i++){
                         for (int j = 0; j < results2.size(); j++){
                             if (results2.get(j).get("memberUsername").equals(friends[i])){
-                                inviteFriendsList.setItemChecked(i, true);
+                                inviteFriendsList.setItemChecked(j, true);
                             }
                         }
                     }
