@@ -95,10 +95,6 @@ public class SavePhotos extends AppCompatActivity {
                     buttonSavePicture.setEnabled(false);
                     selectEvent.setEnabled(false);
 
-                    // Compress image to lower quality scale 1 - 100
-                    //scaled.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    //byte[] image = stream.toByteArray();
-
                     try {
                         byte[] data = convert(imageUri.getPath());
 

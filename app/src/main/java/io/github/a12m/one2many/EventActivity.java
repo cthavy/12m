@@ -10,7 +10,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
@@ -22,7 +21,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -30,6 +28,9 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -390,6 +391,20 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             finish();
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    private void convertBytesToFile(byte[] bytearray) {
+        try {
+
+            File outputFile = File.createTempFile("file", "mp4", getCacheDir());
+            outputFile.deleteOnExit();
+            FileOutputStream fileoutputstream = new FileOutputStream("tempMp4");
+            fileoutputstream.write(bytearray);
+            fileoutputstream.close();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     //This class gets and displays all the pics in the event

@@ -141,9 +141,13 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
     private void videoCapture(){
         if(recording){
             // stop recording and release camera
-            videoButton.setText("START");
+            videoButton.setText("");
             mediaRecorder.stop();  // stop the recording
             releaseMediaRecorder(); // release the MediaRecorder object
+            flipCamera.setEnabled(true);
+            flipCamera.setVisibility(View.VISIBLE);
+            captureImage.setEnabled(true);
+            captureImage.setVisibility(View.VISIBLE);
 
             //Exit after saved
             Intent i = new Intent(CustomCamera.this, SavePhotos.class);
@@ -167,6 +171,10 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
             mediaRecorder.start();
             recording = true;
             videoButton.setText("STOP");
+            flipCamera.setVisibility(View.INVISIBLE);
+            flipCamera.setEnabled(false);
+            captureImage.setEnabled(false);
+            captureImage.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -371,6 +379,8 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
 
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
+                videoButton.setEnabled(false);
+                videoButton.setVisibility(View.INVISIBLE);
                 try {
                     // convert byte array into bitmap
                     Bitmap loadedImage = BitmapFactory.decodeByteArray(data, 0,
