@@ -45,7 +45,8 @@
         <activity android:name=".InviteFriendsActivity" />
         <activity android:name=".EventActivity" />
         <activity android:name=".CustomCamera" />
-        <activity android:name=".SavePhotos"></activity>
+        <activity android:name=".SavePhotos" />
+        <activity android:name=".ViewPictureActivity"></activity>
     </application>
 
 </manifest>

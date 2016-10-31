@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -14,6 +15,7 @@ import android.util.SparseBooleanArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -508,6 +510,22 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
             adapter = new GridViewAdapter(EventActivity.this, R.layout.gridview_item, bitmaps);
             eventPhotos.setAdapter(adapter);
+
+            eventPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    ParseObject obj = ob.get(position);
+                    if(obj.getBoolean("isVideo")){
+                        ParseFile vid = (ParseFile) obj.get("pic");
+
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.parse(vid.getUrl()), "video/*");
+                        startActivity(intent);
+                    } else {
+
+                    }
+                }
+            });
         }
     }
 
