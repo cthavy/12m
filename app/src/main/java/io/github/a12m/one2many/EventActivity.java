@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,8 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -55,6 +59,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     GridView eventPhotos;
 
     boolean isNameChanged = false;
+
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +107,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         eventPhotos = (GridView) findViewById(R.id.gridViewEventPictures);
 
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_event_page);
 
         new GetEventPictures(i.getStringExtra("EventId")).execute();
 
@@ -442,13 +449,12 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            if(ob.size() != 0){
+            if (ob.size() != 0) {
 
-                for (ParseObject pictureItem : ob) {
-                    //adapter.add((String) pictureItem.get("name"));
-                    //adapter.add((ParseFile) pictureItem.get("picture"));    // can't not be applied
-                    if(!pictureItem.getBoolean("isVideo")){
+                for (ParseObject pictureItem : ob) {  // can't not be applied
+                    if (!pictureItem.getBoolean("isVideo")) {
                         ParseFile image = (ParseFile) pictureItem.get("pic");
+
                         byte[] file = new byte[0];
                         try {
                             file = image.getData();
@@ -456,15 +462,126 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                             e.printStackTrace();
                         }
 
-                        Bitmap imageBitmap = BitmapFactory.decodeByteArray(file, 0, file.length);
+                        Bitmap b = BitmapFactory.decodeByteArray(file, 0, file.length);
+                        bitmaps.add(Bitmap.createScaledBitmap(b, 140, 208, false));
 
-                        bitmaps.add(imageBitmap);
+                    } else {
+                        ParseFile image = (ParseFile) pictureItem.get("videoPreview");
+                        if (image != null) {
+
+                            byte[] file = new byte[0];
+                            try {
+                                file = image.getData();
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            Bitmap b = BitmapFactory.decodeByteArray(file, 0, file.length);
+                            bitmaps.add(Bitmap.createScaledBitmap(b, 140, 208, false));
+                        } else {
+                            Picasso.with(EventActivity.this)
+                                    .load(R.drawable.video_preview)
+                                    .resize(140, 208)
+                                    .into(new Target() {
+                                        @Override
+                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                            bitmaps.add(bitmap);
+                                        }
+
+                                        @Override
+                                        public void onBitmapFailed(Drawable errorDrawable) {
+
+                                        }
+
+                                        @Override
+                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                                        }
+                                    });
+                        }
+
                     }
                 }
-
-                adapter = new GridViewAdapter(EventActivity.this, R.layout.gridview_item, bitmaps);
-                eventPhotos.setAdapter(adapter);
             }
+
+            progressBar.setVisibility(View.INVISIBLE);
+
+            adapter = new GridViewAdapter(EventActivity.this, R.layout.gridview_item, bitmaps);
+            eventPhotos.setAdapter(adapter);
         }
     }
+
+
+// Keeping these in case needed for the future
+//    public void addImageWithPicasso(final ArrayList<Bitmap> theList, String imageUrl, final  String failedVideoOrPic){
+//        Picasso.with(this)
+//                .load(imageUrl)
+//                .resize(140, 208)
+//                .into(new Target() {
+//                    @Override
+//                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                        theList.add(bitmap);
+//                    }
+//
+//                    @Override
+//                    public void onBitmapFailed(Drawable errorDrawable) {
+//                        if(failedVideoOrPic.equals("Video")){
+//                            theList.add(
+//                                    (
+//                                            (BitmapDrawable) getResources().getDrawable(R.drawable.video_preview)
+//                                    ).getBitmap()
+//                            );
+//                        } else {
+//                            theList.add(
+//                                    (
+//                                            (BitmapDrawable) getResources().getDrawable(R.drawable.error)
+//                                    ).getBitmap()
+//                            );
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//                    }
+//                });
+//    }
+//
+//    public void addImageWithPicasso(final ArrayList<Bitmap> theList, ParseFile image, String imageUrl, final  String failedVideoOrPic){
+//        try {
+//            Picasso.with(this)
+//                    .load(image.getFile())
+//                    .resize(140, 208)
+//                    .into(new Target() {
+//                        @Override
+//                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                            theList.add(bitmap);
+//                        }
+//
+//                        @Override
+//                        public void onBitmapFailed(Drawable errorDrawable) {
+//                            if(failedVideoOrPic.equals("Video")){
+//                                theList.add(
+//                                        (
+//                                                (BitmapDrawable) getResources().getDrawable(R.drawable.video_preview)
+//                                        ).getBitmap()
+//                                );
+//                            } else {
+//                                theList.add(
+//                                        (
+//                                                (BitmapDrawable) getResources().getDrawable(R.drawable.error)
+//                                        ).getBitmap()
+//                                );
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//                        }
+//                    });
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
