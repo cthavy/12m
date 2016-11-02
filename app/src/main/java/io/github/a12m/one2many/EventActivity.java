@@ -1,6 +1,7 @@
 package io.github.a12m.one2many;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
@@ -31,6 +33,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -453,6 +456,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
             if (ob.size() != 0) {
 
+
+                // TODO: Move picasso into the custom adapter class
                 for (ParseObject pictureItem : ob) {  // can't not be applied
                     if (!pictureItem.getBoolean("isVideo")) {
                         ParseFile image = (ParseFile) pictureItem.get("pic");
@@ -514,15 +519,65 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             eventPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    ParseObject obj = ob.get(position);
+                    final ParseObject obj = ob.get(position);
                     if(obj.getBoolean("isVideo")){
-                        ParseFile vid = (ParseFile) obj.get("pic");
 
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(Uri.parse(vid.getUrl()), "video/*");
-                        startActivity(intent);
+
+                        // TODO: Video deletes but need to refresh activity
+                        if(obj.getString("takenBy").equals(ParseUser.getCurrentUser().getUsername())){
+                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(final DialogInterface dialog, int which) {
+                                    switch (which){
+                                        case DialogInterface.BUTTON_POSITIVE:
+                                            //View button clicked
+                                            ParseFile vid = (ParseFile) obj.get("pic");
+                                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                                            intent.setDataAndType(Uri.parse(vid.getUrl()), "video/*");
+                                            startActivity(intent);
+                                            break;
+
+                                        case DialogInterface.BUTTON_NEGATIVE:
+                                            //Delete button clicked
+                                            try {
+                                                obj.delete();
+                                                obj.saveInBackground(new SaveCallback() {
+                                                    @Override
+                                                    public void done(ParseException e) {
+                                                        if(e == null){
+                                                            Toast.makeText(getApplicationContext(), "Video Deleted", Toast.LENGTH_SHORT)
+                                                                    .show();
+                                                            Intent intent = getIntent();
+                                                            finish();
+                                                            startActivity(intent);
+                                                            dialog.dismiss();
+                                                        }
+                                                    }
+                                                });
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            break;
+                                    }
+                                }
+                            };
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(EventActivity.this);
+                            builder.setMessage("Do you want to view or delete this?").setPositiveButton("View", dialogClickListener)
+                                    .setNegativeButton("Delete", dialogClickListener).show();
+                        } else {
+                            ParseFile vid = (ParseFile) obj.get("pic");
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setDataAndType(Uri.parse(vid.getUrl()), "video/*");
+                            startActivity(intent);
+                        }
+
+
                     } else {
+                        Intent i = new Intent(EventActivity.this, ViewPictureActivity.class);
+                        i.putExtra("objId", ob.get(position).getObjectId());
 
+                        startActivity(i);
                     }
                 }
             });

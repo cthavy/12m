@@ -6,6 +6,14 @@
     <ImageView
         android:id="@+id/picture"
         android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"/>
+
+    <ImageView
+        android:id="@+id/imageView_video_icon"
+        android:layout_width="35dp"
+        android:layout_height="10dp"
+        android:layout_alignRight="@+id/picture"
+        android:background="@drawable/video_sign"
+        android:layout_alignBottom="@+id/picture"/>
 
 </RelativeLayout>
