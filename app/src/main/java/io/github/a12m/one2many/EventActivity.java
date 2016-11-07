@@ -283,10 +283,11 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                     } catch (ParseException e){
                         e.printStackTrace();
                     }
-                    for (int i = 0; i < friends.length; i++){
-                        for (int j = 0; j < results2.size(); j++){
-                            if (results2.get(j).get("memberUsername").equals(friends[i])){
+                    for (int i = 0; i < results2.size(); i++){
+                        for (int j = 0; j < friends.length; j++){
+                            if (results2.get(i).get("memberUsername").equals(friends[j])){
                                 inviteFriendsList.setItemChecked(j, true);
+                                break;
                             }
                         }
                     }
