@@ -457,63 +457,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
 
-//            if (ob.size() != 0) {
-//
-//
-//                // TODO: Move picasso into the custom adapter class
-//                for (ParseObject pictureItem : ob) {  // can't not be applied
-//                    if (!pictureItem.getBoolean("isVideo")) {
-//                        ParseFile image = (ParseFile) pictureItem.get("pic");
-//
-//                        byte[] file = new byte[0];
-//                        try {
-//                            file = image.getData();
-//                        } catch (ParseException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        Bitmap b = BitmapFactory.decodeByteArray(file, 0, file.length);
-//                        bitmaps.add(Bitmap.createScaledBitmap(b, 140, 208, false));
-//
-//                    } else {
-//                        ParseFile image = (ParseFile) pictureItem.get("videoPreview");
-//                        if (image != null) {
-//
-//                            byte[] file = new byte[0];
-//                            try {
-//                                file = image.getData();
-//                            } catch (ParseException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                            Bitmap b = BitmapFactory.decodeByteArray(file, 0, file.length);
-//                            bitmaps.add(Bitmap.createScaledBitmap(b, 140, 208, false));
-//                        } else {
-//                            Picasso.with(EventActivity.this)
-//                                    .load(R.drawable.video_preview)
-//                                    .resize(140, 208)
-//                                    .into(new Target() {
-//                                        @Override
-//                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-//                                            bitmaps.add(bitmap);
-//                                        }
-//
-//                                        @Override
-//                                        public void onBitmapFailed(Drawable errorDrawable) {
-//
-//                                        }
-//
-//                                        @Override
-//                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-//
-//                                        }
-//                                    });
-//                        }
-//
-//                    }
-//                }
-//            }
-
             progressBar.setVisibility(View.INVISIBLE);
 
             adapter = new GridViewAdapter(EventActivity.this, R.layout.gridview_item, links);
