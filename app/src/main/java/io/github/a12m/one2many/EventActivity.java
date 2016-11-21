@@ -3,9 +3,6 @@ package io.github.a12m.one2many;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,8 +31,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -423,12 +418,14 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     private class GetEventPictures extends AsyncTask<Void, Void, Void>{
         String eventId;
         List<ParseObject> ob;
-        ArrayList<Bitmap> bitmaps;
+//        ArrayList<Bitmap> bitmaps;
         GridViewAdapter adapter;
+        ArrayList<ParseObject> links = new ArrayList<>();
 
         public GetEventPictures(String eventId){
             this.eventId = eventId;
-            bitmaps = new ArrayList<>();
+//            bitmaps = new ArrayList<>();
+            links = new ArrayList<>();
         }
 
         @Override
@@ -454,66 +451,72 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            if (ob.size() != 0) {
-
-
-                // TODO: Move picasso into the custom adapter class
-                for (ParseObject pictureItem : ob) {  // can't not be applied
-                    if (!pictureItem.getBoolean("isVideo")) {
-                        ParseFile image = (ParseFile) pictureItem.get("pic");
-
-                        byte[] file = new byte[0];
-                        try {
-                            file = image.getData();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                        Bitmap b = BitmapFactory.decodeByteArray(file, 0, file.length);
-                        bitmaps.add(Bitmap.createScaledBitmap(b, 140, 208, false));
-
-                    } else {
-                        ParseFile image = (ParseFile) pictureItem.get("videoPreview");
-                        if (image != null) {
-
-                            byte[] file = new byte[0];
-                            try {
-                                file = image.getData();
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-
-                            Bitmap b = BitmapFactory.decodeByteArray(file, 0, file.length);
-                            bitmaps.add(Bitmap.createScaledBitmap(b, 140, 208, false));
-                        } else {
-                            Picasso.with(EventActivity.this)
-                                    .load(R.drawable.video_preview)
-                                    .resize(140, 208)
-                                    .into(new Target() {
-                                        @Override
-                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                            bitmaps.add(bitmap);
-                                        }
-
-                                        @Override
-                                        public void onBitmapFailed(Drawable errorDrawable) {
-
-                                        }
-
-                                        @Override
-                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                                        }
-                                    });
-                        }
-
-                    }
+            if(ob.size() != 0){
+                for(ParseObject pictureItem: ob){
+                    links.add(pictureItem);
                 }
             }
 
+//            if (ob.size() != 0) {
+//
+//
+//                // TODO: Move picasso into the custom adapter class
+//                for (ParseObject pictureItem : ob) {  // can't not be applied
+//                    if (!pictureItem.getBoolean("isVideo")) {
+//                        ParseFile image = (ParseFile) pictureItem.get("pic");
+//
+//                        byte[] file = new byte[0];
+//                        try {
+//                            file = image.getData();
+//                        } catch (ParseException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                        Bitmap b = BitmapFactory.decodeByteArray(file, 0, file.length);
+//                        bitmaps.add(Bitmap.createScaledBitmap(b, 140, 208, false));
+//
+//                    } else {
+//                        ParseFile image = (ParseFile) pictureItem.get("videoPreview");
+//                        if (image != null) {
+//
+//                            byte[] file = new byte[0];
+//                            try {
+//                                file = image.getData();
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                            Bitmap b = BitmapFactory.decodeByteArray(file, 0, file.length);
+//                            bitmaps.add(Bitmap.createScaledBitmap(b, 140, 208, false));
+//                        } else {
+//                            Picasso.with(EventActivity.this)
+//                                    .load(R.drawable.video_preview)
+//                                    .resize(140, 208)
+//                                    .into(new Target() {
+//                                        @Override
+//                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                                            bitmaps.add(bitmap);
+//                                        }
+//
+//                                        @Override
+//                                        public void onBitmapFailed(Drawable errorDrawable) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//                                        }
+//                                    });
+//                        }
+//
+//                    }
+//                }
+//            }
+
             progressBar.setVisibility(View.INVISIBLE);
 
-            adapter = new GridViewAdapter(EventActivity.this, R.layout.gridview_item, bitmaps);
+            adapter = new GridViewAdapter(EventActivity.this, R.layout.gridview_item, links);
             eventPhotos.setAdapter(adapter);
 
             eventPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
