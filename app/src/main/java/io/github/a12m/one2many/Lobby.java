@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,7 +28,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -45,7 +49,6 @@ search for other users, view their friends list, and start a new event.
 
 public class Lobby extends AppCompatActivity implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
-
     private static final int REQUEST_CAMERA = 0;
 
     ImageButton newEvent;
@@ -56,8 +59,6 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
     Button searchButton;
 
     ListView eventsListView;
-
-
 
     ProgressBar mProgressBar;
     int TAKE_PHOTO_CODE = 0;
@@ -324,7 +325,6 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
         }
     }
 
-
     private void saveToSelectedFriends(ArrayList<String> fds){
         selectedFriends = fds;
     }
@@ -333,9 +333,10 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
         return selectedFriends;
     }
 
-
     private class GetUserEvents extends AsyncTask<Void, Void, Void> {
         String[] itemName;
+        ParseFile[] itemNamePics;
+        ArrayList<Bitmap> coverPhotos = new ArrayList<>();
         List<ParseObject> ob;
         List<ParseObject> ob2;
 
@@ -372,9 +373,12 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
             itemName = new String[ob.size() + ob2.size()];
             int i = 0;
 
+            itemNamePics = new ParseFile[itemName.length];
+
             //Adding owned events to list
             for (ParseObject event : ob) {
                 itemName[i] = (String) event.get("name");
+                itemNamePics[i] = (ParseFile) event.get("eventImg");
                 i++;
             }
 
@@ -384,10 +388,26 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
                 try {
                     itemName[i] = query.get(eventId).getString("name");
+                    itemNamePics[i] = (ParseFile) query.get(eventId).get("eventImg");
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
                 i++;
+            }
+
+            //Converts all the parsefile images into bitmaps
+            for (ParseFile pics : itemNamePics) {
+                pics.getDataInBackground(new GetDataCallback() {
+                    @Override
+                    public void done(byte[] bytes, ParseException e) {
+                        if (e == null){
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            coverPhotos.add(bmp);
+                        } else {
+                            System.out.println("error in loading pics");
+                        }
+                    }
+                });
             }
 
             return null;
@@ -396,7 +416,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
         @Override
         protected void onPostExecute(final Void param) {
             //setting the event names to the adapter
-            eventsListView.setAdapter(new EventsListAdapter(getApplicationContext(), itemName));
+            eventsListView.setAdapter(new EventsListAdapter(getApplicationContext(), itemName, coverPhotos));
             eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -412,7 +432,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
                         i.putExtra("EventName", itemName[position]);
                         i.putExtra("EventId", (String) ob2.get(position - ob.size()).get("eventId"));
                         i.putExtra("IsOwner", false);
-                        //i.putExtra("eventImg", somefile);
+                        //i.putExtra("eventImg", itemNamePics[position]);
 
                         startActivity(i);
                     } else {

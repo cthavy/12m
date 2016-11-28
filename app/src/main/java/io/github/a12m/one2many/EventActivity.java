@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -44,6 +45,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     CollapsingToolbarLayout collapsingToolbarLayout;
 
     Toolbar toolbar;
+
+    ImageButton coverPic;
 
     TextView ownerName;
     TextView numberOfMembers;
