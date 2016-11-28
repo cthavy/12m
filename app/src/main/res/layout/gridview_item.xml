@@ -3,9 +3,23 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
+    <ProgressBar
+        android:id="@+id/progress_bar_grid_view_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <ImageView
         android:id="@+id/picture"
         android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"/>
+
+    <ImageView
+        android:id="@+id/imageView_video_icon"
+        android:layout_width="35dp"
+        android:layout_height="10dp"
+        android:layout_alignRight="@+id/picture"
+        android:background="@drawable/video_sign"
+        android:layout_alignBottom="@+id/picture"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

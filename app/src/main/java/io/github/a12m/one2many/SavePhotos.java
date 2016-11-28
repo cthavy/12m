@@ -98,12 +98,19 @@ public class SavePhotos extends AppCompatActivity {
                     try {
                         byte[] data = convert(imageUri.getPath());
 
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        // Compress image to lower quality scale 1 - 100
+                        scaled.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] image = stream.toByteArray();
+
                         // Create the ParseFile
                         ParseFile file = new ParseFile("androidbegin.mp4", data);
+                        ParseFile preview = new ParseFile("preview.png", image);
                         // Upload the image into Parse Cloud
 
                         try {
                             file.save();
+                            preview.save();
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -117,6 +124,7 @@ public class SavePhotos extends AppCompatActivity {
                         // Insert isVideo, pic, and takenBy to each of the columns
                         imgupload.put("isVideo", true);
                         imgupload.put("pic", file);
+                        imgupload.put("videoPreview", preview);
                         imgupload.put("takenBy", ParseUser.getCurrentUser().getUsername());
 
                         // Create the class and the columns

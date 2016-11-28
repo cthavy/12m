@@ -1,23 +1,26 @@
 package io.github.a12m.one2many;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +30,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -55,6 +59,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     GridView eventPhotos;
 
     boolean isNameChanged = false;
+
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +107,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         eventPhotos = (GridView) findViewById(R.id.gridViewEventPictures);
 
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_event_page);
 
         new GetEventPictures(i.getStringExtra("EventId")).execute();
 
@@ -412,12 +419,14 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     private class GetEventPictures extends AsyncTask<Void, Void, Void>{
         String eventId;
         List<ParseObject> ob;
-        ArrayList<Bitmap> bitmaps;
+//        ArrayList<Bitmap> bitmaps;
         GridViewAdapter adapter;
+        ArrayList<ParseObject> links = new ArrayList<>();
 
         public GetEventPictures(String eventId){
             this.eventId = eventId;
-            bitmaps = new ArrayList<>();
+//            bitmaps = new ArrayList<>();
+            links = new ArrayList<>();
         }
 
         @Override
@@ -444,28 +453,155 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             super.onPostExecute(aVoid);
 
             if(ob.size() != 0){
+                for(ParseObject pictureItem: ob){
+                    links.add(pictureItem);
+                }
+            }
 
-                for (ParseObject pictureItem : ob) {
-                    //adapter.add((String) pictureItem.get("name"));
-                    //adapter.add((ParseFile) pictureItem.get("picture"));    // can't not be applied
-                    if(!pictureItem.getBoolean("isVideo")){
-                        ParseFile image = (ParseFile) pictureItem.get("pic");
-                        byte[] file = new byte[0];
-                        try {
-                            file = image.getData();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+            progressBar.setVisibility(View.INVISIBLE);
+
+            adapter = new GridViewAdapter(EventActivity.this, R.layout.gridview_item, links);
+            eventPhotos.setAdapter(adapter);
+
+            eventPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    final ParseObject obj = ob.get(position);
+                    if(obj.getBoolean("isVideo")){
+
+
+                        // TODO: Video deletes but need to refresh activity
+                        if(obj.getString("takenBy").equals(ParseUser.getCurrentUser().getUsername())){
+                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(final DialogInterface dialog, int which) {
+                                    switch (which){
+                                        case DialogInterface.BUTTON_POSITIVE:
+                                            //View button clicked
+                                            ParseFile vid = (ParseFile) obj.get("pic");
+                                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                                            intent.setDataAndType(Uri.parse(vid.getUrl()), "video/*");
+                                            startActivity(intent);
+                                            break;
+
+                                        case DialogInterface.BUTTON_NEGATIVE:
+                                            //Delete button clicked
+                                            try {
+                                                obj.delete();
+                                                obj.saveInBackground(new SaveCallback() {
+                                                    @Override
+                                                    public void done(ParseException e) {
+                                                        if(e == null){
+                                                            Toast.makeText(getApplicationContext(), "Video Deleted", Toast.LENGTH_SHORT)
+                                                                    .show();
+                                                            Intent intent = getIntent();
+                                                            finish();
+                                                            startActivity(intent);
+                                                            dialog.dismiss();
+                                                        }
+                                                    }
+                                                });
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            break;
+                                    }
+                                }
+                            };
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(EventActivity.this);
+                            builder.setMessage("Do you want to view or delete this?").setPositiveButton("View", dialogClickListener)
+                                    .setNegativeButton("Delete", dialogClickListener).show();
+                        } else {
+                            ParseFile vid = (ParseFile) obj.get("pic");
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setDataAndType(Uri.parse(vid.getUrl()), "video/*");
+                            startActivity(intent);
                         }
 
-                        Bitmap imageBitmap = BitmapFactory.decodeByteArray(file, 0, file.length);
 
-                        bitmaps.add(imageBitmap);
+                    } else {
+                        Intent i = new Intent(EventActivity.this, ViewPictureActivity.class);
+                        i.putExtra("objId", ob.get(position).getObjectId());
+
+                        startActivity(i);
                     }
                 }
-
-                adapter = new GridViewAdapter(EventActivity.this, R.layout.gridview_item, bitmaps);
-                eventPhotos.setAdapter(adapter);
-            }
+            });
         }
     }
+
+
+// Keeping these in case needed for the future
+//    public void addImageWithPicasso(final ArrayList<Bitmap> theList, String imageUrl, final  String failedVideoOrPic){
+//        Picasso.with(this)
+//                .load(imageUrl)
+//                .resize(140, 208)
+//                .into(new Target() {
+//                    @Override
+//                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                        theList.add(bitmap);
+//                    }
+//
+//                    @Override
+//                    public void onBitmapFailed(Drawable errorDrawable) {
+//                        if(failedVideoOrPic.equals("Video")){
+//                            theList.add(
+//                                    (
+//                                            (BitmapDrawable) getResources().getDrawable(R.drawable.video_preview)
+//                                    ).getBitmap()
+//                            );
+//                        } else {
+//                            theList.add(
+//                                    (
+//                                            (BitmapDrawable) getResources().getDrawable(R.drawable.error)
+//                                    ).getBitmap()
+//                            );
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//                    }
+//                });
+//    }
+//
+//    public void addImageWithPicasso(final ArrayList<Bitmap> theList, ParseFile image, String imageUrl, final  String failedVideoOrPic){
+//        try {
+//            Picasso.with(this)
+//                    .load(image.getFile())
+//                    .resize(140, 208)
+//                    .into(new Target() {
+//                        @Override
+//                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                            theList.add(bitmap);
+//                        }
+//
+//                        @Override
+//                        public void onBitmapFailed(Drawable errorDrawable) {
+//                            if(failedVideoOrPic.equals("Video")){
+//                                theList.add(
+//                                        (
+//                                                (BitmapDrawable) getResources().getDrawable(R.drawable.video_preview)
+//                                        ).getBitmap()
+//                                );
+//                            } else {
+//                                theList.add(
+//                                        (
+//                                                (BitmapDrawable) getResources().getDrawable(R.drawable.error)
+//                                        ).getBitmap()
+//                                );
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//                        }
+//                    });
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

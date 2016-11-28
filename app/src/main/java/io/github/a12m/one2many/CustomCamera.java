@@ -217,7 +217,7 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
         mediaRecorder.setVideoEncodingBitRate(2000000);
         mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mediaRecorder.setVideoFrameRate(30);
-        mediaRecorder.setVideoSize(1920, 1080);
+        mediaRecorder.setVideoSize(1280, 720);
 
         // Saving to the One2Many folder
         videoUrl = Environment.getExternalStorageDirectory() + "/One2Many/" +

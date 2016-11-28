@@ -117,6 +117,13 @@
                 android:layout_height="wrap_content">
             </GridView>
 
+            <ProgressBar
+                android:id="@+id/progress_bar_event_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/lineSeperatorViewEvent" />
+
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
