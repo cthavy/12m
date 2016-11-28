@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -462,6 +463,15 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
             adapter = new GridViewAdapter(EventActivity.this, R.layout.gridview_item, links);
             eventPhotos.setAdapter(adapter);
+
+            //Allows for gridview scrolling within scrollview
+            eventPhotos.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
 
             eventPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
