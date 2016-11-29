@@ -432,7 +432,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
                         i.putExtra("EventName", itemName[position]);
                         i.putExtra("EventId", (String) ob2.get(position - ob.size()).get("eventId"));
                         i.putExtra("IsOwner", false);
-                        //i.putExtra("eventImg", itemNamePics[position]);
+                        //i.putExtra("eventImg", coverPhotos.get(position));
 
                         startActivity(i);
                     } else {
@@ -445,6 +445,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
                         i.putExtra("EventId", ob.get(position).getObjectId());
                         i.putExtra("IsOwner", true);
                         i.putExtra("OwnerName", ParseUser.getCurrentUser().getUsername());
+                        //i.putExtra("eventImg", coverPhotos.get(position));
 
                         startActivity(i);
                     }

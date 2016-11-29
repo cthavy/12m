@@ -17,7 +17,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:contentScrim="?attr/colorPrimary">
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/imageViewEventPage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
