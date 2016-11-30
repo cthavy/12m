@@ -36,6 +36,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -256,6 +257,16 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
                             parseEvent.put("owner", ParseUser.getCurrentUser().getUsername());
                             parseEvent.put("name", eventNameString);
                             parseEvent.put("active", true);
+
+                            //Convert lobby example into a parsefile for upload
+                            Bitmap bmp;
+                            bmp = BitmapFactory.decodeResource(getResources(), R.drawable.lobby_example);
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            byte[] image = stream.toByteArray();
+                            ParseFile file = new ParseFile("defaultCover.png", image);
+                            parseEvent.put("eventImg", file);
+
                             parseEvent.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
