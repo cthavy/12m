@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -39,6 +40,7 @@ import com.parse.SaveCallback;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
 
 /*
 Main lobby page. User should see this when first logging in or opening
@@ -75,12 +77,48 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
 
     ArrayList<String> selectedFriends = new ArrayList<>();
 
+    SwipeRefreshLayout refreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
 
+        //Swipe refresh listener
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        refreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh(){
+                        startActivity(getIntent());
+                        finish();
+                        refreshLayout.setRefreshing(false);
+                    }
+                }
+        );
+
         eventsListView = (ListView) findViewById(R.id.eventsList);
+        //Should allow to reach top of list before refreshing
+        eventsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {}
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                refreshLayout.setEnabled(false);
+                if(eventsListView != null && eventsListView.getChildCount() > 0){
+                    // check if the first item of the list is visible
+                    boolean firstItemVisible = eventsListView.getFirstVisiblePosition() == 0;
+                    // check if the top of the first item is visible
+                    boolean topOfFirstItemVisible = eventsListView.getChildAt(0).getTop() == 0;
+                    // enabling or disabling the refresh layout
+                    if (firstItemVisible && topOfFirstItemVisible){
+                        refreshLayout.setEnabled(true);
+                    }
+                }
+                //refreshLayout.setEnabled(true);
+            }
+        });
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBarLobby);
 
