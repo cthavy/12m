@@ -385,7 +385,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
     private class GetUserEvents extends AsyncTask<Void, Void, Void> {
         String[] itemName;
         ParseFile[] itemNamePics;
-        ArrayList<Bitmap> coverPhotos = new ArrayList<>();
+        Bitmap[] coverPhotos;
         List<ParseObject> ob;
         List<ParseObject> ob2;
 
@@ -423,6 +423,7 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
             int i = 0;
 
             itemNamePics = new ParseFile[itemName.length];
+            coverPhotos = new Bitmap[itemName.length];
 
             //Adding owned events to list
             for (ParseObject event : ob) {
@@ -445,20 +446,20 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
             }
 
             //Converts all the parsefile images into bitmaps
-            for (ParseFile pics : itemNamePics) {
+            for (int j = 0; j < itemNamePics.length; j++){
+                final int index = j;
+                ParseFile pics = itemNamePics[j];
                 pics.getDataInBackground(new GetDataCallback() {
                     @Override
                     public void done(byte[] bytes, ParseException e) {
-                        if (e == null){
+                        if (e == null) {
                             Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            coverPhotos.add(bmp);
-                        } else {
+                            coverPhotos[index] = bmp;
+                        } else
                             System.out.println("error in loading pics");
-                        }
                     }
                 });
             }
-
             return null;
         }
 

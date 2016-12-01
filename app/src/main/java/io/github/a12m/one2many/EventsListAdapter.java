@@ -16,12 +16,12 @@ import java.util.ArrayList;
  */
 public class EventsListAdapter extends BaseAdapter {
     String names[];
-    ArrayList<Bitmap> pics = new ArrayList<>();
+    Bitmap pics[];
     Context context;
 
     private static LayoutInflater inflater = null;
 
-    public EventsListAdapter(Context actContext, String[] eventNames, ArrayList<Bitmap> eventPic) {
+    public EventsListAdapter(Context actContext, String[] eventNames, Bitmap[] eventPic) {
         names = eventNames;
         context = actContext;
         pics = eventPic;
@@ -57,7 +57,7 @@ public class EventsListAdapter extends BaseAdapter {
         holder.tv = (TextView) rowView.findViewById(R.id.Itemname);
         holder.iv = (ImageView) rowView.findViewById(R.id.icon);
         holder.tv.setText(names[position]);
-        holder.iv.setImageBitmap(pics.get(position));
+        holder.iv.setImageBitmap(pics[position]);
 
         return rowView;
     }
