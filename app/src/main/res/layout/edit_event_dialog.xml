@@ -10,7 +10,8 @@
         android:layout_alignBottom="@+id/buttonSave"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/buttonCancel" />
+        android:id="@+id/buttonCancel"
+        android:padding="5dp" />
 
     <TextView
         android:text="Event Name:"
@@ -43,5 +44,17 @@
         android:layout_marginTop="14dp"
         android:layout_below="@+id/eventName"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:padding="5dp" />
+
+    <CheckBox
+        android:text="Delete Event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonCancel"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="58dp"
+        android:id="@+id/ChboxDelete"
+        android:padding="5dp" />
 </RelativeLayout>

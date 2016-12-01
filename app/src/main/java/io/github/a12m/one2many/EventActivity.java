@@ -20,6 +20,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -232,6 +233,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                 final EditText eName = (EditText) dialogRename.findViewById(R.id.eventName);
                 eName.setText(eventName);
 
+                final CheckBox deleteCheck = (CheckBox) dialogRename.findViewById(R.id.ChboxDelete);
+
                 //Cancel button to exit dialog
                 final Button cancelButton = (Button) dialogRename.findViewById(R.id.buttonCancel);
                 cancelButton.setOnClickListener(new View.OnClickListener(){
@@ -246,21 +249,40 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                 saveButton.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
-                        final String temp = eName.getText().toString();
-                        ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
-                        query.whereEqualTo("name", eventName);
-                        query.getFirstInBackground(new GetCallback<ParseObject>() {
-                            @Override
-                            public void done(ParseObject parseObject, ParseException e) {
-                                parseObject.put("name", temp);
-                                parseObject.saveInBackground();
-                                Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
-                                //Refreshes toolbar name
-                                collapsingToolbarLayout.setTitle(temp);
-                                isNameChanged = true;
-                            }
-                        });
-                        dialogRename.dismiss();
+                        //Checks to see if user wants to delete event
+                        if (deleteCheck.isChecked()){
+                            ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
+                            query.whereEqualTo("objectId", getIntent().getStringExtra("EventId"));
+                            query.getFirstInBackground(new GetCallback<ParseObject>() {
+                                @Override
+                                public void done(ParseObject parseObject, ParseException e) {
+                                    if (e == null){
+                                        parseObject.deleteInBackground();
+                                        finish();
+                                        startActivity(new Intent(EventActivity.this, Lobby.class));
+                                        Toast.makeText(getApplicationContext(), "Event destroyed", Toast.LENGTH_LONG).show();
+                                    } else
+                                        Toast.makeText(getApplicationContext(), "Error in deleting event", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            final String temp = eName.getText().toString();
+                            ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
+                            query.whereEqualTo("name", eventName);
+                            query.getFirstInBackground(new GetCallback<ParseObject>() {
+                                @Override
+                                public void done(ParseObject parseObject, ParseException e) {
+                                    parseObject.put("name", temp);
+                                    parseObject.saveInBackground();
+                                    Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+                                    //Refreshes toolbar name
+                                    collapsingToolbarLayout.setTitle(temp);
+                                    isNameChanged = true;
+                                }
+                            });
+                            dialogRename.dismiss();
+                        }
+
                     }
                 });
                 break;
