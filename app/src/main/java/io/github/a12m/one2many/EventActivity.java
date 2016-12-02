@@ -24,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -50,7 +51,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
     Toolbar toolbar;
 
-    ImageButton coverPic;
+    ImageView coverPic;
 
     TextView ownerName;
     TextView numberOfMembers;
@@ -79,8 +80,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         eventName = i.getStringExtra("EventName");
 
-        //crashes app
-        coverPic = (ImageButton) findViewById(R.id.imageViewEventPage);
+        coverPic = (ImageView) findViewById(R.id.imageViewEventPage);
         GetCoverPic();
 
         selectedMembers = new ArrayList<>();
@@ -234,6 +234,9 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                 eName.setText(eventName);
 
                 final CheckBox deleteCheck = (CheckBox) dialogRename.findViewById(R.id.ChboxDelete);
+
+                final ImageView editCover = (ImageView) dialogRename.findViewById(R.id.editCover);
+                editCover.setImageBitmap(coverPic.getDrawable());
 
                 //Cancel button to exit dialog
                 final Button cancelButton = (Button) dialogRename.findViewById(R.id.buttonCancel);
