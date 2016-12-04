@@ -3,11 +3,13 @@ package io.github.a12m.one2many;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -52,6 +54,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     Toolbar toolbar;
 
     ImageView coverPic;
+    private Bitmap newPic;
 
     TextView ownerName;
     TextView numberOfMembers;
@@ -122,7 +125,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_event_page);
 
         new GetEventPictures(i.getStringExtra("EventId")).execute();
-
     }
 
     @Override
@@ -235,8 +237,16 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
                 final CheckBox deleteCheck = (CheckBox) dialogRename.findViewById(R.id.ChboxDelete);
 
-                final ImageView editCover = (ImageView) dialogRename.findViewById(R.id.editCover);
-                editCover.setImageBitmap(coverPic.getDrawable());
+                final ImageButton editCover = (ImageButton) dialogRename.findViewById(R.id.btncoverpic);
+                editCover.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ChangePic(v);
+                    }
+                });
+
+
+
 
                 //Cancel button to exit dialog
                 final Button cancelButton = (Button) dialogRename.findViewById(R.id.buttonCancel);
@@ -439,6 +449,33 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.buttonEventOwnerFinalize:
                 break;
+        }
+    }
+
+    public void ChangePic(View view){
+        Intent photoGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        photoGalleryIntent.setType("image/*");
+        startActivityForResult(photoGalleryIntent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1){
+            if (resultCode == RESULT_OK){
+                Uri selectedImg = data.getData();
+                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+                Cursor cursor = getContentResolver().query(selectedImg, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String picturePath = cursor.getString(columnIndex);
+                cursor.close();
+
+                newPic = BitmapFactory.decodeFile(picturePath);
+                coverPic.setImageBitmap(newPic);
+            }
         }
     }
 

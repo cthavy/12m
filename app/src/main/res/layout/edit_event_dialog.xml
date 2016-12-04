@@ -14,15 +14,6 @@
         android:id="@+id/buttonCancel"
         android:padding="5dp" />
 
-    <TextView
-        android:text="Event Name:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/renameLabel"
-        android:layout_marginTop="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp" />
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,12 +50,25 @@
         android:id="@+id/ChboxDelete"
         android:padding="5dp" />
 
-    <ImageView
+    <ImageButton
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:id="@+id/btncoverpic"
+        android:src="@drawable/lobby_example"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/white" />
+
+    <TextView
+        android:text="Event Name:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@android:color/background_light"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/editCover" />
+        android:id="@+id/renameLabel"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/btncoverpic"
+        android:layout_alignRight="@+id/buttonSave"
+        android:layout_alignEnd="@+id/buttonSave" />
 </RelativeLayout>
