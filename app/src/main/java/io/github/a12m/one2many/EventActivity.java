@@ -41,6 +41,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -55,6 +56,13 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
     ImageView coverPic;
     private Bitmap newPic;
+    Boolean picSelected;
+
+    Dialog dialogRename;
+    EditText eName;
+    CheckBox deleteCheck;
+    ImageButton editCover;
+    Button saveButton;
 
     TextView ownerName;
     TextView numberOfMembers;
@@ -82,6 +90,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         Intent i = getIntent();
 
         eventName = i.getStringExtra("EventName");
+
+        InitializeDialog();
 
         coverPic = (ImageView) findViewById(R.id.imageViewEventPage);
         GetCoverPic();
@@ -125,8 +135,24 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_event_page);
 
         new GetEventPictures(i.getStringExtra("EventId")).execute();
+
+        picSelected = false;
     }
 
+    //Initializes the edit dialog but does not show
+    public void InitializeDialog(){
+        dialogRename = new Dialog(EventActivity.this);
+        dialogRename.setContentView(R.layout.edit_event_dialog);
+
+        eName = (EditText) dialogRename.findViewById(R.id.eventName);
+        deleteCheck = (CheckBox) dialogRename.findViewById(R.id.ChboxDelete);
+        editCover = (ImageButton) dialogRename.findViewById(R.id.btncoverpic);
+        saveButton = (Button) dialogRename.findViewById(R.id.buttonSave);
+
+        eName.setText(eventName);
+    }
+
+    //Flags for lobby refresh or not
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -155,6 +181,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                             if (e == null){
                                 Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                 coverPic.setImageBitmap(bmp);
+                                editCover.setImageBitmap(bmp);
                             } else {
                                 System.out.println("error loading picture");
                             }
@@ -227,77 +254,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v){
         switch (v.getId()) {
             case R.id.buttonEventOwnerEdit:
-                //Creates the edit dialog
-                final Dialog dialogRename = new Dialog(v.getContext());
-                dialogRename.setContentView(R.layout.edit_event_dialog);
                 dialogRename.show();
-
-                final EditText eName = (EditText) dialogRename.findViewById(R.id.eventName);
-                eName.setText(eventName);
-
-                final CheckBox deleteCheck = (CheckBox) dialogRename.findViewById(R.id.ChboxDelete);
-
-                final ImageButton editCover = (ImageButton) dialogRename.findViewById(R.id.btncoverpic);
-                editCover.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ChangePic(v);
-                    }
-                });
-
-
-
-
-                //Cancel button to exit dialog
-                final Button cancelButton = (Button) dialogRename.findViewById(R.id.buttonCancel);
-                cancelButton.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v){
-                        dialogRename.dismiss();
-                    }
-                });
-
-                //Save button to save edits
-                final Button saveButton = (Button) dialogRename.findViewById(R.id.buttonSave);
-                saveButton.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v){
-                        //Checks to see if user wants to delete event
-                        if (deleteCheck.isChecked()){
-                            ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
-                            query.whereEqualTo("objectId", getIntent().getStringExtra("EventId"));
-                            query.getFirstInBackground(new GetCallback<ParseObject>() {
-                                @Override
-                                public void done(ParseObject parseObject, ParseException e) {
-                                    if (e == null){
-                                        parseObject.deleteInBackground();
-                                        finish();
-                                        startActivity(new Intent(EventActivity.this, Lobby.class));
-                                        Toast.makeText(getApplicationContext(), "Event destroyed", Toast.LENGTH_LONG).show();
-                                    } else
-                                        Toast.makeText(getApplicationContext(), "Error in deleting event", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } else {
-                            final String temp = eName.getText().toString();
-                            ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
-                            query.whereEqualTo("name", eventName);
-                            query.getFirstInBackground(new GetCallback<ParseObject>() {
-                                @Override
-                                public void done(ParseObject parseObject, ParseException e) {
-                                    parseObject.put("name", temp);
-                                    parseObject.saveInBackground();
-                                    Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
-                                    //Refreshes toolbar name
-                                    collapsingToolbarLayout.setTitle(temp);
-                                    isNameChanged = true;
-                                }
-                            });
-                            dialogRename.dismiss();
-                        }
-
-                    }
-                });
                 break;
 
             case R.id.buttonEventOwnerAddMembers:
@@ -452,12 +409,14 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public void ChangePic(View view){
+    //Calls for media storage to select new potential cover photo
+    public void DialogChangePic(View view){
         Intent photoGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         photoGalleryIntent.setType("image/*");
         startActivityForResult(photoGalleryIntent, 1);
     }
 
+    //Follows DialogChangePic method and allows selection to go through
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -474,8 +433,60 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                 cursor.close();
 
                 newPic = BitmapFactory.decodeFile(picturePath);
-                coverPic.setImageBitmap(newPic);
+                editCover.setImageBitmap(newPic);
+                picSelected = true;
             }
+        }
+    }
+
+    //Dialog cancel button to dismiss dialog
+    public void DialogCancel(View v){
+        dialogRename.dismiss();
+    }
+
+    //Dialog save button to save all new info
+    public void DialogSave(View view){
+        //Checks to see if user wants to delete event
+        if (deleteCheck.isChecked()){
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
+            query.whereEqualTo("objectId", getIntent().getStringExtra("EventId"));
+            query.getFirstInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject parseObject, ParseException e) {
+                    if (e == null){
+                        parseObject.deleteInBackground();
+                        finish();
+                        startActivity(new Intent(EventActivity.this, Lobby.class));
+                        Toast.makeText(getApplicationContext(), "Event destroyed", Toast.LENGTH_LONG).show();
+                    } else
+                        Toast.makeText(getApplicationContext(), "Error in deleting event", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            final String temp = eName.getText().toString();
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
+            query.whereEqualTo("name", eventName);
+            query.getFirstInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject parseObject, ParseException e) {
+                    if (picSelected){
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        newPic.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] image = stream.toByteArray();
+                        ParseFile file = new ParseFile(eventName+".png", image);
+                        parseObject.put("eventImg", file);
+                        picSelected = false;
+                    }
+
+                    parseObject.put("name", temp);
+                    parseObject.saveInBackground();
+                    Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+                    //Refreshes toolbar name
+                    collapsingToolbarLayout.setTitle(temp);
+                    isNameChanged = true;
+                }
+            });
+            dialogRename.dismiss();
         }
     }
 

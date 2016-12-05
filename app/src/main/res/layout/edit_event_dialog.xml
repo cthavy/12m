@@ -12,7 +12,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:id="@+id/buttonCancel"
-        android:padding="5dp" />
+        android:padding="5dp"
+        android:onClick="DialogCancel" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -37,7 +38,8 @@
         android:layout_below="@+id/eventName"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:padding="5dp" />
+        android:padding="5dp"
+        android:onClick="DialogSave" />
 
     <CheckBox
         android:text="Delete Event"
@@ -60,7 +62,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:background="@android:color/white" />
+        android:background="@android:color/white"
+        android:onClick="DialogChangePic" />
 
     <TextView
         android:text="Event Name:"
