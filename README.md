@@ -34,7 +34,7 @@ Lobby contains these buttons-
    * Might need to pull down refresh in the lobby to see it
  5. Search (“…” located on top)
   1. Start typing a username
-  2 It will auto suggest names from the database
+  2. It will auto suggest names from the database
   3. Select someone and press “…” button
   4. You will be brought to that user’s page
   5. Click “add friend” to send them a friend request
