@@ -55,6 +55,18 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
     String videoUrl;
 
 
+    CountDownTimer countDownTimer = new CountDownTimer(10000, 1000) {
+        public void onTick(long millisUntilFinished) {
+            videoButton.setText("STOP - " + millisUntilFinished / 1000);
+        }
+
+        public void onFinish() {
+            videoButton.setText("START");
+            videoCapture();
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,9 +149,12 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
         }
     }
 
+    // This method starts or stops the video recording depending
+    // on which state the camera is in
     private void videoCapture(){
         if(recording){
             // stop recording and release camera
+            countDownTimer.cancel();
             videoButton.setText("");
             mediaRecorder.stop();  // stop the recording
             releaseMediaRecorder(); // release the MediaRecorder object
@@ -179,20 +194,11 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            new CountDownTimer(10000, 1000) {
-
-                public void onTick(long millisUntilFinished) {
-                    videoButton.setText("STOP - " + millisUntilFinished / 1000);
-                }
-
-                public void onFinish() {
-                    videoButton.setText("START");
-                    videoCapture();
-                }
-            }.start();
+            countDownTimer.start();
         }
     }
 
+    // Prepares the camers to start the recording
     private boolean prepareMediaRecorder(){
         camera = Camera.open(cameraId);
         camera.setDisplayOrientation(90);
@@ -400,6 +406,7 @@ public class CustomCamera extends AppCompatActivity implements SurfaceHolder.Cal
         }
     }
 
+    // Takes the picture
     private void takeImage() {
         camera.takePicture(null, null, new Camera.PictureCallback() {
 

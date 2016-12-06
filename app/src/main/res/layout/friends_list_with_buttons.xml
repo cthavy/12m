@@ -18,9 +18,8 @@
 
     <Button
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="X"
+        android:layout_width="45sp"
+        android:layout_height="45sp"
         android:id="@+id/btn_ignore_e"
         android:layout_alignBottom="@+id/e_pic"
         android:layout_alignParentRight="true"
@@ -28,13 +27,14 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:onClick="IgnoreRequestee" />
+        android:onClick="IgnoreRequestee"
+        android:background="@drawable/cancel"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="O"
+        android:layout_width="45sp"
+        android:layout_height="45sp"
+        android:background="@drawable/check"
         android:id="@+id/btn_accept_e"
         android:layout_alignBottom="@+id/e_pic"
         android:layout_toLeftOf="@+id/btn_ignore_e"

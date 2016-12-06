@@ -1,32 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <Button
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="X"
+        android:layout_width="45sp"
+        android:layout_height="45sp"
         android:id="@+id/btn_ignore_e"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:onClick="DeclineEvent" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="O"
-        android:id="@+id/btn_accept_e"
-        android:layout_toLeftOf="@+id/btn_ignore_e"
-        android:layout_toStartOf="@+id/btn_ignore_e"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:onClick="AcceptEvent" />
+        android:onClick="DeclineEvent"
+        android:background="@drawable/cancel"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -58,4 +47,14 @@
             android:gravity="left|center"
             android:layout_margin="5dp" />
     </LinearLayout>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="45sp"
+        android:layout_height="45sp"
+        android:background="@drawable/check"
+        android:id="@+id/btn_accept_e"
+        android:onClick="AcceptEvent"
+        android:layout_alignBottom="@+id/btn_ignore_e"
+        android:layout_toLeftOf="@+id/btn_ignore_e" />
 </RelativeLayout>
