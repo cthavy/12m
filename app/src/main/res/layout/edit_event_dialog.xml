@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="65sp"
+        android:background="@color/colorPrimary"
+        android:id="@+id/button_edit_event_header"
+        android:text="Edit Event"
+        android:textColor="@android:color/white"/>
 
     <Button
         android:text="Cancel"
@@ -63,7 +71,8 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:background="@android:color/white"
-        android:onClick="DialogChangePic" />
+        android:onClick="DialogChangePic"
+        android:layout_below="@id/button_edit_event_header"/>
 
     <TextView
         android:text="Event Name:"
