@@ -18,29 +18,29 @@ android app
 2. Click register to signup
 3. After registration it will bring you to lobby
 Lobby contains these buttons-
- 3.1. Profile (Person)
-  i. Will display your user info
-  ii. Can click edit profile to change certain attributes
- 3.2. Picture (Camera)
-  i. Can take a picture, video, flip camera, or use flash
-  ii. After taking picture/video, select event to post on
- 3.3. Notifications (Planet)
-  i. Top list will contain friend requests sent to you
-  ii. Bottom list will contain event requests sent to you
- 3.4. New Event (Pluses)
-  i. Name your event
-  ii. Select friends to invite to the event
-  iii. Create the event (Can now see it in lobby)
-  * Might need to pull down refresh in the lobby to see it
- 3.5. Search (“…” located on top)
-  i. Start typing a username
-  ii. It will auto suggest names from the database
-  iii. Select someone and press “…” button
-  iv. You will be brought to that user’s page
-  v. Click “add friend” to send them a friend request
- 3.6. Event details (Event item, only appears when you are in an event)
-  i. Will show cover photo, owner, and number of members in event
-  ii. Below will have a space for your media
-  iii. “Edit” can change cover, rename, or delete event
-  iv. “Members” can send new invites or remove friends by checking or unchecking
-  v. “Finalize” feature not yet fully complete on Android
+ 1. Profile (Person)
+  1. Will display your user info
+  2. Can click edit profile to change certain attributes
+ 2. Picture (Camera)
+  1. Can take a picture, video, flip camera, or use flash
+  2. After taking picture/video, select event to post on
+ 3. Notifications (Planet)
+  1. Top list will contain friend requests sent to you
+  2. Bottom list will contain event requests sent to you
+ 4. New Event (Pluses)
+  1. Name your event
+  2. Select friends to invite to the event
+  3. Create the event (Can now see it in lobby)
+   * Might need to pull down refresh in the lobby to see it
+ 5. Search (“…” located on top)
+  1. Start typing a username
+  2 It will auto suggest names from the database
+  3. Select someone and press “…” button
+  4. You will be brought to that user’s page
+  5. Click “add friend” to send them a friend request
+ 6. Event details (Event item, only appears when you are in an event)
+  1. Will show cover photo, owner, and number of members in event
+  2. Below will have a space for your media
+  3. “Edit” can change cover, rename, or delete event
+  4. “Members” can send new invites or remove friends by checking or unchecking
+  5. “Finalize” feature not yet fully complete on Android
