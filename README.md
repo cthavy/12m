@@ -19,28 +19,28 @@ android app
 3. After registration it will bring you to lobby
 Lobby contains these buttons-
 4. Profile (Person)
-..* Will display your user info
-..* Can click edit profile to change certain attributes
+⋅⋅* Will display your user info
+⋅⋅* Can click edit profile to change certain attributes
 5. Picture (Camera)
-..* Can take a picture, video, flip camera, or use flash
-..* After taking picture/video, select event to post on
+⋅⋅* Can take a picture, video, flip camera, or use flash
+⋅⋅* After taking picture/video, select event to post on
 6. Notifications (Planet)
-..* Top list will contain friend requests sent to you
-..* Bottom list will contain event requests sent to you
+⋅⋅* Top list will contain friend requests sent to you
+⋅⋅* Bottom list will contain event requests sent to you
 7. New Event (Pluses)
-..* Name your event
-..* Select friends to invite to the event
-..* Create the event (Can now see it in lobby)
-..* Might need to pull down refresh in the lobby to see it
-8. Search (“…” located on top)
-..* Start typing a username
-..* It will auto suggest names from the database
-..* Select someone and press “…” button
-..* You will be brought to that user’s page
-..* Click “add friend” to send them a friend request
+⋅⋅* Name your event
+⋅⋅* Select friends to invite to the event
+⋅⋅* Create the event (Can now see it in lobby)
+⋅⋅* Might need to pull down refresh in the lobby to see it
+8. Search (Magnifying glass)
+⋅⋅* Start typing a username
+⋅⋅* It will auto suggest names from the database
+⋅⋅* Select someone and press magnifying button
+⋅⋅* You will be brought to that user’s page
+⋅⋅* Click “add friend” to send them a friend request
 9. Event details (Event item, only appears when you are in an event)
-..* Will show cover photo, owner, and number of members in event
-..* Below will have a space for your media
-..* “Edit” can change cover, rename, or delete event
-..* “Members” can send new invites or remove friends by checking or unchecking
-..* “Finalize” feature not yet fully complete on Android
+⋅⋅* Will show cover photo, owner, and number of members in event
+⋅⋅* Below will have a space for your media
+⋅⋅* “Edit” can change cover, rename, or delete event
+⋅⋅* “Members” can send new invites or remove friends by checking or unchecking
+⋅⋅* “Finalize” feature not yet fully complete on Android
