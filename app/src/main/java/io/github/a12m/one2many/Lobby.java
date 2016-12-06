@@ -40,7 +40,6 @@ import com.parse.SaveCallback;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
 
 /*
 Main lobby page. User should see this when first logging in or opening
@@ -67,8 +66,6 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
     int TAKE_PHOTO_CODE = 0;
     public static int count = 0;
     Uri imageUri;
-
-    //Test list to populate the Lobby
 
     ArrayList<String> searchableUsers;
 

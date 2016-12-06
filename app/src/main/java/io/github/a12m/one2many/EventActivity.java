@@ -405,6 +405,20 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.buttonEventOwnerFinalize:
+                // Configuring a dialog to let the user know this is coming soon
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setMessage("This is coming soon");
+
+                // Add the buttons
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+                // Create the AlertDialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
         }
     }

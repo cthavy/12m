@@ -9,65 +9,80 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="io.github.a12m.one2many.Profile">
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/profile_image"
-        android:layout_alignParentTop="true"
+    <TextView
+        android:id="@+id/text_view_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:textColor="@android:color/black"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_view_profile"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:maxHeight="100dp"
-        android:maxWidth="100dp" />
+        android:layout_alignParentStart="true">
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Log out"
-        android:id="@+id/btn_logout"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/profile_image"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:maxHeight="100dp"
+            android:maxWidth="100dp"
+            android:layout_centerHorizontal="true"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="\@username"
-        android:id="@+id/Text_username"
-        android:layout_below="@+id/profile_image"/>
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log out"
+            android:id="@+id/btn_logout"
+            android:layout_alignBottom="@+id/btn_edit"
+            android:layout_alignParentRight="true"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="\@email"
-        android:id="@+id/Text_email"
-        android:layout_below="@+id/Text_username"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="\@username"
+            android:id="@+id/Text_username"
+            android:layout_below="@+id/profile_image"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit Profile"
-        android:id="@+id/btn_edit"
-        android:onClick="EditProfile"
-        android:layout_below="@+id/Text_email"
-        android:layout_alignParentLeft="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="\@email"
+            android:id="@+id/Text_email"
+            android:layout_below="@+id/Text_username"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Friends"
-        android:id="@+id/Text_friend"
-        android:layout_toRightOf="@+id/profile_image"
-        android:layout_marginTop="11dp" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile"
+            android:id="@+id/btn_edit"
+            android:onClick="EditProfile"
+            android:layout_below="@+id/Text_email"
+            android:layout_alignParentLeft="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Events"
-        android:id="@+id/Text_event"
-        android:layout_toRightOf="@id/profile_image"
-        android:layout_below="@+id/Text_friend"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Friends"
+            android:id="@+id/Text_friend"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/profile_image"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Events"
+            android:id="@+id/Text_event"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/Text_friend"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

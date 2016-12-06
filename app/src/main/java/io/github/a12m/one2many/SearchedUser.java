@@ -1,10 +1,8 @@
 package io.github.a12m.one2many;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,13 +11,12 @@ import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
-import com.parse.GetDataCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,18 +81,24 @@ public class SearchedUser extends AppCompatActivity {
                 if (e == null){
                     //Gets and converts profile pic to be displayed
                     ParseFile file = (ParseFile) parseUser.get("avatarPic");
-                    file.getDataInBackground(new GetDataCallback() {
-                        @Override
-                        public void done(byte[] bytes, ParseException e) {
-                            //If avatar pic exists, then decode it into a bitmap to load
-                            if (e == null){
-                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                d_pic.setImageBitmap(bmp);
-                            } else {
-                                System.out.println("error loading picture");
-                            }
-                        }
-                    });
+
+                    Picasso.with(getApplicationContext())
+                            .load(file.getUrl())
+                            .resize(300, 300)
+                            .into(d_pic);
+
+//                    file.getDataInBackground(new GetDataCallback() {
+//                        @Override
+//                        public void done(byte[] bytes, ParseException e) {
+//                            //If avatar pic exists, then decode it into a bitmap to load
+//                            if (e == null){
+//                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                                d_pic.setImageBitmap(bmp);
+//                            } else {
+//                                System.out.println("error loading picture");
+//                            }
+//                        }
+//                    });
                     //Displays the rest of the user's fields
                     d_username.setText("@"+searchedName);
 
@@ -131,7 +134,7 @@ public class SearchedUser extends AppCompatActivity {
             public void done(List<ParseObject> list, ParseException e) {
                 if (e == null){
                     friendSize = list.size();
-                    d_friend_count.setText(String.valueOf(friendSize));
+                    d_friend_count.setText(String.valueOf(friendSize) + " Friends");
                 }
             }
         });
@@ -155,7 +158,7 @@ public class SearchedUser extends AppCompatActivity {
                         public void done(List<ParseObject> list, ParseException e) {
                             if (list != null){
                                 ct_events += list.size();
-                                d_event_count.setText(String.valueOf(ct_events));
+                                d_event_count.setText(String.valueOf(ct_events) + " Events");
                             }
                         }
                     });

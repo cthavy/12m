@@ -19,5 +19,6 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:paddingTop="5dp"
-        android:textColor="#000" />
+        android:textColor="#000"
+        android:layout_gravity="center_horizontal"/>
 </LinearLayout>

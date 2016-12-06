@@ -2,8 +2,6 @@ package io.github.a12m.one2many;
 
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,12 +11,12 @@ import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,18 +78,24 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                 //If user exists then grabs their avatar picture
                 if (parseObject != null) {
                     ParseFile file = (ParseFile) parseObject.get("avatarPic");
-                    file.getDataInBackground(new GetDataCallback() {
-                        @Override
-                        public void done(byte[] bytes, ParseException e) {
-                            //If avatar pic exists, then decode it into a bitmap to load
-                            if (e == null){
-                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                d_pic.setImageBitmap(bmp);
-                            } else {
-                                System.out.println("error loading picture");
-                            }
-                        }
-                    });
+
+                    Picasso.with(getApplicationContext())
+                            .load(file.getUrl())
+                            .resize(300, 300)
+                            .into(d_pic);
+
+//                    file.getDataInBackground(new GetDataCallback() {
+//                        @Override
+//                        public void done(byte[] bytes, ParseException e) {
+//                            //If avatar pic exists, then decode it into a bitmap to load
+//                            if (e == null){
+//                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                                d_pic.setImageBitmap(bmp);
+//                            } else {
+//                                System.out.println("error loading picture");
+//                            }
+//                        }
+//                    });
 
                     //Displays username
                     username = (String) parseObject.get("username");

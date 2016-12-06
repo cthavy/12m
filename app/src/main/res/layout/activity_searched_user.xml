@@ -9,79 +9,65 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SearchedUser">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile_image"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:maxHeight="100dp"
-        android:maxWidth="100dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="999"
-        android:id="@+id/count_friend"
-        android:layout_alignTop="@+id/profile_image"
-        android:layout_toRightOf="@+id/profile_image"
-        android:layout_toEndOf="@+id/profile_image"
-        android:layout_marginLeft="35dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="999"
-        android:id="@+id/count_events"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/count_friend"
-        android:layout_toEndOf="@+id/count_friend"
-        android:layout_marginLeft="60dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Friends"
-        android:id="@+id/Text_friend"
-        android:layout_below="@+id/count_friend"
-        android:layout_alignLeft="@+id/count_friend"
-        android:layout_alignStart="@+id/count_friend" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Events"
-        android:id="@+id/Text_event"
-        android:layout_below="@+id/count_events"
-        android:layout_alignStart="@+id/count_events"
-        android:layout_alignLeft="@+id/count_events" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="\@username"
         android:id="@+id/Text_username"
-        android:layout_below="@+id/profile_image"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/black"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="\@email"
-        android:id="@+id/Text_email"
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/profile_image"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:maxHeight="100dp"
+        android:maxWidth="100dp"
+        android:layout_centerHorizontal="true"
         android:layout_below="@+id/Text_username" />
+
+    <RelativeLayout
+        android:id="@+id/relative_layout_searched"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_image">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Friends"
+            android:id="@+id/count_friend"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="35dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Events"
+            android:id="@+id/count_events"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="60dp"
+            android:layout_below="@+id/count_friend"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="\@email"
+            android:id="@+id/Text_email"
+            android:layout_below="@+id/Text_username" />
+
+    </RelativeLayout>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Friend +"
         android:id="@+id/btn_add"
-        android:layout_below="@+id/Text_friend"
-        android:layout_alignLeft="@+id/Text_friend"
-        android:onClick="RequestFriend" />
+        android:onClick="RequestFriend"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/relative_layout_searched"/>
 
 </RelativeLayout>
