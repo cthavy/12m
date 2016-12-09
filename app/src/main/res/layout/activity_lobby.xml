@@ -8,8 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="io.github.a12m.one2many.Lobby">
 
-
-
     <ProgressBar
         android:id="@+id/progressBarLobby"
         android:layout_width="200sp"
@@ -27,7 +25,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:hint="Search"
+        android:hint="Search Users"
         android:layout_toLeftOf="@+id/searchButton"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
@@ -78,17 +76,23 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="12m"
-                android:id="@+id/logo"
-                android:layout_alignBottom="@+id/btn_profile"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:textSize="35sp"
-                android:gravity="center" />
+            <ImageView
+                android:layout_width="45sp"
+                android:layout_height="45sp"
+                android:background="@drawable/logo"
+                android:layout_marginTop="7sp"/>
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+                <!--android:text="12m"-->
+                <!--android:id="@+id/logo"-->
+                <!--android:layout_alignBottom="@+id/btn_profile"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:textSize="35sp"-->
+                <!--android:gravity="center" />-->
 
             <ImageButton
                 android:layout_width="wrap_content"

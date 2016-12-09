@@ -364,10 +364,14 @@ public class Lobby extends AppCompatActivity implements View.OnClickListener, Ac
             case R.id.searchButton:
                 //Searches for selected user and opens up their profile page
                 search_username = search_text.getText().toString();
-                Intent intent2 = new Intent(this, SearchedUser.class);
-                intent2.putExtra("searchedName", search_username);
-                startActivity(intent2);
-                break;
+                if(search_username.replaceAll(" ", "").equals("")){
+                    Toast.makeText(getApplicationContext(), "Nothing Entered", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent2 = new Intent(this, SearchedUser.class);
+                    intent2.putExtra("searchedName", search_username);
+                    startActivity(intent2);
+                    break;
+                }
         }
     }
 

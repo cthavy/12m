@@ -56,8 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="\@email"
-            android:id="@+id/Text_email"
-            android:layout_below="@+id/Text_username" />
+            android:id="@+id/Text_email" />
 
     </RelativeLayout>
 
@@ -68,6 +67,56 @@
         android:id="@+id/btn_add"
         android:onClick="RequestFriend"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/relative_layout_searched"/>
+        android:layout_below="@+id/relative_layout_searched"
+        android:background="@drawable/button_background"
+        android:textColor="#FFF"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@color/colorPrimary"
+        android:id="@+id/viewSeperatorSearched"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/btn_add"
+        android:layout_marginTop="25sp" />
+
+
+    <RelativeLayout
+        android:layout_below="@+id/viewSeperatorSearched"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_view_searched_suggested"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Suggested Friends"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar_searched_suggested"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/text_view_searched_suggested"/>
+
+        <TextView
+            android:id="@+id/text_view_no_suggested"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Suggested Users"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/text_view_searched_suggested"
+            android:visibility="invisible"/>
+
+        <ListView
+            android:id="@+id/list_view_searched_suggested"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_view_searched_suggested">
+        </ListView>
+
+    </RelativeLayout>
 </RelativeLayout>

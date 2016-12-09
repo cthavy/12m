@@ -19,6 +19,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <RelativeLayout
+        android:id="@+id/relative_layout_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_view_profile"
@@ -38,11 +39,13 @@
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45sp"
             android:text="Log out"
             android:id="@+id/btn_logout"
             android:layout_alignBottom="@+id/btn_edit"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:background="@drawable/button_background"
+            android:textColor="#FFF"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -60,12 +63,14 @@
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45sp"
             android:text="Edit Profile"
             android:id="@+id/btn_edit"
             android:onClick="EditProfile"
             android:layout_below="@+id/Text_email"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/button_background"
+            android:textColor="#FFF"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -84,5 +89,15 @@
             android:layout_below="@+id/Text_friend"/>
 
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@color/colorPrimary"
+        android:id="@+id/viewSeperatorProfile"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relative_layout_profile"
+        android:layout_marginTop="25sp" />
 
 </RelativeLayout>

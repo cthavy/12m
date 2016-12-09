@@ -1,11 +1,15 @@
 package io.github.a12m.one2many;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +46,11 @@ public class SearchedUser extends AppCompatActivity {
     int friendSize;
     int ct_events;
 
+    ProgressBar suggestedUsersProgressBar;
+    ListView suggestedUsersListView;
+    List<ParseObject> suggestedUsersListParseObject;
+    TextView textViewNoSuggested;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,10 +73,16 @@ public class SearchedUser extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No reason to search yourself :)", Toast.LENGTH_SHORT).show();
         }
 
+        suggestedUsersProgressBar = (ProgressBar) findViewById(R.id.progress_bar_searched_suggested);
+        suggestedUsersListView = (ListView) findViewById(R.id.list_view_searched_suggested);
+        textViewNoSuggested = (TextView) findViewById(R.id.text_view_no_suggested);
+
         getData(searchedName);
         ifFriends(searchedName);
         getFriends(searchedName);
         getEvents(searchedName);
+
+        new suggestedUsers().execute();
     }
 
     //Loads user searched data from Parse
@@ -220,5 +235,79 @@ public class SearchedUser extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Pending reply", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public class suggestedUsers extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // Getting the list of all the users the current user sent friend requests or received
+            // friend requests from
+            ParseQuery query = new ParseQuery("FriendRequest");
+            query.whereContains("fromUser", ParseUser.getCurrentUser().getUsername());
+            query.whereContains("toUser", ParseUser.getCurrentUser().getUsername());
+
+            try {
+                List<ParseObject> ob = query.find();
+                List<String> exclude = new ArrayList<String>();
+
+                ParseQuery query1 = new ParseQuery("_User");
+
+                // Excluding the user the current user is looking at
+                exclude.add(searchedName);
+                exclude.add(ParseUser.getCurrentUser().getUsername());
+
+                // Now excluding those users from the list of suggested friends
+                for(ParseObject po: ob){
+                    // If the current user sent a request to this person then exclude this person
+                    if(po.getString("fromUser").equals(ParseUser.getCurrentUser().getUsername())){
+                        exclude.add(po.getString("toUser"));
+                    } else {
+                        exclude.add(po.getString("fromUser"));
+                    }
+                }
+
+                query1.whereNotContainedIn("username", exclude);
+                // And limiting the number of users returned to 20
+                query1.setLimit(20);
+
+                suggestedUsersListParseObject = query1.find();
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            suggestedUsersProgressBar.setVisibility(View.INVISIBLE);
+
+            if(suggestedUsersListParseObject.size() == 0){
+                suggestedUsersProgressBar.setVisibility(View.INVISIBLE);
+                textViewNoSuggested.setVisibility(View.VISIBLE);
+            } else {
+                SuggestedFriendsAdapter adapter = new SuggestedFriendsAdapter(SearchedUser.this,
+                        R.layout.friends_list, (ArrayList) suggestedUsersListParseObject);
+
+                suggestedUsersListView.setAdapter(adapter);
+
+                suggestedUsersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent i = new Intent(SearchedUser.this, SearchedUser.class);
+                        i.putExtra("searchedName", suggestedUsersListParseObject.get(position).getString("username"));
+                        startActivity(i);
+                    }
+                });
+            }
+        }
     }
 }
